@@ -1,0 +1,11 @@
+2005-09-17  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix various build problems.
+
+2005-09-15  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix build problems on FreeBSD or Darwin.
+
+2005-06-03  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Support TIGER/192 and RIPEMD160.

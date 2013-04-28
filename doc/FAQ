@@ -1,0 +1,12 @@
+Frequently Asked Questions:
+
+	Q. Why no compatibilities with CVSup(R)?
+	A. I was very tired to read Modula-3 code.
+
+	Q. Why isn't the configure script used?
+	A. I hate it.
+
+	Q. Do these tools support IPv6?
+	A. Do you REALLY use these tools?
+
+CVSup is a registered trademark of John D. Polstra

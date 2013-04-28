@@ -1,0 +1,67 @@
+2004-11-26  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.18
+
+	* Fix buffer overrun. (client/server)
+
+2004-10-30  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.17
+
+2004-09-24  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve robustness. (client/server)
+	  Make this more friendly to userlevel POSIX thread libraries.
+
+2004-07-15  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve performance to parse rcsfile(5) based files.
+
+2004-06-22  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* When -u/-g is specified, drop the privilege. (server)
+
+2004-06-21  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Update scanfiles when changes anything only.
+
+	* 0.24.16
+
+2004-06-19  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve performance to parse rcsfile(5) based files with many
+	  revisions.
+
+2004-05-17  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Make this compile on Interix.
+
+2004-04-17  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.15
+
+2004-04-11  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Make this compile with TenDRA.
+
+	* Make this compile on Solaris7.
+
+2004-04-10  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New utility: cvsync2cvsup
+
+	  This converts a scanfile from the cvsync style to the CVSup(R) style.
+	  It is useful for mirror maintainers to distribute the CVS
+	  repositories via both CVSup and CVSync protocols.
+
+2004-04-09  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve robustness. (client)
+
+2004-04-05  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.14
+
+2004-02-25  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to do munmap() with size 0. (client/server)

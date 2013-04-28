@@ -1,0 +1,856 @@
+2003-12-26  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Get rid of sched_yield(). (client/server)
+
+2003-12-21  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve robustness. (server)
+
+2003-11-30  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve robustness. (client)
+
+	* Fix a dead lock problem. (client/server)
+
+2003-11-28  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.13
+
+2003-11-25  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve the performance. (client/server)
+
+	  It's 4 - 30% faster than 0.24.12.
+	  (of course, depends on disk I/O, network connectivity, and so on.)
+	  Have fun!
+
+2003-11-12  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to remain temporary files. (client)
+
+	  To remove that files, remove scanfiles and re-run cvsync client.
+
+2003-11-11  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Option (server)
+
+		-l: Specifies the file to write the system log.
+
+2003-11-07  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New feature: base (client/server/cvscan)
+
+	  Specifies a prefix used for relative pathnames in all of the keyword
+	  'distfile', 'refuse', and 'scanfile'. It must be an absolute path.
+
+2003-11-06  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.12
+
+	* Fix a bug to use a wrong constant as NI_MAXHOST on OpenBSD.
+	  (cvscan/client/server)
+
+2003-11-03  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to require the existence of 'prefix' when the release
+	  type is 'list'. (client)
+
+	* 0.24.11
+
+2003-11-01  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New keyword: base-prefix (client)
+
+	  Specifies a prefix used for relative pathnames in all of the
+	  keyword 'prefix'. It must be an absolute path.
+
+2003-10-30  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.10
+
+	* Fix a bug to uninitialize an interger constant. (cvsup2cvsync)
+
+2003-10-29  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.9
+
+	* New utility: cvsup2cvsync
+
+	  This converts a scanfile from the CVSup(R) style to the cvsync style.
+	  It is useful for mirror maintainers to distribute the CVS
+	  repositories via both CVSup and CVSync protocols.
+
+2003-10-23  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Use poll() instead of select() if available. (server/client)
+
+2003-10-21  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New feature: refuse (client)
+
+	  It provides the way to refuse to add/update/remove files or
+	  directories.
+
+2003-10-08  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.8
+
+	* Fix a bug to create a wrong pid file when a relative path is
+	  specified by using an option -p. (server/client)
+
+2003-09-16  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.7
+
+	* Fix a bug to fail to run with GNU Pth/PTL. (server)
+
+	* Fix compile problems on OSes without a pthread library
+	  support. (cvscan/rcscmp)
+
+2003-09-10  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.6
+
+2003-09-06  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New feature: specify configurations in command line. (client)
+
+	  URI Syntax:
+		cvsync://<hostname>[:<port>][/[<name>/release/[?<aux>]]]
+
+	  Samples:
+		cvsync://some.where/
+			Retrieves the collections list.
+		cvsync://some.where/foo/rcs/?prefix=/localsrc
+			Retrieves the collection foo/rcs under /localsrc.
+
+	  The documentation is not prepared yet.
+
+2003-09-04  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to fail to execute in background when use an option -p
+	  to specify a file name to store a PID number and it is a relative
+	  path. (server)
+
+2003-08-30  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.5
+
+2003-08-29  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to fail to replace files in top directory when use a
+	  feature 'scanfile'. (server)
+
+2003-08-27  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.4
+
+2003-08-23  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to fail to replace files in some cases. (server)
+
+	* Fix a double free bug. (server)
+
+2003-08-03  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.3
+
+	* Fix a bug to fail to update a symlink status. (client)
+
+2003-08-02  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New keyword: nordiff (server)
+
+	  On updating a regular file, a server send a whole file instead of
+	  using rdiff algorithm. It is efficient to update tarballs or similar.
+
+2003-08-01  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve a rdiff performance slightly. (server)
+
+2003-07-31  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.2
+
+2003-07-29  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* A 'access' file is reloaded dynamically. (server)
+	  If this file is modified, it is reloaded as a client is connected.
+
+	  A server no longer needs restart in order to reload any
+	  configuration files.
+
+2003-07-28  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New keyword: base-prefix (server)
+
+	  Specifies a prefix used for relative pathnames in all of the
+	  keyword 'prefix'. It must be an absolute path.
+
+2003-07-26  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to try to remove a wrong pid file mistakenly. (server)
+
+	* Fix a bug to fail to tranfer the last file in some cases. (server)
+
+2003-07-25  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* native SHA1 is enabled on OpenBSD 3.3 or prior again.
+	  On OpenBSD, all SHA1 calculations are wrapped in a giant lock.
+
+2003-07-24  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a rdiff bug. (server)
+
+	* New keyword: haltfile (server)
+
+	  When specified, a server checks it instead of /var/run/cvsyncd.HALT.
+
+	* New feature: file-based halt (server)
+
+	  If /var/run/cvsyncd.HALT is created or modified when a server is
+	  running, the server exits gracefully.
+
+	* New keyword: pidfile (server)
+
+	  Specifies a file that the server's pid number is stored into.
+
+2003-07-23  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to mirror directories/files specified as 'deny'
+	  in 'distfile' mistakenly.
+
+2003-07-22  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.1
+
+2003-07-21  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* WARNING: "hash mismatch" on OpenBSD (server/client)
+	  In some cases, the client shows an error message "hash mismatch" and
+	  fails to update repositories. This problem is caused by reason that
+	  native OpenBSD SHA-1 implementation is not thread safe.
+
+	  Workaround:
+		1. Specifies "hash md5" in your configuration file.
+		2. Rebuild the server/client with HAVE_SHA1=no or
+		   HASH_TYPE={libgcrypt,mhash,openssl}.
+
+	  This problem is reported to OpenBSD mailing list by Sato-san and
+	  fixed in the current OpenBSD tree. See the following URL.
+	  	http://www.openbsd.org/cgi-bin/cvsweb/src/lib/libc/hash/sha1.c
+
+	  native SHA-1 is disabled on OpenBSD 3.3 or prior in 0.24.1.
+
+	* Fix a hash type negotiation bug. (server)
+
+2003-07-19  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix some rdiff bugs. (server)
+
+2003-07-14  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug to remain the <pidfile> when the initialization is failed.
+	  (server)
+
+	* Fix a bug to show error messages mistakenly when destroy
+	  pthread_cond_t. (server/client)
+
+2003-07-13  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.24.0
+
+2003-07-10  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Implement a new mirror algorithm for regular files. (server/client)
+	  This improves the performance on updating large regular
+	  files incredibly.
+
+	* Fix a potential problem when rcsfile(5) based files with
+	  over 256 symbols are updated. (server/client)
+
+2003-07-09  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.23.8
+
+	* Fix a bug not to accept the option -L. (cvscan)
+
+	* Fix a bug that the default value of 'maxclients' is not set properly
+	  when 'maxclients' is not specified. (server)
+
+	* Fix bugs of alignment. (server/client)
+
+2003-07-08  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix bugs not to work properly when set 'errormode' to 'fixup' or
+	  'ignore' in some case. (server/client)
+
+	* 0.23.7
+
+	* Fix a memory leak. (server)
+
+2003-07-07  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.23.6
+
+2003-07-03  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New feature: errormode (server/client)
+
+	  Specifies the behaviour when any errors/conflicts are found in local
+	  distributions.
+
+		abort
+			Exit/Disconnect with error messages immediately.
+		fixup
+			Recover errors/conflicts and keep running.
+		ignore
+			Ignore any errors/conflicts.
+
+	  The keyword 'loose' is obsoleted, same to set 'errormode' to 'ignore'.
+	  This exists only for the backward compatibility.
+
+	* Option (client)
+
+		-L: Set 'errormode' to 'fixup' for all collections.
+
+	* Option (cvscan)
+
+		-L: Set 'errormode' to 'fixup'.
+		-l: Set 'errormode' to 'ignore'.
+
+2003-07-01  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve stability. (server/client)
+
+2003-06-26  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.23.5
+
+	* Fix a bug to fail to update the file with over 256 symbols.
+
+2003-06-25  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.23.4
+
+	* Fix serious bugs around the destruction of hash context.
+	  These may cause abort() in C library and the server will stop.
+
+2003-06-24  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Improve stability.
+
+	* Fix some bugs.
+
+	* Make this compile with Intel C++ Compiler.
+
+2003-06-18  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Make this compile with Sun Microsystems Forte C.
+
+	* 0.23.3
+
+	* Make this compile on Solaris8.
+
+2003-06-17  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.23.2
+
+	* Improve stability.
+
+	* Fix some bugs.
+
+	* Be more verbose.
+
+2003-06-13  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix some 4GB limitations.
+
+2003-06-10  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.23.1
+
+	* Improve stability.
+
+	* Fix some bugs.
+
+2003-06-04  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.23.0
+
+	* Improve stability.
+
+2003-06-02  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* HEADS UP: Compression
+	  0.22.0 has a serious compression bug. If you use old versions,
+	  please upgrade 0.23.0 or higher. If 0.23.0 detects the remote host
+	  is 0.22.0, fallback to no compression mode forcibly.
+
+	* Fix many bugs.
+
+2003-05-30  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.22.0
+
+	* New keyword: compress (client only)
+
+	* Options (client)
+
+		-Z: Disables a compression.
+		-z: Enables a compression.
+
+	* Option (server)
+
+		-z: Sets the compression level.
+			0: no compression.
+			1: the fastest, but less compression.
+			9: the slowest, but best compression.
+
+2003-05-24  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.21.1
+
+2003-05-21  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a well known problem to fail to update the file with the same
+	  name but the different type.
+
+2003-05-17  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.21.0
+
+2003-05-15  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Experimental SOCKS5 support.
+
+	  If you want to use SOCKS5, please specify SOCKS5_TYPE.
+
+	  The following types are available:
+
+		dante
+		nec
+		none (default)
+
+2003-05-14  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug that cvscan doesn't work if 'distfile' is not set.
+
+2003-05-11  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New feature: access
+
+	  It provides the way to control to allow/deny the connections.
+
+		allow <v4addr>[/<netmask>][,<max>]
+		allow <v6addr>[/<prefixlen>][,<max>]
+		allow <domain>[,<max>]
+			'allow' specifies the acceptable address block and
+			the acceptable domain name. <max> means the maximum
+			connections from the address block or the domain name.
+			Even if <max> is greater than 'maxclient', the maximum
+			is restricted by the value of 'maxclient'.
+
+		always <v4addr>[/<netmask>]
+		always <v6addr>[/<prefixlen>]
+		always <domain>
+			'always' specifies the acceptable address block and the
+			acceptable domain name with no restrictions. Even if
+			the number of the connections is already same as
+			'maxclient', the connection from this address block or
+			the domain name never be rejected.
+
+		deny <v4addr>[/<netmask>]
+		deny <v6addr>[/<prefixlen>]
+		deny <domain>
+			'deny' specifies the unacceptable address block and the
+			unacceptable domain name. The server always rejects the
+			connection from this address block and the domain name.
+
+	'permit' is an alias to 'allow'.
+	'reject' is an alias to 'deny'.
+
+2003-05-08  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.20.2
+
+	* New feature: distfile
+
+	  It provides the flexible way to distribute files.
+
+		allow, upgrade <pattern>
+			Distribute files which matches the pattern.
+		deny, omitany <pattern>
+			Don't distribute files which matches the pattern.
+
+2003-05-02  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.20.1
+
+	* Support libgcrypt and mhash libraries.
+
+	  If you want to use other hash library instead of native one,
+	  please specify HASH_TYPE.
+
+	  The following types are available:
+
+		libgcrypt
+		mhash
+		native (default)
+		openssl
+
+	  By this change, never fall back to OpenSSL automatically even if a
+	  native hash library is not available.
+
+2003-05-01  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Option (cvscan)
+
+		-c: Specifies the configuration file for cvsyncd.
+		    cvscan use the information of scanfile (loose, nofollow,
+		    release, prefix and so on) from it.
+
+2003-04-25  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.20.0
+
+	* HEADS UP: Change the Protocol around 'SetAttr'.
+	  These changes remove the potential 'SetAttr' issue.
+	  If you use the old versions, please upgrade to 0.20.0 or higher.
+
+2003-04-23  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug that the default value of 'maxclients' is not set properly.
+
+	* 0.19.6
+
+2003-04-21  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug that the 'loose' feature doesn't work properly.
+
+	* Fix a bug that both server/client tried to traverse wrong paths
+	  if a relative path calculated by the keyword 'super' is more than
+	  2 levels.
+
+2003-04-20  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.19.5
+
+2003-04-17  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug that the 'SetAttr' request for directories was issued in
+	  a wrong order.
+
+2003-04-16  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New feature: loose
+
+	  Background:
+	  Proper CVS repositories don't have files with same file name
+	  inside/outside 'Attic' directory of the same directory. If both exist
+	  accidentally, it is very difficult to determine which file is the
+	  right one. So in the past, cvsync exits abnormaly with the
+	  'inconsistency' error message. But some CVS repositories has this
+	  inconsistency. It is unhappy for CVS repositories mirror sites to
+	  redistribute them.
+
+	  The keyword 'loose' provides a workaround for bogus CVS repositories.
+	  When cvsync detects a inconsistency, cvsync assumes that the a file
+	  with more recent modification time is right and don't exit.
+
+	  This feature is optional. The best way is to remove the
+	  inconsistencies from master sites, of course.
+
+	* Fix a bug that when move a RCS file from inside/outside Attic to
+	  outside/inside Attic without chaging modifition time and permissions,
+	  cvsync cannot detect the action.
+
+2003-04-15  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.19.4
+
+	* Fix a bug that broken 'head' and 'branch' are written.
+
+	* Make this compile on Solaris 9.
+
+	* Fix a bug that a server writes a wrong pid number to <pidfile>.
+
+2003-04-14  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.19.3
+
+	* Fix a bug that '@' is missing for 'comment'.
+
+	* Improve the network performance.
+
+	* Options (both)
+
+		-V: Print the version number to standard error.
+		-v: Verbose mode.
+
+	* Options (server)
+
+		-g: Specifies the group the server should run as.
+		-u: Specifies the user the server should run as.
+		-w: Sets the working directory of the server.
+
+2003-04-09  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.19.2
+
+	* When the configuration file is updated, a server reloads it
+	  automatically.
+
+	* Options (client)
+
+		-4: Forces a client to use IPv4 addresses only
+		-6: Forces a client to use IPv6 addresses only.
+
+	* A server runs in background mode (default).
+	  When executed with the option -f, a server runs in foreground mode.
+
+2003-04-08  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.19.1
+
+	* Fix a bug to fail to mirror a repository when no pre-existing files.
+
+	* Fix a bug that list operations fail when pre-allocated buffers are
+	  exhausted.
+
+	* Even if a server fail to parse a RCS file, just ignore it and
+	  continue to run.
+
+2003-04-05  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix a bug that a packet length of protocol version is mistakenly
+	  calculated.
+
+2003-04-04  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.19.0
+
+	* HEADS UP: Change Cvsync Version Exchange Protocol
+	  If you use the old versions, please upgrade to 0.19.0 or higher.
+
+	* Improve the performance to update sub-collection.
+	  When a server receives an update request of collections
+	  defined as sub-collection, the server sends differences
+	  of the sub-collection with a relative prefix based on the
+	  `super' collection. The client can update only that directory.
+
+	* REMARK:
+		AIX 4.3.3 without IPv6
+		BSD/OS 4.2
+		Cygwin 1.3.22 without IPv6
+		FreeBSD/i386 5.0-CURRENT (as of 2003/03/12)
+		FreeBSD/i386 4.7-STABLE (as of 2003/03/05)
+		FreeBSD/sparc64 5.0-CURRENT (as of 2003/03/05)
+		Mac OS X
+		NetBSD/alpha 1.6O with native pthreads
+		NetBSD/i386 1.6P with native pthreads
+		NetBSD/i386 1.6L with GNU Pth
+		NetBSD/macppc 1.6M with native pthreads
+		OpenBSD/i386 3.2-stable
+		OpenBSD/sparc64 3.3-beta
+		Red Hat Linux 7.2
+		Solaris 8/SPARC
+
+	  Works fine on these platforms.
+
+2003-04-01  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Make this compile on AIX 4.3.3
+
+	* 0.18.0
+
+	* Implement a new keyword 'super', which allows to define
+	  sub-collections of a collection. For example:
+
+		collection {
+			name netbsd release rcs
+			prefix /cvsroot
+			...
+		}
+		collection {
+			name netbsd-pkgsrc release rcs
+			prefix /cvsroot/pkgsrc
+			super netbsd
+		}
+
+	  For the collection `netbsd-pkgsrc', a client gets only
+	  /cvsroot/pkgsrc part of the whole of NetBSD CVS repository
+	  (/cvsroot). When `super' is specified as shown above, 'nofollow'
+	  and 'umask' of the collection `netbsd-pkgsrc' with `super' are
+	  inherited from the collection `netbsd'. When a scanfile is
+	  also specified in the collection `netbsd', the collection
+	  `netbsd-pkgsrc' employs the corresponding entries in the parent's
+	  scanfile. Thus, using `super' keyword, only a scanfile for the
+	  top of sub-collections is needed to use the scanfile functionality
+	  when sub-collections of a collection are defined. It makes the use
+	  of a scanfile more efficient.
+
+	  'super' can be specified recursively (i.e. a sub-collection can
+	  be the parent of another sub-collection).
+
+	  (Thanks hrs AT FreeBSD DOT org)
+
+2003-03-31  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.17.2
+
+	* Fix a bug that the fallback of file compare algorithm doesn't work.
+
+	* Fix a bug that the length of a file name in Attic is mistakenly
+	  calculated.
+
+2003-03-29  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.17.1
+
+	* ANNOUNCE: Public cvsync service
+	  cvsync.allbsd.org provides the distribution and source trees of
+	  FreeBSD, NetBSD, OpenBSD, OpenDarwin, XFree86, and TenDRA via cvsync.
+	  URL: http://www.allbsd.org/#pub-cvsync
+
+	* mk/*.mk
+	  Make compile on old BSDs.
+
+2003-03-28  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix signed vs unsigned problem.
+
+	* 0.17.0
+
+	* HEADS UP: Change Collection Exchange Protocol
+	  To make add the new release type easy, the protocol to exchange
+	  collections list is changed.
+	  All servers/clients SHOULD be upgraded to 0.17.0 or higher.
+
+	* Fix a bug to calculate the symbolic link path name length.
+	  (noticed by naddy AT OpenBSD DOT org)
+
+2003-03-27  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* New release type: list
+	  Retrieve the collections list provided by the server.
+
+	* Scanfile (client)
+	  If the scanfile is specified and that doesn't exist, it's generated
+	  automatically at the stage of loading the configuration file.
+
+	* 0.16.1
+
+	* mk/*.mk
+	  Make compile on cygwin completely.
+
+2003-03-26  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.16.0
+
+	* Scanfile (server)
+	  The empty scanfile is acceptable.
+
+	* The symbolic link is fully supported.
+	  Client: Never follow the symbolic link.
+	  Server: If 'nofollow' is specified in a 'collection' section,
+		  don't follow the symbolic link.
+		  The default is off, i.e. follow the symbolic link.
+
+2003-03-25  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.15.2
+
+	* mk/*.mk
+	  Make compile on cygwin (cvscan/rcscan/rcscmp only).
+	  cvsync{,d} depends on the existence of getaddrinfo()/getnameinfo().
+	  The latest cygwin (1.3.22-1) doesn't have these APIs, so cannot
+	  compile them yet.
+
+2003-03-24  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.15.1
+
+	* Scanfile (server)
+	  Implement the experimental server-side scanfile feature.
+
+	* REMARK: the Performance
+	  When the scanfile feature is enabled on both server/client,
+	  the update procedure is done in 3sec (best) - 40min (worst).
+
+2003-03-18  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.15.0
+
+	* Improve the performance and stabilities with scanfile features.
+
+	* Signal Handling (client)
+	  When SIGINT or SIGTERM is received, the client process stop and
+	  the scanfile is updated if it's enabled.
+
+	* Improve English (Thanks hrs AT FreeBSD DOT org!)
+
+2003-03-15  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* mk/base.mk, mk/pthread.mk (FreeBSD/Solaris)
+	  Clean up compiler/linker options.
+
+	* 0.14.5
+
+	* Scanfile (client)
+	  Even if unnecessarily deep directories exist on the local disk,
+	  work properly.
+
+	* doc/FAQ
+	  Add one item.
+
+		Q. How do I compile/install your tools?
+		A. Just type 'gmake'/'gmake install'.
+
+2003-03-11  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* sock_select @ common/network.c
+	  Wake up the server listening thread in every second.
+
+	* Signal Handling (server)
+	  When SIGINT or SIGTERM is received, reject new connections and
+	  the finalization procedure will be deferred until all outstanding
+	  cvsync threads are done.
+
+	* Signal Handling (client) - well known bug
+	  When SIGINT or SIGTERM is received, never stop. Please issue SIGKILL.
+
+2003-03-10  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.14.4
+
+	* common/hash.h, mk/hash.mk, mk/pthread.mk
+	  Make compile on Red Hat Linux 7.2 with/without OpenSSL.
+
+	* Fix typos and missing headers.
+
+2003-03-09  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* doc/FAQ
+	  Add one item.
+
+		Q. Are these tools stable?
+		A. If you think so, they are stable.
+
+	* mk/pthread.mk (FreeBSD/NetBSD/OpenBSD specific)
+	  Use -pthread (LDFLAGS) instead of -lpthread or -lc_r (LIBS).
+	  (noticed by naddy AT OpenBSD DOT org and slightly modified)
+
+	* common/filetypes.h
+	  Some file types are reserved.
+		B: block special
+		C: character special
+		L: hard link
+		S: symbolic link
+
+2003-03-08  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* 0.14.3
+
+	* mux_close_out @ common/mux.c
+	  Fix a bug to call pthread_cond_wait() before locking the mutex.

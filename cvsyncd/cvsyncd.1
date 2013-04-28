@@ -1,0 +1,288 @@
+.\"
+.\" Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. Neither the name of the author nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.Dd Jun 23, 2005
+.Dt CVSYNCD 1
+.Os
+.Sh NAME
+.Nm cvsyncd
+.Nd synchronize CVS repositories
+.Sh SYNOPSIS
+.Nm cvsyncd
+.Op Fl Vfhqv
+.Op Fl c Ar file
+.Op Fl g Ar group
+.Op Fl l Ar file
+.Op Fl p Ar file
+.Op Fl u Ar user
+.Op Fl w Ar directory
+.Op Fl z Ar level
+.Sh DESCRIPTION
+.Nm cvsync
+is a fast, portable, IPv6 capable CVS repository synchronization utility.
+.Nm cvsync
+consists of a client program
+.Nm cvsync ,
+a server program
+.Nm ,
+a supplemental tool
+.Nm cvscan ,
+.Nm cvsup2cvsync ,
+and,
+.Nm cvsync2cvsup .
+.Pp
+NOT YET
+.Pp
+The following options are available:
+.Bl -tag -width indent
+.It Fl V
+Print the version number of
+.Nm
+to standard error.
+.It Fl c Ar file
+Specifies the file to store collections.
+.It Fl f
+Run in foreground mode.
+.It Fl g Ar group
+Specifies the group the server should run as after it initializes.
+.It Fl h
+Print the default configuration file, the protocol number, the usage and
+the version number of
+.Nm
+to standard error.
+.It Fl l Ar file
+Specifies the file to write the system log.
+.It Fl p Ar file
+Specifies the file to store a pid number.
+.It Fl q
+Be silent mode.
+.It Fl u Ar user
+Specifies the user the server should run as after it initializes.
+.It Fl v
+Be verbose mode.
+.It Fl w Ar directory
+Specifies the prefix for
+.Fl c
+and
+.Fl p .
+If a path name given by
+.Fl c
+or
+.Fl p
+is the absolute path, this prefix is not appended to them.
+.It Fl z Ar level
+Sets the compression level to
+.Ar level .
+The compression level must be between 0 and 9.
+0 means no compression.
+1 indicates the fastest, but less compression.
+9 indicates the slowest, but best compression.
+The default value is 1.
+.El
+.Sh CONFIGURATION FILE
+.Nm
+uses a configuration file which specifies collections to distribute CVS
+repositories.
+Basically it is a free format plain text file whose keywords are separated by
+white space(s) and/or carriage return(s).
+Comments begin with
+.Ql #
+and extend to the end of the line.
+.Pp
+The following options are available:
+.Bl -tag -width indent
+.It Sy access Ar file
+NOT YET
+.Pp
+It must be an absolute path.
+This keyword is valid in
+.Ql config .
+.It Sy base Ar directory
+Specifies a prefix used for relative pathnames in all of the keyword
+.Ql distfile
+and
+.Ql scanfile .
+It must be an absolute path.
+This keyword is valid in
+.Ql config .
+.It Sy base-prefix Ar directory
+Specifies a prefix used for relative pathnames in all of the keyword
+.Ql prefix .
+It must be an absolute path.
+This keyword is valid in
+.Ql config .
+.It Sy collection "{ ... }"
+NOT YET
+.It Sy comment Ar string
+Describes the information about the collection.
+This is available from the remote host by using the release type
+.Ql list .
+This keyword is valid in
+.Ql collection .
+.It Sy config "{ ... }"
+NOT YET
+.It Sy distfile Ar file
+NOT YET
+.Pp
+It must be an absolute path.
+This keyword is valid in
+.Ql collection .
+.It Sy errormode Ar mode
+Specifies the behavior when any potential errors/conflicts are found in local
+distributions.
+.Pp
+The following modes are available:
+.Bl -tag -width indent
+.It Sy abort
+Disconnect the client immediately.
+.It Sy fixup
+Recover errors/conflicts and keep running.
+.It Sy ignore
+Ignore any errors/conflicts.
+.El
+.Pp
+The default value is
+.Ql abort .
+This keyword is valid in
+.Ql collection .
+.It Sy haltfile Ar file
+Specifies the file to exit gracefully.
+If this file is created or modified when a server is running, the server try
+to exit gracefully.
+The default value is /var/run/cvsyncd.HALT.
+This keyword is valid in
+.Ql config .
+.It Sy hash Ar type
+Specifies the hash type to validate the distributed files and deltas.
+.Ql md5
+shall be supported in any environments.
+.Ql ripemd160 ,
+.Ql sha1 ,
+.Ql tiger192
+and, any other types are optional.
+The default value is
+.Ql md5 .
+This keyword is valid in
+.Ql config .
+.It Sy listen Ar address
+Specifies the listen address.
+This keyword is valid in
+.Ql config .
+.It Sy loose
+Obsoleted.
+Same to set
+.Ql errormode
+to
+.Ql ignore .
+.It Sy maxclients Ar number
+Specifies the maximum of connections from the remote hosts.
+The default value is 16.
+This keyword is valid in
+.Ql config .
+.It Sy nofollow
+Doesn't follow a symbolic link and handle it as is.
+By default,
+.Nm
+follows a symbolic link.
+This keyword is valid in
+.Ql collection .
+.It Sy pidfile Ar file
+Specifies the file to store a pid number.
+It must be an absolute path.
+This keyword is valid in
+.Ql config .
+.It Sy port Ar number
+Specifies the listen port number.
+The default value is 7777.
+This keyword is valid in
+.Ql config .
+.It Sy prefix Ar directory
+Specifies the directory where the distribution files are stored.
+This keyword is valid in
+.Ql collection .
+.It Sy release Ar type
+Specifies a type of collections which are distributed from the server.
+When most of files in a collection have a specific format such as
+.Xr rcsfile 5 ,
+.Nm
+can use optimized algorithms to transfer such files.
+However, it needs that
+.Ql release Ar type
+is specified properly.
+.Pp
+Using
+.Ql release Ar type ,
+you can specify transfer a file tree itself in a collection or a partial
+information of the tree such as a specific revision in
+.Xr rcsfile 5 .
+This is the reason why
+.Nm
+does not decide the collection type automatically.
+.Pp
+The following types are available:
+.Bl -tag -width indent
+.It Sy rcs
+NOT YET
+.El
+.Pp
+This keyword is valid in
+.Ql collection .
+.It Sy scanfile Ar file
+Specifies the scanfile that the information about a directory structure is
+stored.
+When a scanfile is specified,
+.Nm
+does not scan a directory structure and use the information from the scanfile
+instead.
+This allows to reduce disk i/o load radically.
+This file must be generated by using
+.Nm cvscan .
+It must be an absolute path.
+This keyword is valid in
+.Ql collection .
+.It Sy super Ar name
+NOT YET
+.It Sy umask Ar number
+Forces
+.Nm
+to use a umask value of
+.Ar number .
+The default value is 022.
+This keyword is valid in
+.Ql collection .
+.El
+.Sh EXIT STATUS
+The
+.Nm
+utility exits EXIT_SUCCESS on success, and EXIT_FAILURE if an error occurs.
+.Sh SEE ALSO
+.Xr cvscan 1 ,
+.Xr cvsup2cvsync 1 ,
+.Xr cvsync 1 ,
+.Xr cvsync2cvsup 1 ,
+.Xr fnmatch 3

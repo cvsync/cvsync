@@ -1,0 +1,142 @@
+.\"
+.\" Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+.\"                         Hiroki Sato <hrs@allbsd.org>
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. Neither the name of the author nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.Dd Apr 10, 2004
+.Dt CVSCAN 1
+.Os
+.Sh NAME
+.Nm cvscan
+.Nd generate a scanfile for
+.Nm cvsync
+and
+.Nm cvsyncd
+.Sh SYNOPSIS
+.Nm cvscan
+.Op Fl hqv
+.Op Fl r Ar release
+.Fl c Ar file
+.Op Ar name
+.Nm cvscan
+.Op Fl Fhqv
+.Op Fl L | Fl l
+.Op Fl r Ar release
+.Fl f Ar file
+.Ar directory
+.Sh DESCRIPTION
+.Nm
+is a small utility mainly for
+.Nm cvsyncd .
+During a synchronization,
+.Nm cvsyncd
+scans and compares a directory structure of each collection on the client with
+one on the server.
+When a scanfile is used on the server,
+.Nm cvsyncd
+does not scan a directory structure and use the information from the scanfile
+instead.
+This allows to reduce disk i/o load radically.
+.Pp
+However, if the server is the origin or the upstream server does not use
+.Nm cvsync ,
+the scanfile has to be generated on the server.
+.Nm
+is the utility for that purpose.
+.Pp
+Since
+.Nm cvsync
+automatically generates scanfiles for each collection with the keyword
+.Ql scanfile ,
+.Nm
+is usually not needed on the client.
+.Pp
+The following options are available:
+.Bl -tag -width indent
+.It Fl F
+Doesn't follow a symbolic link.
+By default,
+.Nm
+follows a symbolic link and handle it as is.
+.It Fl L
+Forces
+.Nm
+to set
+.Ql errormode
+to
+.Ql fixup .
+Refer the keyword
+.Ql errormode
+in
+.Nm cvsync
+or
+.Nm cvsyncd .
+.It Fl c Ar file
+Specifies the configuration file for
+.Nm cvsyncd .
+.It Fl f Ar file
+Specifies the output file.
+The file must be writable.
+.It Fl h
+Print the usage of
+.Nm
+to standard error.
+.It Fl l
+Forces
+.Nm
+to set
+.Ql errormode
+to
+.Ql ignore .
+Refer the keyword
+.Ql errormode
+in
+.Nm cvsync
+or
+.Nm cvsyncd .
+.It Fl q
+Be silent mode.
+.It Fl r Ar release
+Specifies the release type.
+Refer the keyword
+.Ql release
+in
+.Nm cvsync
+or
+.Nm cvsyncd .
+.It Fl v
+Be verbose mode.
+.El
+.Sh EXIT STATUS
+The
+.Nm
+utility exits EXIT_SUCCESS on success, and EXIT_FAILURE if an error occurs.
+.Sh SEE ALSO
+.Xr cvsup2cvsync 1 ,
+.Xr cvsync 1 ,
+.Xr cvsync2cvsup 1 ,
+.Xr cvsyncd 1
