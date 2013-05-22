@@ -59,10 +59,10 @@ configure_show:
 	@$(foreach V,${CFG_PARAMS},${ECHO} "  ${V}=" ${${V}};)
 
 depend: ${SRCS}
-	if [ -x ${MKDEP} ]; then ${MKDEP} -f .depend ${CFLAGS} $^ ; fi
+	if [ -x ${MKDEP} ]; then ${MKDEP} ${MKDEP_OPT} ${CFLAGS} $^ ; fi
 
 distclean: clean
-	$(RM) .depend ../mk/defaults.mk *.core *.d *.stackdump
+	$(RM) ${MKDEP_FILE} ../mk/defaults.mk *.core *.d *.stackdump
 
 install: all
 	${INSTALL} ${INSTALL_BIN_OPTS} ${PROG} ${BINDIR}/${PROG}
@@ -74,8 +74,8 @@ uninstall:
 ${PROG}: ${OBJS}
 	$(CC) ${LDFLAGS} -o ${PROG} ${OBJS} ${LIBS}
 
-ifeq ($(shell ${TEST} -f ./.depend && ${ECHO} yes), yes)
-include ./.depend
+ifeq ($(shell ${TEST} -f ./${MKDEP_FILE} && ${ECHO} yes), yes)
+include ./${MKDEP_FILE}
 endif
 
 HASH_TYPE      ?= unused

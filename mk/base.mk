@@ -107,8 +107,16 @@ CVSYNC_DEFAULT_CONFIG	?=
 CVSYNCD_DEFAULT_CONFIG	?=
 
 ECHO	?= /bin/echo
-MKDEP	?= /usr/bin/mkdep
 TEST	?= /bin/test
+
+MKDEP		?= /usr/bin/mkdep
+MKDEP_FILE	?= .depend
+MKDEP_OPT	?= -f ${MKDEP_FILE}
+ifeq (${HOST_OS}, NetBSD)
+ifeq ($(shell ${TEST} ${OSVER} -ge 300000000 && ${ECHO} yes), yes) # 3.0
+MKDEP_OPT	+= --
+endif # 3.0
+endif # NetBSD
 
 ifeq ($(shell ${TEST} -f ../mk/defaults.mk && ${ECHO} yes), yes)
 include ../mk/defaults.mk
