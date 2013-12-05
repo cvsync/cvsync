@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,8 +83,8 @@ filecmp_list(struct filecmp_args *fca)
 
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE; /* dummy */
-		cmd[3] = namelen;
-		cmd[4] = relnamelen;
+		cmd[3] = (uint8_t)namelen;
+		cmd[4] = (uint8_t)relnamelen;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 			return (false);
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cl->cl_name, namelen))

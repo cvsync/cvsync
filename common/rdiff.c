@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2002-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2002-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ rdiff_weak(const uint8_t *addr, size_t size)
 		h_rv += l_rv;
 	}
 
-	return ((h_rv << 16) | l_rv);
+	return ((uint32_t)((h_rv << 16) | l_rv));
 }
 
 uint8_t *
@@ -66,7 +66,7 @@ rdiff_search(uint8_t *sp, uint8_t *bp, uint32_t bsize, size_t length,
 	void *ctx;
 	size_t len;
 
-	if ((len = bp - sp) < length)
+	if ((len = (size_t)(bp - sp)) < length)
 		return (NULL);
 	if (len > bsize)
 		len = bsize;
@@ -88,16 +88,16 @@ rdiff_search(uint8_t *sp, uint8_t *bp, uint32_t bsize, size_t length,
 	wh = RDIFF_WEAK_HIGH(w);
 
 	while (sp < bp) {
-		if ((len = bp - sp) < length)
+		if ((len = (size_t)(bp - sp)) < length)
 			return (NULL);
 
 		if (len > bsize) {
-			wl = wl - sp[0] + sp[bsize];
-			wh = wh - bsize * sp[0] + wl;
+			wl = (uint16_t)(wl - sp[0] + sp[bsize]);
+			wh = (uint16_t)(wh - bsize * sp[0] + wl);
 			len = bsize;
 		} else {
-			wl = wl - sp[0];
-			wh = wh - len-- * sp[0];
+			wl = (uint16_t)(wl - sp[0]);
+			wh = (uint16_t)(wh - len-- * sp[0]);
 		}
 
 		if ((rwl == wl) && (rwh == wh)) {

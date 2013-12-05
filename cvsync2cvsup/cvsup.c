@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@
 
 #include "defs.h"
 
-#define	CVSUP_MAXATTRSIZE	256
+#define	CVSUP_MAXATTRSIZE	(256)
 
 size_t cvsup_escape_name(struct scanfile_attr *, void *, size_t);
 

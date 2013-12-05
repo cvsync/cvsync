@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -109,7 +109,8 @@ updater_rcs_scanfile_create(struct updater_args *uda)
 	switch (cap->ca_type) {
 	case FILETYPE_FILE:
 		if ((auxlen = attr_rcs_encode_file(cap->ca_aux, auxmax,
-						   cap->ca_mtime, cap->ca_size,
+						   cap->ca_mtime,
+						   (off_t)cap->ca_size,
 						   cap->ca_mode)) == 0) {
 			return (false);
 		}
@@ -220,7 +221,8 @@ updater_rcs_scanfile_setattr(struct updater_args *uda)
 		break;
 	case FILETYPE_FILE:
 		if ((auxlen = attr_rcs_encode_file(cap->ca_aux, auxmax,
-						   cap->ca_mtime, cap->ca_size,
+						   cap->ca_mtime,
+						   (off_t)cap->ca_size,
 						   cap->ca_mode)) == 0) {
 			return (false);
 		}
@@ -267,7 +269,8 @@ updater_rcs_scanfile_update(struct updater_args *uda)
 	switch (cap->ca_type) {
 	case FILETYPE_FILE:
 		if ((auxlen = attr_rcs_encode_file(cap->ca_aux, auxmax,
-						   cap->ca_mtime, cap->ca_size,
+						   cap->ca_mtime,
+						   (off_t)cap->ca_size,
 						   cap->ca_mode)) == 0) {
 			return (false);
 		}

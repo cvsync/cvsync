@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,15 @@
 #ifndef __VERSION_H__
 #define	__VERSION_H__
 
-#define	CVSYNC_MAJOR		0
-#define	CVSYNC_MINOR		24
-#define	CVSYNC_PATCHLEVEL	19
+#define	CVSYNC_MAJOR		(0)
+#define	CVSYNC_MINOR		(24)
+#define	CVSYNC_PATCHLEVEL	(20)
 
 #define	CVSYNC_PROTO_MAJOR	CVSYNC_MAJOR
 #define	CVSYNC_PROTO_MINOR	CVSYNC_MINOR
-#define	CVSYNC_PROTO_ERROR	0xff
+#define	CVSYNC_PROTO_ERROR	(0xff)
 
-#define	CVSYNC_PROTO(j, n)	(((j) << 16) | (n))
+#define	CVSYNC_PROTO(j, n)	((uint32_t)(((j) << 16) | (n)))
 
 #define	CVSYNC_URL	"http://www.cvsync.org/"
 

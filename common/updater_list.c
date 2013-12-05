@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,8 +49,6 @@
 #include "mux.h"
 
 #include "updater.h"
-
-#define	UPDATER_LIST_BUFSIZE	CVSYNC_MAXAUXLEN
 
 bool updater_list_fetch(struct updater_args *);
 

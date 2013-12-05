@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,11 +50,11 @@
 
 #include "defs.h"
 
-#define	CVSUP_ATTR_FILETYPE	0x01
-#define	CVSUP_ATTR_MTIME	0x02
-#define	CVSUP_ATTR_SIZE		0x04
-#define	CVSUP_ATTR_LINKTARGET	0x08
-#define	CVSUP_ATTR_MODE		0x80
+#define	CVSUP_ATTR_FILETYPE	(0x01)
+#define	CVSUP_ATTR_MTIME	(0x02)
+#define	CVSUP_ATTR_SIZE		(0x04)
+#define	CVSUP_ATTR_LINKTARGET	(0x08)
+#define	CVSUP_ATTR_MODE		(0x80)
 
 #define	CVSUP_ATTRS_DIR		(CVSUP_ATTR_MODE)
 #define	CVSUP_ATTRS_FILE	(CVSUP_ATTR_MTIME|CVSUP_ATTR_SIZE|CVSUP_ATTR_MODE)
@@ -425,7 +425,7 @@ cvsup_decode_attrs(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 		if (isdigit((int)(*sp)))
 			attrs += *sp - '0';
 		else
-			attrs += tolower(*sp) - 'a' + 10;
+			attrs += (uint32_t)(tolower(*sp) - 'a' + 10);
 		sp++;
 	}
 
@@ -626,7 +626,7 @@ cvsup_decode_linktarget(uint8_t *sp, uint8_t *ep, uint8_t **new_sp,
 
 	*new_sp = sp;
 
-	return (linksp - (uint8_t *)buffer);
+	return ((size_t)(linksp - (uint8_t *)buffer));
 }
 
 uint16_t
@@ -656,7 +656,7 @@ cvsup_decode_mode(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 			logmsg_err("%c: invalid Mode specifier", *sp);
 			return ((uint16_t)-1);
 		}
-		mode = (mode << 3) + *sp++ - '0';
+		mode = (uint16_t)((mode << 3) + *sp++ - '0');
 	}
 
 	*new_sp = sp;

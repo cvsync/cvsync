@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -120,7 +120,7 @@ sock_wait(int sock, int dir)
 {
 	struct pollfd fds[1];
 	short events;
-	int rv;
+	int tmout, rv;
 
 	if (dir == CVSYNC_SOCKDIR_OUT)
 		events = POLLOUT;
@@ -131,7 +131,7 @@ sock_wait(int sock, int dir)
 	fds[0].events = events;
 	fds[0].revents = 0;
 
-	for (;;) {
+	for (tmout = 0 ; tmout < CVSYNC_TIMEOUT ; tmout += CVSYNC_TICKS) {
 		if ((rv = poll(fds, 1, CVSYNC_TICKS)) == -1) {
 			if (errno != EINTR) {
 				logmsg_err("Socket Error: poll: %s",
@@ -152,6 +152,10 @@ sock_wait(int sock, int dir)
 			return (false);
 		}
 		break;
+	}
+	if (tmout == CVSYNC_TIMEOUT) {
+		logmsg_err("Socket Error: timeout");
+		return (false);
 	}
 
 	return (true);

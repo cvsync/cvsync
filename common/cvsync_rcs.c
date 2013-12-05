@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,7 +78,7 @@ cvsync_rcs_insert_attic(char *path, size_t pathlen, size_t pathmax)
 		}
 		rpath--;
 	}
-	len = pathlen - (rpath - path);
+	len = pathlen - (size_t)(rpath - path);
 	(void)memmove(&rpath[_atticlen], rpath, len + 1); /* incl. NULL */
 	(void)memcpy(rpath, _attic, _atticlen);
 
@@ -104,7 +104,7 @@ cvsync_rcs_remove_attic(char *path, size_t pathlen)
 	}
 	if (sp == NULL)
 		return (false);
-	len = pathlen - (sp - path);
+	len = pathlen - (size_t)(sp - path);
 	for (rpath-- ; rpath > path ; rpath--) {
 		if (*rpath == '/') {
 			rpath++;

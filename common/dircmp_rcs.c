@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -899,13 +899,14 @@ dircmp_rcs_opendir(struct dircmp_args *dca, size_t pathlen)
 	struct mdirent_rcs *mdp;
 	struct mdirent_args mda;
 	struct collection *cl = dca->dca_collection;
-	size_t rpathlen = pathlen - (dca->dca_rpath - dca->dca_path), len;
+	size_t rpathlen, len;
 	int rv;
 
 	mda.mda_errormode = cl->cl_errormode;
 	mda.mda_symfollow = cl->cl_symfollow;
 	mda.mda_remove = false;
 
+	rpathlen = pathlen - (size_t)(dca->dca_rpath - dca->dca_path);
 	if (rpathlen >= cl->cl_rprefixlen) {
 		if ((mdirp = mopendir_rcs(dca->dca_path, pathlen,
 					  dca->dca_pathmax, &mda)) == NULL) {

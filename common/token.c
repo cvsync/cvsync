@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@ token_get_keyword(FILE *fp, const struct token_keyword *keys)
 	}
 
 	while (isalnum(c) || (c == '{') || (c == '}') || (c == '-')) {
-		tk.token[tk.length++] = c;
+		tk.token[tk.length++] = (char)c;
 		if (tk.length == sizeof(tk.token)) {
 			logmsg_err("too long token");
 			return (NULL);
@@ -139,7 +139,7 @@ token_get_string(FILE *fp, struct token *tk)
 
 	if ((quot = strchr("\"'", c)) == NULL) {
 		do {
-			tk->token[tk->length++] = c;
+			tk->token[tk->length++] = (char)c;
 			if (tk->length == sizeof(tk->token)) {
 				logmsg_err("too long token");
 				return (false);
@@ -157,7 +157,7 @@ token_get_string(FILE *fp, struct token *tk)
 			return (false);
 		}
 		while (c != *quot) {
-			tk->token[tk->length++] = c;
+			tk->token[tk->length++] = (char)c;
 			if (tk->length == sizeof(tk->token)) {
 				logmsg_err("too long token");
 				return (false);

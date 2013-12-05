@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@ struct config {
 	char			cf_base[PATH_MAX], cf_base_prefix[PATH_MAX];
 	int			cf_family;
 	int			cf_compress;
-	uint8_t			cf_hash;
+	int			cf_hash;
 	uint32_t		cf_proto;
 	uint16_t		cf_mss;
 	struct collection	*cf_collections;

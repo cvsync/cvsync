@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -197,7 +197,7 @@ dirscan_rcs_down(struct dirscan_args *dsa, struct mdirent_rcs *mdp)
 		return (false);
 
 	cmd[2] = DIRCMP_DOWN;
-	cmd[3] = mdp->md_namelen;
+	cmd[3] = (uint8_t)mdp->md_namelen;
 	if ((len = attr_rcs_encode_dir(&cmd[4], dsa->dsa_cmdmax - base,
 				       mode)) == 0) {
 		return (false);
@@ -255,7 +255,7 @@ dirscan_rcs_file(struct dirscan_args *dsa, struct mdirent_rcs *mdp)
 		return (false);
 
 	SetWord(cmd, len + base - 2);
-	cmd[3] = mdp->md_namelen;
+	cmd[3] = (uint8_t)mdp->md_namelen;
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, cmd, 4))
 		return (false);
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, mdp->md_name, mdp->md_namelen))
@@ -271,7 +271,7 @@ dirscan_rcs_symlink(struct dirscan_args *dsa, struct mdirent_rcs *mdp)
 {
 	uint8_t *cmd = dsa->dsa_cmd;
 	size_t len;
-	int auxlen;
+	ssize_t auxlen;
 
 	if (dsa->dsa_pathlen + mdp->md_namelen + 1 > dsa->dsa_pathmax)
 		return (false);
@@ -284,18 +284,20 @@ dirscan_rcs_symlink(struct dirscan_args *dsa, struct mdirent_rcs *mdp)
 		return (false);
 	}
 
-	if ((len = mdp->md_namelen + auxlen + 4) > dsa->dsa_cmdmax)
+	if ((len = mdp->md_namelen + (size_t)auxlen + 4) > dsa->dsa_cmdmax)
 		return (false);
 
 	SetWord(cmd, len - 2);
 	cmd[2] = DIRCMP_SYMLINK;
-	cmd[3] = mdp->md_namelen;
+	cmd[3] = (uint8_t)mdp->md_namelen;
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, cmd, 4))
 		return (false);
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, mdp->md_name, mdp->md_namelen))
 		return (false);
-	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, dsa->dsa_symlink, auxlen))
+	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, dsa->dsa_symlink,
+		      (size_t)auxlen)) {
 		return (false);
+	}
 
 	return (true);
 }
@@ -307,12 +309,13 @@ dirscan_rcs_opendir(struct dirscan_args *dsa, size_t pathlen)
 	struct mdirent_rcs *mdp;
 	struct mdirent_args mda;
 	struct collection *cl = dsa->dsa_collection;
-	size_t rpathlen = pathlen - (dsa->dsa_rpath - dsa->dsa_path), len;
+	size_t rpathlen, len;
 
 	mda.mda_errormode = cl->cl_errormode;
 	mda.mda_symfollow = false;
 	mda.mda_remove = true;
 
+	rpathlen = pathlen - (size_t)(dsa->dsa_rpath - dsa->dsa_path);
 	if (rpathlen >= cl->cl_rprefixlen) {
 		if ((mdirp = mopendir_rcs(dsa->dsa_path, pathlen,
 					  dsa->dsa_pathmax, &mda)) == NULL) {

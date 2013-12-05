@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,32 +36,32 @@ struct cvsync_file;
 struct hash_args;
 struct mux;
 
-#define	FILECMP_START		0x80
-#define	FILECMP_END		0x81
+#define	FILECMP_START		(0x80)
+#define	FILECMP_END		(0x81)
 
-#define	FILECMP_ADD		0x00
-#define	FILECMP_REMOVE		0x01
-#define	FILECMP_SETATTR		0x02
-#define	FILECMP_UPDATE		0x03
-#define	FILECMP_RCS_ATTIC	0x04
+#define	FILECMP_ADD		(0x00)
+#define	FILECMP_REMOVE		(0x01)
+#define	FILECMP_SETATTR		(0x02)
+#define	FILECMP_UPDATE		(0x03)
+#define	FILECMP_RCS_ATTIC	(0x04)
 
 /* UPDATE */
-#define	FILECMP_UPDATE_END	0x81
+#define	FILECMP_UPDATE_END	(0x81)
 
-#define	FILECMP_UPDATE_GENERIC	0x00
-#define	FILECMP_UPDATE_RCS	0x01
-#define	FILECMP_UPDATE_RDIFF	0x02
+#define	FILECMP_UPDATE_GENERIC	(0x00)
+#define	FILECMP_UPDATE_RCS	(0x01)
+#define	FILECMP_UPDATE_RDIFF	(0x02)
 
-#define	FILECMP_UPDATE_RCS_HEAD		0x00
-#define	FILECMP_UPDATE_RCS_BRANCH	0x01
-#define	FILECMP_UPDATE_RCS_ACCESS	0x02
-#define	FILECMP_UPDATE_RCS_SYMBOLS	0x03
-#define	FILECMP_UPDATE_RCS_LOCKS	0x04
-#define	FILECMP_UPDATE_RCS_COMMENT	0x05
-#define	FILECMP_UPDATE_RCS_EXPAND	0x06
-#define	FILECMP_UPDATE_RCS_DELTA	0x07
-#define	FILECMP_UPDATE_RCS_DESC		0x08
-#define	FILECMP_UPDATE_RCS_DELTATEXT	0x09
+#define	FILECMP_UPDATE_RCS_HEAD		(0x00)
+#define	FILECMP_UPDATE_RCS_BRANCH	(0x01)
+#define	FILECMP_UPDATE_RCS_ACCESS	(0x02)
+#define	FILECMP_UPDATE_RCS_SYMBOLS	(0x03)
+#define	FILECMP_UPDATE_RCS_LOCKS	(0x04)
+#define	FILECMP_UPDATE_RCS_COMMENT	(0x05)
+#define	FILECMP_UPDATE_RCS_EXPAND	(0x06)
+#define	FILECMP_UPDATE_RCS_DELTA	(0x07)
+#define	FILECMP_UPDATE_RCS_DESC		(0x08)
+#define	FILECMP_UPDATE_RCS_DELTATEXT	(0x09)
 
 struct filecmp_args {
 	struct mux		*fca_mux;

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -413,7 +413,7 @@ updater_rcs_add_file(struct updater_args *uda)
 		}
 		ep--;
 	}
-	len = ep - uda->uda_path;
+	len = (size_t)(ep - uda->uda_path);
 	(void)memcpy(uda->uda_tmpfile, uda->uda_path, len);
 	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE,
 		     CVSYNC_TMPFILE_LEN);
@@ -690,7 +690,7 @@ updater_rcs_attic(struct updater_args *uda)
 		}
 		ep--;
 	}
-	len = ep - uda->uda_path;
+	len = (size_t)(ep - uda->uda_path);
 	(void)memcpy(uda->uda_tmpfile, uda->uda_path, len);
 	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE,
 		     CVSYNC_TMPFILE_LEN);
@@ -908,7 +908,7 @@ updater_rcs_update(struct updater_args *uda)
 		}
 		ep--;
 	}
-	len = ep - uda->uda_path;
+	len = (size_t)(ep - uda->uda_path);
 	(void)memcpy(uda->uda_tmpfile, uda->uda_path, len);
 	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE,
 		     CVSYNC_TMPFILE_LEN);
@@ -1220,7 +1220,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 						break;
 					iov[1].iov_base = i1->i_id;
 					iov[1].iov_len = i1->i_len;
-					wn = i1->i_len + 2;
+					wn = (ssize_t)(i1->i_len + 2);
 					if (writev(fd, iov, 2) != wn) {
 						logmsg_err("%s",
 							   strerror(errno));
@@ -1332,7 +1332,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 					iov[1].iov_len = s1->s_len;
 					iov[3].iov_base = n1->n_str;
 					iov[3].iov_len = n1->n_len;
-					wn = s1->s_len + n1->n_len + 3;
+					wn = (ssize_t)(s1->s_len + n1->n_len + 3);
 					if (writev(fd, iov, 4) != wn) {
 						logmsg_err("%s",
 							   strerror(errno));
@@ -1350,7 +1350,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 			iov[1].iov_len = s2->s_len;
 			iov[3].iov_base = n2->n_str;
 			iov[3].iov_len = n2->n_len;
-			wn = s2->s_len + n2->n_len + 3;
+			wn = (ssize_t)(s2->s_len + n2->n_len + 3);
 			if (writev(fd, iov, 4) != wn) {
 				logmsg_err("%s", strerror(errno));
 				return (false);
@@ -1373,7 +1373,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 				iov[1].iov_len = s1->s_len;
 				iov[3].iov_base = n1->n_str;
 				iov[3].iov_len = n1->n_len;
-				wn = s1->s_len + n1->n_len + 3;
+				wn = (ssize_t)(s1->s_len + n1->n_len + 3);
 				if (writev(fd, iov, 4) != wn) {
 					logmsg_err("%s", strerror(errno));
 					return (false);
@@ -1400,7 +1400,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		iov[1].iov_len = s1->s_len;
 		iov[3].iov_base = n1->n_str;
 		iov[3].iov_len = n1->n_len;
-		wn = s1->s_len + n1->n_len + 3;
+		wn = (ssize_t)(s1->s_len + n1->n_len + 3);
 		if (writev(fd, iov, 4) != wn) {
 			logmsg_err("%s", strerror(errno));
 			return (false);
@@ -1469,7 +1469,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 					iov[1].iov_len = i1->i_len;
 					iov[3].iov_base = n1->n_str;
 					iov[3].iov_len = n1->n_len;
-					wn = i1->i_len + n1->n_len + 3;
+					wn = (ssize_t)(i1->i_len + n1->n_len + 3);
 					if (writev(fd, iov, 4) != wn) {
 						logmsg_err("%s",
 							   strerror(errno));
@@ -1487,7 +1487,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 			iov[1].iov_len = i2->i_len;
 			iov[3].iov_base = n2->n_str;
 			iov[3].iov_len = n2->n_len;
-			wn = i2->i_len + n2->n_len + 3;
+			wn = (ssize_t)(i2->i_len + n2->n_len + 3);
 			if (writev(fd, iov, 4) != wn) {
 				logmsg_err("%s", strerror(errno));
 				return (false);
@@ -1510,7 +1510,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 				iov[1].iov_len = i1->i_len;
 				iov[3].iov_base = n1->n_str;
 				iov[3].iov_len = n1->n_len;
-				wn = i1->i_len + n1->n_len + 3;
+				wn = (ssize_t)(i1->i_len + n1->n_len + 3);
 				if (writev(fd, iov, 4) != wn) {
 					logmsg_err("%s", strerror(errno));
 					return (false);
@@ -1537,7 +1537,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		iov[1].iov_len = i1->i_len;
 		iov[3].iov_base = n1->n_str;
 		iov[3].iov_len = n1->n_len;
-		wn = i1->i_len + n1->n_len + 3;
+		wn = (ssize_t)(i1->i_len + n1->n_len + 3);
 		if (writev(fd, iov, 4) != wn) {
 			logmsg_err("%s", strerror(errno));
 			return (false);
@@ -1793,7 +1793,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 	iov[0].iov_len = slen;
 	iov[1].iov_base = "\n";
 	iov[1].iov_len = 1;
-	wn = slen + 1;
+	wn = (ssize_t)(slen + 1);
 	sp += slen;
 
 	/* date */

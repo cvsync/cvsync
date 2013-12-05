@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,12 +30,13 @@
 #ifndef __NETWORK_H__
 #define	__NETWORK_H__
 
-#define	CVSYNC_MAXHOST	1025
-#define	CVSYNC_MAXSERV	32
-#define	CVSYNC_TICKS	100 /* msec */
+#define	CVSYNC_MAXHOST	(1025)
+#define	CVSYNC_MAXSERV	(32)
+#define	CVSYNC_TICKS	(100) /* msec */
+#define	CVSYNC_TIMEOUT	(30000) /* msec */
 
-#define	CVSYNC_SOCKDIR_OUT	0
-#define	CVSYNC_SOCKDIR_IN	1
+#define	CVSYNC_SOCKDIR_OUT	(0)
+#define	CVSYNC_SOCKDIR_IN	(1)
 
 #if defined(USE_SOCKS5)
 int SOCKS5_init(char *);

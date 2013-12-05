@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,15 +36,15 @@ struct mdirent;
 struct mux;
 struct scanfile_attr;
 
-#define	DIRCMP_START		0x80
-#define	DIRCMP_END		0x81
+#define	DIRCMP_START		(0x80)
+#define	DIRCMP_END		(0x81)
 
-#define	DIRCMP_DOWN		0x00
-#define	DIRCMP_UP		0x01
-#define	DIRCMP_FILE		0x02
-#define	DIRCMP_RCS		0x03
-#define	DIRCMP_RCS_ATTIC	0x04
-#define	DIRCMP_SYMLINK		0x05
+#define	DIRCMP_DOWN		(0x00)
+#define	DIRCMP_UP		(0x01)
+#define	DIRCMP_FILE		(0x02)
+#define	DIRCMP_RCS		(0x03)
+#define	DIRCMP_RCS_ATTIC	(0x04)
+#define	DIRCMP_SYMLINK		(0x05)
 
 struct dircmp_args {
 	struct mux		*dca_mux;

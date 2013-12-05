@@ -1,11 +1,3 @@
-2005-09-17  MAEKAWA Masahide  <maekawa@cvsync.org>
+2008-05-11  MAEKAWA Masahide  <maekawa@cvsync.org>
 
-	* Fix various build problems.
-
-2005-09-15  MAEKAWA Masahide  <maekawa@cvsync.org>
-
-	* Fix build problems on FreeBSD or Darwin.
-
-2005-06-03  MAEKAWA Masahide  <maekawa@cvsync.org>
-
-	* Support TIGER/192 and RIPEMD160.
+	* Fix build problem on DragonFly 1.11 or later.

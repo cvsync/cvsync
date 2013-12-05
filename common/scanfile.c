@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -294,7 +294,8 @@ scanfile_rename(struct scanfile_args *sa)
 			return (false);
 		}
 		while (sa->sa_start < sa->sa_end) {
-			if ((len = sa->sa_end - sa->sa_start) > CVSYNC_BSIZE)
+			len = (size_t)(sa->sa_end - sa->sa_start);
+			if (len > CVSYNC_BSIZE)
 				len = CVSYNC_BSIZE;
 			if ((wn = write(sa->sa_tmp, sa->sa_start,
 					len)) == -1) {

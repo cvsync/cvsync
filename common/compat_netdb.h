@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,22 +46,22 @@ struct addrinfo {
 #endif /* DECLARE_ADDRINFO */
 
 #ifndef AI_PASSIVE
-#define	AI_PASSIVE	0x02
+#define	AI_PASSIVE	(0x02)
 #endif /* AI_PASSIVE */
 
 #ifndef NI_NUMERICHOST
-#define	NI_NUMERICHOST	0x2
+#define	NI_NUMERICHOST	(0x2)
 #endif /* NI_NUMERICHOST */
 #ifndef NI_NAMEREQD
-#define	NI_NAMEREQD	0x4
+#define	NI_NAMEREQD	(0x4)
 #endif /* NI_NAMEREQD */
 #ifndef NI_NUMERICSERV
-#define	NI_NUMERICSERV	0x8
+#define	NI_NUMERICSERV	(0x8)
 #endif /* NI_NUMERICSERV */
 #endif /* defined(_AIX) */
 
 #if defined(NO_SOCKADDR_STORAGE)
-#define	_SS_MAXSIZE	128
+#define	_SS_MAXSIZE	(128)
 #define	_SS_ALIGNSIZE	(sizeof(int64_t))
 #if defined(NO_SOCKADDR_LEN)
 #define	_SS_PAD1SIZE	(_SS_ALIGNSIZE - sizeof(sa_family_t))

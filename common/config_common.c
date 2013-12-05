@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -280,7 +280,7 @@ config_parse_umask(struct config_args *ca, struct collection *cl)
 	if (!token_get_number(ca->ca_fp, &ul))
 		return (false);
 
-	if (ul & ~CVSYNC_ALLPERMS) {
+	if (ul & (unsigned long)(~CVSYNC_ALLPERMS)) {
 		logmsg_err("line %u: umask %lu: %s", lineno, ul,
 			   strerror(ERANGE));
 		return (false);

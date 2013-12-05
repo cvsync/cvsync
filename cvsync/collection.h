@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@ struct collection {
 	int			cl_flags;
 };
 
-#define	CLFLAGS_DISABLE		0x00000001
+#define	CLFLAGS_DISABLE		(0x00000001)
 
 void collection_destroy(struct collection *);
 void collection_destroy_all(struct collection *);

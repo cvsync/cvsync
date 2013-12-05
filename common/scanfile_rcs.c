@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -292,7 +292,7 @@ scanfile_rcs_dir(struct scanfile_rcs_args *sra, struct mdirent_rcs *mdp)
 	uint16_t mode = RCS_MODE(mdp->md_stat.st_mode, sra->sra_umask);
 	size_t rpathlen, namelen, auxlen;
 
-	rpathlen = sra->sra_pathlen - (sra->sra_rpath - sra->sra_path);
+	rpathlen = sra->sra_pathlen - (size_t)(sra->sra_rpath - sra->sra_path);
 	if ((namelen = rpathlen + mdp->md_namelen) >= sra->sra_pathmax)
 		return (false);
 	(void)memcpy(&sra->sra_rpath[rpathlen], mdp->md_name, mdp->md_namelen);
@@ -323,7 +323,7 @@ scanfile_rcs_file(struct scanfile_rcs_args *sra, struct mdirent_rcs *mdp)
 	uint16_t mode = RCS_MODE(st->st_mode, sra->sra_umask);
 	size_t rpathlen, namelen, auxlen;
 
-	rpathlen = sra->sra_pathlen - (sra->sra_rpath - sra->sra_path);
+	rpathlen = sra->sra_pathlen - (size_t)(sra->sra_rpath - sra->sra_path);
 	if ((namelen = rpathlen + mdp->md_namelen) >= sra->sra_pathmax)
 		return (false);
 	(void)memcpy(&sra->sra_rpath[rpathlen], mdp->md_name, mdp->md_namelen);
@@ -363,9 +363,9 @@ scanfile_rcs_symlink(struct scanfile_rcs_args *sra, struct mdirent_rcs *mdp)
 	struct scanfile_args *sa = &sra->sra_scanfile;
 	struct scanfile_attr *attr = &sa->sa_attr;
 	size_t rpathlen, namelen;
-	int auxlen;
+	ssize_t auxlen;
 
-	rpathlen = sra->sra_pathlen - (sra->sra_rpath - sra->sra_path);
+	rpathlen = sra->sra_pathlen - (size_t)(sra->sra_rpath - sra->sra_path);
 	if ((namelen = rpathlen + mdp->md_namelen) >= sra->sra_pathmax)
 		return (false);
 	(void)memcpy(&sra->sra_rpath[rpathlen], mdp->md_name, mdp->md_namelen);
@@ -392,9 +392,10 @@ scanfile_rcs_opendir(struct scanfile_rcs_args *sra, size_t pathlen)
 {
 	struct mDIR *mdirp;
 	struct mdirent_rcs *mdp;
-	size_t rpathlen = pathlen - (sra->sra_rpath - sra->sra_path), len;
+	size_t rpathlen, len;
 	int rv;
 
+	rpathlen = pathlen - (size_t)(sra->sra_rpath - sra->sra_path);
 	if (rpathlen >= sra->sra_rprefixlen) {
 		if ((mdirp = mopendir_rcs(sra->sra_path, pathlen,
 					  sra->sra_pathmax,

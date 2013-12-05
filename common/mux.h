@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,37 +30,37 @@
 #ifndef __MUX_H__
 #define	__MUX_H__
 
-#define	MUX_MAXCHANNELS		2
-#define	MUX_IN			0
-#define	MUX_OUT			1
+#define	MUX_MAXCHANNELS		(2)
+#define	MUX_IN			(0)
+#define	MUX_OUT			(1)
 
-#define	MUX_MIN_MSS		1024	/* 1KB */
-#define	MUX_DEFAULT_MSS		2048	/* 2KB */
-#define	MUX_MAX_MSS		4096	/* 4KB */
+#define	MUX_MIN_MSS		(1024)	/* 1KB */
+#define	MUX_DEFAULT_MSS		(2048)	/* 2KB */
+#define	MUX_MAX_MSS		(4096)	/* 4KB */
 #define	MUX_MAX_MSS_ZLIB	(MUX_MAX_MSS * 2)
 
-#define	MUX_MIN_BUFSIZE		8192	/* 8KB */
-#define	MUX_DEFAULT_BUFSIZE	16384	/* 16KB */
-#define	MUX_MAX_BUFSIZE		32768	/* 32KB */
+#define	MUX_MIN_BUFSIZE		(8192)	/* 8KB */
+#define	MUX_DEFAULT_BUFSIZE	(16384)	/* 16KB */
+#define	MUX_MAX_BUFSIZE		(32768)	/* 32KB */
 
-#define	MUX_DIRCMP		0	/* DirScan -> DirCmp */
-#define	MUX_FILESCAN_IN		0	/* FileScan <- DirCmp */
-#define	MUX_FILECMP		1	/* FileScan -> FileCmp */
-#define	MUX_UPDATER_IN		1	/* Updater <- FileCmp */
+#define	MUX_DIRCMP		(0)	/* DirScan -> DirCmp */
+#define	MUX_FILESCAN_IN		(0)	/* FileScan <- DirCmp */
+#define	MUX_FILECMP		(1)	/* FileScan -> FileCmp */
+#define	MUX_UPDATER_IN		(1)	/* Updater <- FileCmp */
 
-#define	MUX_DIRCMP_IN		0	/* DirCmp <- DirScan */
-#define	MUX_FILESCAN		0	/* DirCmp -> FileScan */
-#define	MUX_FILECMP_IN		1	/* FileCmp <- FileScan */
-#define	MUX_UPDATER		1	/* FileCmp -> Updater */
+#define	MUX_DIRCMP_IN		(0)	/* DirCmp <- DirScan */
+#define	MUX_FILESCAN		(0)	/* DirCmp -> FileScan */
+#define	MUX_FILECMP_IN		(1)	/* FileCmp <- FileScan */
+#define	MUX_UPDATER		(1)	/* FileCmp -> Updater */
 
-#define	MUX_CMD_DATA		0x00
-#define	MUX_CMD_RESET		0x01
-#define	MUX_CMD_CLOSE		0x02
+#define	MUX_CMD_DATA		(0x00)
+#define	MUX_CMD_RESET		(0x01)
+#define	MUX_CMD_CLOSE		(0x02)
 
-#define	MUX_CMDLEN_DATA		4
-#define	MUX_CMDLEN_RESET	6
-#define	MUX_CMDLEN_CLOSE	2
-#define	MUX_MAXCMDLEN		6 /* max(MUX_CMDLEN_{DATA,RESET,CLOSE}) */
+#define	MUX_CMDLEN_DATA		(4)
+#define	MUX_CMDLEN_RESET	(6)
+#define	MUX_CMDLEN_CLOSE	(2)
+#define	MUX_MAXCMDLEN		(6) /* max(MUX_CMDLEN_{DATA,RESET,CLOSE}) */
 
 enum mux_state {
 	MUX_STATE_INIT,

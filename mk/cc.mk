@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2003-2012 MAEKAWA Masahide <maekawa@cvsync.org>
+# Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -66,8 +66,9 @@ endif # TenDRA
 
 ifeq (${CC_TYPE}, clang) # Clang
 CC	= clang
-CFLAGS += -pedantic
-CFLAGS += -W -Wall -Wbad-function-cast -Wcast-align -Wchar-subscripts -Werror
-CFLAGS += -Winline -Wmissing-prototypes -Wnested-externs -Wpointer-arith
-CFLAGS += -Wshadow -Wstrict-prototypes
+CFLAGS += -Werror -Weverything
+CFLAGS += -Wno-format-nonliteral
+CFLAGS += -Wno-missing-noreturn
+CFLAGS += -Wno-padded
+CFLAGS += -Wno-shorten-64-to-32
 endif # Clang

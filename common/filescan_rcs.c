@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -714,7 +714,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 		return (false);
 	SetWord(cmd, len - 2);
 	cmd[2] = FILECMP_UPDATE_RCS_HEAD;
-	cmd[3] = rcs->head.n_len;
+	cmd[3] = (uint8_t)rcs->head.n_len;
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->head.n_len > 0) {
@@ -729,7 +729,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 		return (false);
 	SetWord(cmd, len - 2);
 	cmd[2] = FILECMP_UPDATE_RCS_BRANCH;
-	cmd[3] = rcs->branch.n_len;
+	cmd[3] = (uint8_t)rcs->branch.n_len;
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->branch.n_len > 0) {
@@ -742,7 +742,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 	/* access */
 	SetWord(cmd, 2);
 	cmd[2] = FILECMP_UPDATE_RCS_ACCESS;
-	cmd[3] = rcs->access.ra_count;
+	cmd[3] = (uint8_t)rcs->access.ra_count;
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->access.ra_count > 0) {
@@ -750,7 +750,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			id = &rcs->access.ra_id[i];
 			if ((len = id->i_len + 1) > fsa->fsa_cmdmax)
 				return (false);
-			cmd[0] = id->i_len;
+			cmd[0] = (uint8_t)id->i_len;
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 1))
 				return (false);
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, id->i_id,
@@ -766,7 +766,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 	if (fsa->fsa_proto < CVSYNC_PROTO(0, 24)) {
 		SetWord(cmd, 2);
 		cmd[2] = FILECMP_UPDATE_RCS_SYMBOLS;
-		cmd[3] = rcs->symbols.rs_count;
+		cmd[3] = (uint8_t)rcs->symbols.rs_count;
 		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 			return (false);
 	} else {
@@ -787,8 +787,8 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			len = num->n_len + sym->s_len + 2;
 			if (len > fsa->fsa_cmdmax)
 				return (false);
-			cmd[0] = sym->s_len;
-			cmd[1] = num->n_len;
+			cmd[0] = (uint8_t)sym->s_len;
+			cmd[1] = (uint8_t)num->n_len;
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 2))
 				return (false);
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, sym->s_sym,
@@ -808,7 +808,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 	SetWord(cmd, 3);
 	cmd[2] = FILECMP_UPDATE_RCS_LOCKS;
 	cmd[3] = (rcs->locks.rl_strict != 0) ? 1 : 0;
-	cmd[4] = rcs->locks.rl_count;
+	cmd[4] = (uint8_t)rcs->locks.rl_count;
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 5))
 		return (false);
 	if (rcs->locks.rl_count > 0) {
@@ -819,8 +819,8 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			len = id->i_len + num->n_len + 2;
 			if (len > fsa->fsa_cmdmax)
 				return (false);
-			cmd[0] = id->i_len;
-			cmd[1] = num->n_len;
+			cmd[0] = (uint8_t)id->i_len;
+			cmd[1] = (uint8_t)num->n_len;
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 2))
 				return (false);
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, id->i_id,
@@ -841,7 +841,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 		return (false);
 	SetWord(cmd, len - 2);
 	cmd[2] = FILECMP_UPDATE_RCS_COMMENT;
-	cmd[3] = rcs->comment.s_len;
+	cmd[3] = (uint8_t)rcs->comment.s_len;
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->comment.s_len > 0) {
@@ -856,7 +856,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 		return (false);
 	SetWord(cmd, len - 2);
 	cmd[2] = FILECMP_UPDATE_RCS_EXPAND;
-	cmd[3] = rcs->expand.s_len;
+	cmd[3] = (uint8_t)rcs->expand.s_len;
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->expand.s_len > 0) {
@@ -897,7 +897,7 @@ filescan_rcs_update_rcs_delta(struct filescan_args *fsa,
 		/* num */
 		SetWord(cmd, len - 2);
 		cmd[2] = FILECMP_UPDATE_RCS_DELTA;
-		cmd[3] = rev->num.n_len;
+		cmd[3] = (uint8_t)rev->num.n_len;
 		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 			return (false);
 		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rev->num.n_str,
@@ -967,7 +967,7 @@ filescan_rcs_update_rcs_deltatext(struct filescan_args *fsa,
 		/* num */
 		SetWord(cmd, len - 2);
 		cmd[2] = FILECMP_UPDATE_RCS_DELTATEXT;
-		cmd[3] = rev->num.n_len;
+		cmd[3] = (uint8_t)rev->num.n_len;
 		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 			return (false);
 		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rev->num.n_str,

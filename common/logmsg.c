@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@
 #include "cvsync.h"
 #include "logmsg.h"
 
-#define	LINE_MAXLEN	256	/* incl. NULL */
+#define	LINE_MAXLEN	(256)	/* incl. NULL */
 
 bool logmsg_detail = false, logmsg_quiet = false;
 

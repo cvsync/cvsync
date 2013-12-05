@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,36 +36,36 @@ struct hash_args;
 struct mux;
 struct scanfile_args;
 
-#define	UPDATER_START		0x80
-#define	UPDATER_END		0x81
+#define	UPDATER_START		(0x80)
+#define	UPDATER_END		(0x81)
 
-#define	UPDATER_ADD		0x00
-#define	UPDATER_REMOVE		0x01
-#define	UPDATER_SETATTR		0x02
-#define	UPDATER_UPDATE		0x03
-#define	UPDATER_RCS_ATTIC	0x04
+#define	UPDATER_ADD		(0x00)
+#define	UPDATER_REMOVE		(0x01)
+#define	UPDATER_SETATTR		(0x02)
+#define	UPDATER_UPDATE		(0x03)
+#define	UPDATER_RCS_ATTIC	(0x04)
 
 /* UPDATE */
-#define	UPDATER_UPDATE_END	0x81
-#define	UPDATER_UPDATE_ADD	0x82
-#define	UPDATER_UPDATE_REMOVE	0x83
-#define	UPDATER_UPDATE_UPDATE	0x84
+#define	UPDATER_UPDATE_END	(0x81)
+#define	UPDATER_UPDATE_ADD	(0x82)
+#define	UPDATER_UPDATE_REMOVE	(0x83)
+#define	UPDATER_UPDATE_UPDATE	(0x84)
 
-#define	UPDATER_UPDATE_GENERIC	0x00
-#define	UPDATER_UPDATE_RCS	0x01
-#define	UPDATER_UPDATE_RDIFF	0x02
+#define	UPDATER_UPDATE_GENERIC	(0x00)
+#define	UPDATER_UPDATE_RCS	(0x01)
+#define	UPDATER_UPDATE_RDIFF	(0x02)
 
-#define	UPDATER_UPDATE_RCS_HEAD		0x00
-#define	UPDATER_UPDATE_RCS_BRANCH	0x01
-#define	UPDATER_UPDATE_RCS_ACCESS	0x02
-#define	UPDATER_UPDATE_RCS_SYMBOLS	0x03
-#define	UPDATER_UPDATE_RCS_LOCKS	0x04
-#define	UPDATER_UPDATE_RCS_LOCKS_STRICT	0x05
-#define	UPDATER_UPDATE_RCS_COMMENT	0x06
-#define	UPDATER_UPDATE_RCS_EXPAND	0x07
-#define	UPDATER_UPDATE_RCS_DELTA	0x08
-#define	UPDATER_UPDATE_RCS_DESC		0x09
-#define	UPDATER_UPDATE_RCS_DELTATEXT	0x0a
+#define	UPDATER_UPDATE_RCS_HEAD		(0x00)
+#define	UPDATER_UPDATE_RCS_BRANCH	(0x01)
+#define	UPDATER_UPDATE_RCS_ACCESS	(0x02)
+#define	UPDATER_UPDATE_RCS_SYMBOLS	(0x03)
+#define	UPDATER_UPDATE_RCS_LOCKS	(0x04)
+#define	UPDATER_UPDATE_RCS_LOCKS_STRICT	(0x05)
+#define	UPDATER_UPDATE_RCS_COMMENT	(0x06)
+#define	UPDATER_UPDATE_RCS_EXPAND	(0x07)
+#define	UPDATER_UPDATE_RCS_DELTA	(0x08)
+#define	UPDATER_UPDATE_RCS_DESC		(0x09)
+#define	UPDATER_UPDATE_RCS_DELTATEXT	(0x0a)
 
 struct updater_args {
 	struct mux		*uda_mux;

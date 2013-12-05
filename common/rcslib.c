@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -117,6 +117,7 @@ char *rcslib_parse_locks(char *, const char *, struct rcslib_locks *);
 char *rcslib_parse_date(char *, const char *, struct rcslib_date *);
 char *rcslib_parse_branches(char *, const char *, struct rcslib_branches *);
 char *rcslib_parse_newphrase(char *, const char *);
+char *rcslib_parse_rcsdiff(char *, const char *, struct rcslib_rcsdiff *);
 
 char *rcslib_parse_word(char *, const char *);
 char *rcslib_parse_num(char *, const char *, struct rcsnum *);
@@ -182,6 +183,9 @@ rcslib_destroy_delta(struct rcslib_file *rcs)
 		}
 	}
 	free(rcs->delta.rd_rev);
+	if (rcs->delta.rd_rev_deltatext != NULL) {
+		free(rcs->delta.rd_rev_deltatext);
+	}
 }
 
 bool
@@ -280,6 +284,11 @@ rcslib_parse_rcstext(struct rcslib_file *rcs, char *sp, const char *bp)
 			rcslib_destroy_delta(rcs);
 			return (false);
 		}
+	}
+
+	/* XXX - construct RCS appropriate deltatext list */
+	if (rcs->delta.rd_count > 0) {
+		/* XXX */
 	}
 
 	return (true);
@@ -1063,7 +1072,7 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 	date->rd_tm.tm_sec = n;
 
 	date->rd_num.n_str = sv_sp;
-	date->rd_num.n_len = sp - sv_sp;
+	date->rd_num.n_len = (size_t)(sp - sv_sp);
 
 	return (sp);
 }
@@ -1184,6 +1193,62 @@ rcslib_parse_newphrase(char *sp, const char *bp)
 }
 
 char *
+rcslib_parse_rcsdiff(char *sp, const char *bp, struct rcslib_rcsdiff *rd)
+{
+	size_t n, c;
+
+	switch (*sp) {
+	case 'a':
+	case 'd':
+		rd->rd_cmd = *sp++;
+		if (sp == bp)
+			return (NULL);
+		break;
+	default:
+		return (NULL);
+	}
+
+	n = 0;
+	while (*sp != ' ') {
+		if (!isdigit((int)(*sp)))
+			return (NULL);
+		c = (size_t)(*sp - '0');
+		if (++sp == bp)
+			return (NULL);
+		if (SIZE_MAX / 10 < n)
+			return (NULL);
+		n *= 10;
+		if (SIZE_MAX - n < c)
+			return (NULL);
+		n += c;
+	}
+
+	if (++sp == bp)
+		return (NULL);
+
+	rd->rd_lineno = n;
+
+	n = 0;
+	while (*sp != '\n') {
+		if (!isdigit((int)(*sp)))
+			return (NULL);
+		c = (size_t)(*sp - '0');
+		if (++sp == bp)
+			return (NULL);
+		if (SIZE_MAX / 10 < n)
+			return (NULL);
+		n *= 10;
+		if (SIZE_MAX - n < c)
+			return (NULL);
+		n += c;
+	}
+
+	rd->rd_count = n;
+
+	return (sp + 1);
+}
+
+char *
 rcslib_parse_word(char *sp, const char *bp)
 {
 	char *sv_sp = sp;
@@ -1215,7 +1280,7 @@ rcslib_parse_num(char *sp, const char *bp, struct rcsnum *num)
 
 	if (num != NULL) {
 		num->n_str = sv_sp;
-		num->n_len = sp - sv_sp;
+		num->n_len = (size_t)(sp - sv_sp);
 		num->n_level = 0;
 		num->n_num[num->n_level] = 0;
 		sp = sv_sp;
@@ -1267,7 +1332,7 @@ rcslib_parse_id(char *sp, const char *bp, struct rcsid *id)
 
 	if (id != NULL) {
 		id->i_id = sv_sp;
-		id->i_len = sp - sv_sp;
+		id->i_len = (size_t)(sp - sv_sp);
 	}
 
 	return (sp);
@@ -1305,7 +1370,7 @@ rcslib_parse_sym(char *sp, const char *bp, struct rcssym *sym)
 
 	if (sym != NULL) {
 		sym->s_sym = sv_sp;
-		sym->s_len = sp - sv_sp;
+		sym->s_len = (size_t)(sp - sv_sp);
 	}
 
 	return (sp);
@@ -1335,7 +1400,7 @@ rcslib_parse_string(char *sp, const char *bp, struct rcsstr *str)
 
 	if (str != NULL) {
 		str->s_str = sv_sp;
-		str->s_len = sp++ - sv_sp;
+		str->s_len = (size_t)(sp++ - sv_sp);
 	}
 
 	return (sp);

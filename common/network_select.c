@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,7 +121,7 @@ sock_wait(int sock, int dir)
 {
 	fd_set *readfds, *writefds, fds;
 	struct timeval tv;
-	int rv;
+	int tmout, rv;
 
 	if (dir == CVSYNC_SOCKDIR_OUT) {
 		readfds = NULL;
@@ -133,7 +133,7 @@ sock_wait(int sock, int dir)
 	FD_ZERO(&fds);
 	FD_SET(sock, &fds);
 
-	for (;;) {
+	for (tmout = 0 ; tmout < CVSYNC_TIMEOUT ; tmout += CVSYNC_TICKS) {
 		tv.tv_sec = CVSYNC_TICKS / 1000;
 		tv.tv_usec = (CVSYNC_TICKS % 1000) * 1000;
 		if ((rv = select(sock + 1, readfds, writefds, NULL,
@@ -157,6 +157,10 @@ sock_wait(int sock, int dir)
 			return (false);
 		}
 		break;
+	}
+	if (tmout == CVSYNC_TIMEOUT) {
+		logmsg_err("Socket Error: timeout");
+		return (false);
 	}
 
 	return (true);

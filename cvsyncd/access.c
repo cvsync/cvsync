@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -662,7 +662,7 @@ access_parse_address(char *sp, const char *bp, size_t n, struct aclent *aclp)
 	char addr[CVSYNC_MAXHOST], binaddr[CVSYNC_MAXADDRLEN];
 	size_t addrlen;
 
-	if ((addrlen = bp - sp) >= sizeof(addr))
+	if ((addrlen = (size_t)(bp - sp)) >= sizeof(addr))
 		return (false);
 	(void)memcpy(addr, sp, addrlen);
 	addr[addrlen] = '\0';
@@ -690,7 +690,7 @@ access_parse_hostname(char *sp, const char *bp, struct aclent *aclp)
 	}
 
 	aclp->acl_family = AF_UNSPEC;
-	aclp->acl_addrlen = bp - sp;
+	aclp->acl_addrlen = (size_t)(bp - sp);
 	if ((aclp->acl_addr = malloc(aclp->acl_addrlen + 1)) == NULL) {
 		logmsg_err("ACL: %s", strerror(errno));
 		return (false);
@@ -709,7 +709,7 @@ access_parse_number(char *sp, const char *bp, size_t *n)
 	size_t len;
 	unsigned long v;
 
-	if ((len = bp - sp) >= sizeof(s)) {
+	if ((len = (size_t)(bp - sp)) >= sizeof(s)) {
 		logmsg_err("ACL: %.*s: restricted to 1000", len, sp);
 		return (false);
 	}
@@ -850,8 +850,8 @@ access_set_ipv6addr(struct aclent *aclp, const void *addr, size_t prefixlen)
 		v6mask[i] = 0xff;
 	if ((prefixlen % 8) != 0) {
 		if ((i = 8 - (prefixlen - n * 8)) > 0) {
-			v6mask[n] = 0xff >> i;
-			v6mask[n] = v6mask[n] << i;
+			v6mask[n] = (uint8_t)(0xff >> i);
+			v6mask[n] = (uint8_t)(v6mask[n] << i);
 			n++;
 		}
 	}

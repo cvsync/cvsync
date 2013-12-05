@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 
 struct cvsync_attr;
 
-#define	MAXATTRLEN		18	/* == max(*_ATTRLEN_*) */
+#define	MAXATTRLEN		(18)	/* == max(*_ATTRLEN_*) */
 
 #define	CVSYNC_ALLPERMS		(S_ISUID|S_ISGID|S_ISVTX|\
 				 S_IRWXU|S_IRWXG|S_IRWXO)
@@ -40,11 +40,11 @@ struct cvsync_attr;
 #define	CVSYNC_UMASK_RCS	(S_IWGRP|S_IWOTH)
 
 #define	RCS_PERMS		(S_IRWXU|S_IRWXG|S_IRWXO)
-#define	RCS_MODE(m, u)		((uint16_t)(((m) & ~(u)) & RCS_PERMS))
+#define	RCS_MODE(m, u)		((uint16_t)(((uint16_t)(m) & ~(u)) & RCS_PERMS))
 
-#define	RCS_ATTRLEN_DIR		2
-#define	RCS_ATTRLEN_FILE	18
-#define	RCS_ATTRLEN_RCS		10
+#define	RCS_ATTRLEN_DIR		(2)
+#define	RCS_ATTRLEN_FILE	(18)
+#define	RCS_ATTRLEN_RCS		(10)
 
 size_t attr_rcs_encode_dir(uint8_t *, size_t, uint16_t);
 size_t attr_rcs_encode_file(uint8_t *, size_t, time_t, off_t, uint16_t);

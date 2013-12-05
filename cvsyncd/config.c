@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,11 +61,11 @@
 #include "defs.h"
 
 #ifndef CVSYNCD_DEFAULT_MAXCLIENTS
-#define	CVSYNCD_DEFAULT_MAXCLIENTS	16
+#define	CVSYNCD_DEFAULT_MAXCLIENTS	(16)
 #endif /* CVSYNCD_DEFAULT_MAXCLIENTS */
 
-#define	CVSYNCD_MIN_MAXCLIENTS		1
-#define	CVSYNCD_MAX_MAXCLIENTS		2048
+#define	CVSYNCD_MIN_MAXCLIENTS		(1)
+#define	CVSYNCD_MAX_MAXCLIENTS		(2048)
 
 enum {
 	TOK_ACL,

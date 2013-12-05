@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2002-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2002-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -265,7 +265,7 @@ updater_rdiff_update_copy(struct updater_args *uda, struct cvsync_file *cfp,
 	bp = sp + length;
 
 	while (sp < bp) {
-		if ((len = bp - sp) > CVSYNC_BSIZE)
+		if ((len = (size_t)(bp - sp)) > CVSYNC_BSIZE)
 			len = CVSYNC_BSIZE;
 
 		if ((wn = write(uda->uda_fileno, sp, len)) == -1) {

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2002-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2002-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -109,7 +109,7 @@ filecmp_rdiff_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 			continue;
 		}
 
-		if ((len = sp - sv_sp) > 0) {
+		if ((len = (size_t)(sp - sv_sp)) > 0) {
 			if (length > 0) {
 				if (!rdiff_copy(fca->fca_mux, MUX_UPDATER,
 						(off_t)offset, length)) {
@@ -250,7 +250,7 @@ filecmp_rdiff_ischanged(struct filecmp_args *fca, struct cvsync_file *cfp)
 			}
 			i++;
 
-			if ((len = bp - sp) > bsize)
+			if ((len = (size_t)(bp - sp)) > bsize)
 				len = bsize;
 			if (rdiff_weak(sp, len) != weak)
 				break;

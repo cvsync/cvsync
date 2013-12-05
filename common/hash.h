@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ enum {
 
 #define	HASH_DEFAULT_TYPE	HASH_MD5
 
-#define	HASH_MAXLEN	64	/* 512bits */
+#define	HASH_MAXLEN	(64)	/* 512bits */
 
 struct hash_args {
 	bool	(*init)(void **);
@@ -62,5 +62,16 @@ struct hash_args {
 int hash_pton(const char *, size_t);
 size_t hash_ntop(int, void *, size_t);
 bool hash_set(int, const struct hash_args **);
+
+extern const struct hash_args MD5_args;
+#if defined(HAVE_RIPEMD160)
+extern const struct hash_args RIPEMD160_args;
+#endif /* defined(HAVE_RIPEMD160) */
+#if defined(HAVE_SHA1)
+extern const struct hash_args SHA1_args;
+#endif /* defined(HAVE_SHA1) */
+#if defined(HAVE_TIGER192)
+extern const struct hash_args TIGER192_args;
+#endif /* defined(HAVE_TIGER192) */
 
 #endif /* __HASH_H__ */

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,22 +30,22 @@
 #ifndef __BASEDEF_H__
 #define	__BASEDEF_H__
 
-#define	GetWord(w)	((((uint16_t)((w)[0])) << 8) | \
-			 (((uint16_t)((w)[1])) << 0))
+#define	GetWord(w)	((uint16_t)((((uint16_t)((w)[0])) << 8) | \
+				    (((uint16_t)((w)[1])) << 0)))
 
-#define	GetDWord(w)	((((uint32_t)((w)[0])) << 24) | \
-			 (((uint32_t)((w)[1])) << 16) | \
-			 (((uint32_t)((w)[2])) <<  8) | \
-			 (((uint32_t)((w)[3])) <<  0))
+#define	GetDWord(w)	((uint32_t)((((uint32_t)((w)[0])) << 24) | \
+				    (((uint32_t)((w)[1])) << 16) | \
+				    (((uint32_t)((w)[2])) <<  8) | \
+				    (((uint32_t)((w)[3])) <<  0)))
 
-#define	GetDDWord(w)	((((uint64_t)((w)[0])) << 56) | \
-			 (((uint64_t)((w)[1])) << 48) | \
-			 (((uint64_t)((w)[2])) << 40) | \
-			 (((uint64_t)((w)[3])) << 32) | \
-			 (((uint64_t)((w)[4])) << 24) | \
-			 (((uint64_t)((w)[5])) << 16) | \
-			 (((uint64_t)((w)[6])) <<  8) | \
-			 (((uint64_t)((w)[7])) <<  0))
+#define	GetDDWord(w)	((uint64_t)((((uint64_t)((w)[0])) << 56) | \
+				    (((uint64_t)((w)[1])) << 48) | \
+				    (((uint64_t)((w)[2])) << 40) | \
+				    (((uint64_t)((w)[3])) << 32) | \
+				    (((uint64_t)((w)[4])) << 24) | \
+				    (((uint64_t)((w)[5])) << 16) | \
+				    (((uint64_t)((w)[6])) <<  8) | \
+				    (((uint64_t)((w)[7])) <<  0)))
 
 #define	SetWord(w, v) \
 	do { \

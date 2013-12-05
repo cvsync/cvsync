@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
 #define	true	(1)
 #define	false	(0)
 
-#define	__bool_true_false_are_defined	1
+#define	__bool_true_false_are_defined	(1)
 #endif /* defined(NO_STDBOOL_H) */
 
 #endif /* __COMPAT_STDBOOL_H__ */

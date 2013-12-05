@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -109,7 +109,7 @@ main(int argc, char *argv[])
 				v = 0;
 				errno = EINVAL;
 			}
-			if (v & ~CVSYNC_ALLPERMS) {
+			if (v & (unsigned long)(~CVSYNC_ALLPERMS)) {
 				v = ULONG_MAX;
 				errno = ERANGE;
 			}
@@ -327,7 +327,7 @@ cvsup2cvsync_write_attr(struct scanfile_args *sa, struct cvsync_attr *attr)
 
 	sa->sa_attr.a_type = attr->ca_tag;
 	sa->sa_attr.a_name = attr->ca_name;
-	sa->sa_attr.a_namelen = bp - attr->ca_name;
+	sa->sa_attr.a_namelen = (size_t)(bp - attr->ca_name);
 	sa->sa_attr.a_aux = attr->ca_aux;
 	sa->sa_attr.a_auxlen = attr->ca_auxlen;
 

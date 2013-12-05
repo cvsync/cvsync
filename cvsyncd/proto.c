@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -310,8 +310,8 @@ collectionlist_exchange(int sock, struct config *cf)
 			return (NULL);
 		}
 		SetWord(cmd, len + auxlen - 2);
-		cmd[2] = namelen;
-		cmd[3] = relnamelen;
+		cmd[2] = (uint8_t)namelen;
+		cmd[3] = (uint8_t)relnamelen;
 		if (!sock_send(sock, cmd, 4)) {
 			collection_destroy(cl);
 			collection_destroy_all(cls);
@@ -453,7 +453,7 @@ channel_establish(int sock, struct config *cf, uint32_t proto)
 		mxb = &mx->mx_buffer[MUX_IN][i];
 
 		SetWord(cmd, 7);
-		cmd[2] = i;
+		cmd[2] = (uint8_t)i;
 		SetWord(&cmd[3], mxb->mxb_mss);
 		SetDWord(&cmd[5], mxb->mxb_bufsize);
 		if (!sock_send(sock, cmd, 9)) {

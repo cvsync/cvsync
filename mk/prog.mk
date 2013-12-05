@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
+# Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without

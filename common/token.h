@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #ifndef __TOKEN_H__
 #define	__TOKEN_H__
 
-#define	MAX_TOKEN_LENGTH	2048
+#define	MAX_TOKEN_LENGTH	(2048)
 
 struct token {
 	char	token[MAX_TOKEN_LENGTH];

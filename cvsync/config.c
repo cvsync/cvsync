@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,7 +85,7 @@ enum {
 	TOK_UNKNOWN
 };
 
-const struct token_keyword config_keywords[] = {
+static const struct token_keyword config_keywords[] = {
 	{ "{",			1,	TOK_LBRACE },
 	{ "}",			1,	TOK_RBRACE },
 	{ "base",		4,	TOK_BASE },
@@ -590,7 +590,7 @@ bool
 config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 {
 	const char *sv_sp = sp, *ep;
-	size_t sv_len = bp - sp, len;
+	size_t sv_len = (size_t)(bp - sp), len;
 
 	if (*sp == '[') {
 		if (++sp >= bp) {
@@ -601,7 +601,7 @@ config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 			logmsg_err("host: missing ']'");
 			return (false);
 		}
-		if ((len = ep - sp) >= sizeof(cf->cf_host)) {
+		if ((len = (size_t)(ep - sp)) >= sizeof(cf->cf_host)) {
 			logmsg_err("%.*s: host %.*s: %s", sv_len, sv_sp, len,
 				   sp, strerror(ENAMETOOLONG));
 			return (false);
@@ -617,7 +617,7 @@ config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 	} else {
 		if ((ep = memchr(sp, ':', (size_t)(bp - sp))) == NULL)
 			ep = bp;
-		if ((len = ep - sp) >= sizeof(cf->cf_host)) {
+		if ((len = (size_t)(ep - sp)) >= sizeof(cf->cf_host)) {
 			logmsg_err("%.*s: host %.*s: %s", sv_len, sv_sp, len,
 				   sp, strerror(ENAMETOOLONG));
 			return (false);
@@ -641,7 +641,7 @@ config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 	if (sp >= bp)
 		return (true);
 
-	if ((len = bp - sp) >= sizeof(cf->cf_serv)) {
+	if ((len = (size_t)(bp - sp)) >= sizeof(cf->cf_serv)) {
 		logmsg_err("%.*s: port %.*s: %s", sv_len, sv_sp, len, sp,
 			   strerror(ENAMETOOLONG));
 		return (false);
@@ -663,7 +663,7 @@ config_parse_uri_collection(const char *sp, const char *bp,
 		logmsg_err("name: premature EOL");
 		return (false);
 	}
-	if ((len = ep - sp) >= sizeof(cl->cl_name)) {
+	if ((len = (size_t)(ep - sp)) >= sizeof(cl->cl_name)) {
 		logmsg_err("name %.*s: %s", len, sp, strerror(ENAMETOOLONG));
 		return (false);
 	}
@@ -682,7 +682,7 @@ config_parse_uri_collection(const char *sp, const char *bp,
 		logmsg_err("release: premature EOL");
 		return (false);
 	}
-	if ((len = ep - sp) >= sizeof(cl->cl_release)) {
+	if ((len = (size_t)(ep - sp)) >= sizeof(cl->cl_release)) {
 		logmsg_err("release %.*s: %s", len, sp,
 			   strerror(ENAMETOOLONG));
 		return (false);
@@ -721,9 +721,9 @@ config_parse_uri_aux(const char *sp, const char *bp, struct collection *cl)
 		if ((ep = memchr(sp, '&', (size_t)(bp - sp))) == NULL)
 			ep = bp;
 		if ((sep = memchr(sp, '=', (size_t)(ep - sp))) == NULL)
-			len = ep - sp;
+			len = (size_t)(ep - sp);
 		else
-			len = sep - sp;
+			len = (size_t)(sep - sp);
 		if (len == 0) {
 			logmsg_err("collection %s/%s: empty keyword",
 				   cl->cl_name, cl->cl_release);

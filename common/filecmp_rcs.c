@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -427,7 +427,7 @@ filecmp_rcs_add_file(struct filecmp_args *fca)
 		else
 			len = CVSYNC_BSIZE;
 
-		if (!cvsync_mmap(cfp, size, len)) {
+		if (!cvsync_mmap(cfp, size, (off_t)len)) {
 			(*hashops->destroy)(fca->fca_hash_ctx);
 			cvsync_fclose(cfp);
 			return (false);
@@ -493,7 +493,7 @@ filecmp_rcs_add_symlink(struct filecmp_args *fca)
 	}
 	SetWord(cmd, wn);
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, wn + 2))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, (size_t)(wn + 2)))
 		return (false);
 
 	return (true);
@@ -1083,7 +1083,7 @@ filecmp_rcs_update_symlink(struct filecmp_args *fca)
 	struct cvsync_attr *cap = &fca->fca_attr;
 	uint8_t *cmd = fca->fca_cmd;
 	size_t base;
-	int wn;
+	ssize_t wn;
 
 	if ((base = cap->ca_namelen + 6) >= fca->fca_cmdmax)
 		return (false);
@@ -1095,14 +1095,14 @@ filecmp_rcs_update_symlink(struct filecmp_args *fca)
 			   fca->fca_cmdmax - base)) == -1) {
 		return (false);
 	}
-	SetWord(cmd, wn + base - 2);
+	SetWord(cmd, (size_t)((size_t)wn + base - 2));
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
 		      cap->ca_namelen)) {
 		return (false);
 	}
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, &cmd[6], wn))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, &cmd[6], (size_t)wn))
 		return (false);
 
 	return (true);
@@ -1135,7 +1135,7 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 			return (false);
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE_RCS_HEAD;
-		cmd[3] = num->n_len;
+		cmd[3] = (uint8_t)num->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (num->n_len > 0) {
@@ -1165,7 +1165,7 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 			return (false);
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE_RCS_BRANCH;
-		cmd[3] = num->n_len;
+		cmd[3] = (uint8_t)num->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (num->n_len > 0) {
@@ -1265,7 +1265,7 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 			return (false);
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE_RCS_COMMENT;
-		cmd[3] = str->s_len;
+		cmd[3] = (uint8_t)str->s_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (str->s_len > 0) {
@@ -1295,7 +1295,7 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 			return (false);
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE_RCS_EXPAND;
-		cmd[3] = str->s_len;
+		cmd[3] = (uint8_t)str->s_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (str->s_len > 0) {
@@ -1357,7 +1357,7 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_ACCESS;
 			cmd[3] = UPDATER_UPDATE_REMOVE;
-			cmd[4] = i2->i_len;
+			cmd[4] = (uint8_t)i2->i_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
@@ -1381,7 +1381,7 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_ACCESS;
 			cmd[3] = UPDATER_UPDATE_REMOVE;
-			cmd[4] = i2->i_len;
+			cmd[4] = (uint8_t)i2->i_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
@@ -1396,7 +1396,7 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_ACCESS;
 			cmd[3] = UPDATER_UPDATE_ADD;
-			cmd[4] = i1->i_len;
+			cmd[4] = (uint8_t)i1->i_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id,
@@ -1413,7 +1413,7 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE_RCS_ACCESS;
 		cmd[3] = UPDATER_UPDATE_ADD;
-		cmd[4] = i1->i_len;
+		cmd[4] = (uint8_t)i1->i_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 			return (false);
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id, i1->i_len))
@@ -1473,8 +1473,8 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_SYMBOLS;
 			cmd[3] = UPDATER_UPDATE_REMOVE;
-			cmd[4] = s2->s_len;
-			cmd[5] = n2->n_len;
+			cmd[4] = (uint8_t)s2->s_len;
+			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, s2->s_sym,
@@ -1503,8 +1503,8 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_SYMBOLS;
 			cmd[3] = UPDATER_UPDATE_REMOVE;
-			cmd[4] = s2->s_len;
-			cmd[5] = n2->n_len;
+			cmd[4] = (uint8_t)s2->s_len;
+			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, s2->s_sym,
@@ -1526,8 +1526,8 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_SYMBOLS;
 			cmd[3] = UPDATER_UPDATE_ADD;
-			cmd[4] = s1->s_len;
-			cmd[5] = n1->n_len;
+			cmd[4] = (uint8_t)s1->s_len;
+			cmd[5] = (uint8_t)n1->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, s1->s_sym,
@@ -1550,8 +1550,8 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE_RCS_SYMBOLS;
 		cmd[3] = UPDATER_UPDATE_ADD;
-		cmd[4] = s1->s_len;
-		cmd[5] = n1->n_len;
+		cmd[4] = (uint8_t)s1->s_len;
+		cmd[5] = (uint8_t)n1->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 			return (false);
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, s1->s_sym, s1->s_len))
@@ -1611,8 +1611,8 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_LOCKS;
 			cmd[3] = UPDATER_UPDATE_REMOVE;
-			cmd[4] = i2->i_len;
-			cmd[5] = n2->n_len;
+			cmd[4] = (uint8_t)i2->i_len;
+			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
@@ -1641,8 +1641,8 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_LOCKS;
 			cmd[3] = UPDATER_UPDATE_REMOVE;
-			cmd[4] = i2->i_len;
-			cmd[5] = n2->n_len;
+			cmd[4] = (uint8_t)i2->i_len;
+			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
@@ -1664,8 +1664,8 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 			SetWord(cmd, len - 2);
 			cmd[2] = UPDATER_UPDATE_RCS_LOCKS;
 			cmd[3] = UPDATER_UPDATE_ADD;
-			cmd[4] = i1->i_len;
-			cmd[5] = n1->n_len;
+			cmd[4] = (uint8_t)i1->i_len;
+			cmd[5] = (uint8_t)n1->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id,
@@ -1688,8 +1688,8 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 		SetWord(cmd, len - 2);
 		cmd[2] = UPDATER_UPDATE_RCS_LOCKS;
 		cmd[3] = UPDATER_UPDATE_ADD;
-		cmd[4] = i1->i_len;
-		cmd[5] = n1->n_len;
+		cmd[4] = (uint8_t)i1->i_len;
+		cmd[5] = (uint8_t)n1->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 			return (false);
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id, i1->i_len))
@@ -1823,7 +1823,7 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 		return (false);
 
 	/* num */
-	cmd[0] = rev->num.n_len;
+	cmd[0] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,
@@ -1832,7 +1832,7 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 	}
 
 	/* date */
-	cmd[0] = rev->date.rd_num.n_len;
+	cmd[0] = (uint8_t)rev->date.rd_num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->date.rd_num.n_str,
@@ -1843,7 +1843,7 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 			   rev->date.rd_num.n_len);
 
 	/* author */
-	cmd[0] = rev->author.i_len;
+	cmd[0] = (uint8_t)rev->author.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->author.i_id,
@@ -1854,7 +1854,7 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 			   rev->author.i_len);
 
 	/* state */
-	cmd[0] = rev->state.i_len;
+	cmd[0] = (uint8_t)rev->state.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->state.i_len > 0) {
@@ -1872,7 +1872,7 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 		return (false);
 	for (i = 0 ; i < branches->rb_count ; i++) {
 		struct rcsnum *num = &branches->rb_num[i];
-		cmd[0] = num->n_len;
+		cmd[0] = (uint8_t)num->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 			return (false);
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str,
@@ -1883,7 +1883,7 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 	}
 
 	/* next */
-	cmd[0] = rev->next.n_len;
+	cmd[0] = (uint8_t)rev->next.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->next.n_len > 0) {
@@ -1914,7 +1914,7 @@ filecmp_rcs_delta_remove(struct filecmp_args *fca, struct rcsnum *num)
 	SetWord(cmd, len - 2);
 	cmd[2] = UPDATER_UPDATE_RCS_DELTA;
 	cmd[3] = UPDATER_UPDATE_REMOVE;
-	cmd[4] = num->n_len;
+	cmd[4] = (uint8_t)num->n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str, num->n_len))
@@ -1977,7 +1977,7 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 		return (false);
 
 	/* num */
-	cmd[0]= rev->num.n_len;
+	cmd[0] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,
@@ -1986,7 +1986,7 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 	}
 
 	/* date */
-	cmd[0] = rev->date.rd_num.n_len;
+	cmd[0] = (uint8_t)rev->date.rd_num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->date.rd_num.n_str,
@@ -1995,7 +1995,7 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 	}
 
 	/* author */
-	cmd[0] = rev->author.i_len;
+	cmd[0] = (uint8_t)rev->author.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->author.i_id,
@@ -2004,7 +2004,7 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 	}
 
 	/* state */
-	cmd[0] = rev->state.i_len;
+	cmd[0] = (uint8_t)rev->state.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->state.i_len > 0) {
@@ -2020,7 +2020,7 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 		return (false);
 	for (i = 0 ; i < branches->rb_count ; i++) {
 		num = &branches->rb_num[i];
-		cmd[0] = num->n_len;
+		cmd[0] = (uint8_t)num->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 			return (false);
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str,
@@ -2030,7 +2030,7 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 	}
 
 	/* next */
-	cmd[0] = rev->next.n_len;
+	cmd[0] = (uint8_t)rev->next.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->next.n_len > 0) {
@@ -2059,7 +2059,7 @@ filecmp_rcs_desc(struct filecmp_args *fca, struct rcslib_file *rcs)
 		return (false);
 	SetWord(cmd, len - 2);
 	cmd[2] = UPDATER_UPDATE_RCS_DESC;
-	cmd[3] = rcs->desc.s_len;
+	cmd[3] = (uint8_t)rcs->desc.s_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 		return (false);
 	if (rcs->desc.s_len > 0) {
@@ -2179,7 +2179,7 @@ filecmp_rcs_deltatext_add(struct filecmp_args *fca,
 	SetWord(cmd, len - 2);
 	cmd[2] = UPDATER_UPDATE_RCS_DELTATEXT;
 	cmd[3] = UPDATER_UPDATE_ADD;
-	cmd[4] = rev->num.n_len;
+	cmd[4] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,
@@ -2241,7 +2241,7 @@ filecmp_rcs_deltatext_remove(struct filecmp_args *fca, struct rcsnum *num)
 	SetWord(cmd, len - 2);
 	cmd[2] = UPDATER_UPDATE_RCS_DELTATEXT;
 	cmd[3] = UPDATER_UPDATE_REMOVE;
-	cmd[4] = num->n_len;
+	cmd[4] = (uint8_t)num->n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str, num->n_len))
@@ -2283,7 +2283,7 @@ filecmp_rcs_deltatext_update(struct filecmp_args *fca,
 	SetWord(cmd, len - 2);
 	cmd[2] = UPDATER_UPDATE_RCS_DELTATEXT;
 	cmd[3] = UPDATER_UPDATE_UPDATE;
-	cmd[4] = rev->num.n_len;
+	cmd[4] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 		return (false);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,

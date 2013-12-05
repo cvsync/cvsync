@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -111,7 +111,8 @@ updater_generic_update(struct updater_args *uda)
 		if (wn == 0)
 			break;
 
-		(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer, wn);
+		(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer,
+				   (size_t)wn);
 		size -= (uint64_t)wn;
 	}
 	if (size != 0) {

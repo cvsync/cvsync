@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@ struct config {
 	char			cf_access_name[PATH_MAX + CVSYNC_NAME_MAX + 1];
 	char			cf_halt_name[PATH_MAX + CVSYNC_NAME_MAX + 1];
 	char			cf_pid_name[PATH_MAX + CVSYNC_NAME_MAX + 1];
-	uint8_t			cf_hash;
+	int			cf_hash;
 	struct collection	*cf_collections;
 	struct config_include	*cf_includes;
 	int			cf_refcnt;

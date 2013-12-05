@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,10 @@
 #ifndef __RCSLIB_H__
 #define	__RCSLIB_H__
 
+#define	RCSLIB_HASH_INIT	(5381)
+#define	RCSLIB_HASH(h, k)	((uint32_t)(((h) * 33) + (int)(k)))
+#define	RCSLIB_HASH_END(h)	((uint32_t)((h) + ((h) >> 5)))
+
 /*
  * rcsfile(5) - Manual Page Revision: 1.5.2.1; Release Date: 2001/07/22
  */
@@ -44,7 +48,7 @@ struct rcsnum {
 	char	*n_str;
 	size_t	n_len;
 	size_t	n_level;
-#define	RCSNUM_MAXLEVEL		16	/* heuristic */
+#define	RCSNUM_MAXLEVEL		(16)	/* heuristic */
 	int32_t	n_num[RCSNUM_MAXLEVEL];
 };
 #define	RCSNUM_SIZE		(sizeof(struct rcsnum))
@@ -78,7 +82,7 @@ struct rcslib_date {
 
 struct rcslib_delta {
 	size_t			rd_size, rd_count;
-	struct rcslib_revision	*rd_rev;
+	struct rcslib_revision	*rd_rev, **rd_rev_deltatext;
 };
 
 struct rcslib_lock {
@@ -106,7 +110,7 @@ struct rcslib_revision {
 	/* internal use */
 	struct rcslib_revision	*rv_next;
 	int			rv_flags;
-#define	RCSLIB_REVISION_DELTATEXT	0x0001
+#define	RCSLIB_REVISION_DELTATEXT	(0x0001)
 };
 #define	RCSLIB_REVISION_SIZE	(sizeof(struct rcslib_revision))
 
@@ -136,6 +140,13 @@ struct rcslib_file {
 
 	/* desc */
 	struct rcsstr		desc;
+};
+
+/* "[ad]<lineno> <count>\n" */
+struct rcslib_rcsdiff {
+	char	rd_cmd;
+	size_t	rd_lineno;
+	size_t	rd_count;
 };
 
 struct rcslib_file *rcslib_init(void *, off_t);

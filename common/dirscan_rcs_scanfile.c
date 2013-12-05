@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -231,7 +231,7 @@ dirscan_rcs_scanfile_down(struct dirscan_args *dsa, struct scanfile_attr *attr)
 	}
 	if (name < sv_name)
 		name = sv_name;
-	namelen = attr->a_namelen - (name - sv_name);
+	namelen = attr->a_namelen - (size_t)(name - sv_name);
 	if (namelen > dsa->dsa_namemax)
 		return (false);
 	if ((len = namelen + attr->a_auxlen + 4) > dsa->dsa_cmdmax)
@@ -239,7 +239,7 @@ dirscan_rcs_scanfile_down(struct dirscan_args *dsa, struct scanfile_attr *attr)
 
 	SetWord(cmd, len - 2);
 	cmd[2] = DIRCMP_DOWN;
-	cmd[3] = namelen;
+	cmd[3] = (uint8_t)namelen;
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, cmd, 4))
 		return (false);
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, name, namelen))
@@ -276,7 +276,7 @@ dirscan_rcs_scanfile_file(struct dirscan_args *dsa, struct scanfile_attr *attr)
 	}
 	if (name < sv_name)
 		name = sv_name;
-	namelen = attr->a_namelen - (name - sv_name);
+	namelen = attr->a_namelen - (size_t)(name - sv_name);
 	if (namelen > dsa->dsa_namemax)
 		return (false);
 	if ((len = namelen + attr->a_auxlen + 4) > dsa->dsa_cmdmax)
@@ -307,7 +307,7 @@ dirscan_rcs_scanfile_file(struct dirscan_args *dsa, struct scanfile_attr *attr)
 	default:
 		return (false);
 	}
-	cmd[3] = namelen;
+	cmd[3] = (uint8_t)namelen;
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, cmd, 4))
 		return (false);
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, name, namelen))

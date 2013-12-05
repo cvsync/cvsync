@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,17 +58,6 @@ static const struct hashent hashents[] = {
 #endif /* defined(HAVE_TIGER192) */
 	{ NULL,		0,	HASH_UNSPEC }
 };
-
-extern const struct hash_args MD5_args;
-#if defined(HAVE_RIPEMD160)
-extern const struct hash_args RIPEMD160_args;
-#endif /* defined(HAVE_RIPEMD160) */
-#if defined(HAVE_SHA1)
-extern const struct hash_args SHA1_args;
-#endif /* defined(HAVE_SHA1) */
-#if defined(HAVE_TIGER192)
-extern const struct hash_args TIGER192_args;
-#endif /* defined(HAVE_TIGER192) */
 
 int
 hash_pton(const char *name, size_t namelen)

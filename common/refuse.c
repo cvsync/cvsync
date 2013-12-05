@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -257,7 +257,7 @@ refuse_access(struct refuse_args *ra, struct cvsync_attr *ca)
 			if (rv != FNM_NOMATCH)
 				return (false);
 
-			namelen = ep - pat;
+			namelen = (size_t)(ep - pat);
 		}
 	}
 

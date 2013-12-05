@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,15 +33,12 @@
 #include <stdlib.h>
 
 #include <limits.h>
-#include <pthread.h>
 #include <string.h>
 
 #include "compat_stdbool.h"
 #include "compat_limits.h"
 
 #include "mdirent.h"
-
-pthread_mutex_t mdirent_mtx = PTHREAD_MUTEX_INITIALIZER;
 
 void
 mclosedir(struct mDIR *mdirp)

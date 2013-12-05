@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -177,8 +177,8 @@ dirscan_start(struct dirscan_args *dsa, const char *name, const char *relname)
 
 	SetWord(cmd, len - 2);
 	cmd[2] = DIRCMP_START;
-	cmd[3] = namelen;
-	cmd[4] = relnamelen;
+	cmd[3] = (uint8_t)namelen;
+	cmd[4] = (uint8_t)relnamelen;
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, cmd, 5))
 		return (false);
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, name, namelen))

@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,14 +36,14 @@ struct hash_args;
 struct mux;
 struct refuse_args;
 
-#define	FILESCAN_START		0x80
-#define	FILESCAN_END		0x81
+#define	FILESCAN_START		(0x80)
+#define	FILESCAN_END		(0x81)
 
-#define	FILESCAN_ADD		0x00
-#define	FILESCAN_REMOVE		0x01
-#define	FILESCAN_SETATTR	0x02
-#define	FILESCAN_UPDATE		0x03
-#define	FILESCAN_RCS_ATTIC	0x04
+#define	FILESCAN_ADD		(0x00)
+#define	FILESCAN_REMOVE		(0x01)
+#define	FILESCAN_SETATTR	(0x02)
+#define	FILESCAN_UPDATE		(0x03)
+#define	FILESCAN_RCS_ATTIC	(0x04)
 
 struct filescan_args {
 	struct mux		*fsa_mux;

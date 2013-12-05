@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2000-2005 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,18 +30,18 @@
 #ifndef __CVSYNC_H__
 #define	__CVSYNC_H__
 
-#define	CVSYNC_MAXCMDLEN	2048
-#define	CVSYNC_MAXADDRLEN	128
+#define	CVSYNC_MAXCMDLEN	(2048)
+#define	CVSYNC_MAXADDRLEN	(128)
 
 #define	CVSYNC_DEFAULT_PORT	"7777"
 
 #define	CVSYNC_TMPFILE		".cvsync.XXXXXX"
-#define	CVSYNC_TMPFILE_LEN	14	/* == strlen(CVSYNC_TMPFILE) */
+#define	CVSYNC_TMPFILE_LEN	(14)	/* == strlen(CVSYNC_TMPFILE) */
 
 #define	CVSYNC_THREAD_FAILURE	((void *)false)
 #define	CVSYNC_THREAD_SUCCESS	((void *)true)
 
-#define	CVSYNC_BSIZE		1048576 /* 1MB */
+#define	CVSYNC_BSIZE		(1048576) /* 1MB */
 
 enum {
 	CVSYNC_NO_ERROR		= 0x00,
