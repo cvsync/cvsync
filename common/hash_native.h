@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2012 MAEKAWA Masahide <maekawa@cvsync.org>
+ * Copyright (c) 2003-2013 MAEKAWA Masahide <maekawa@cvsync.org>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,5 +81,21 @@
 #endif /* __INTERIX || __NetBSD__ || __OpenBSD__ */
 
 #endif /* defined(HAVE_SHA1) */
+
+#if defined(__APPLE__)
+
+#include <CommonCrypto/CommonDigest.h>
+
+typedef CC_MD5_CTX	MD5_CTX;
+#define	MD5Init		CC_MD5_Init
+#define	MD5Update	CC_MD5_Update
+#define	MD5Final	CC_MD5_Final
+
+typedef CC_SHA1_CTX	SHA1_CTX;
+#define	SHA1Init	CC_SHA1_Init
+#define	SHA1Update	CC_SHA1_Update
+#define	SHA1Final	CC_SHA1_Final
+
+#endif /* defined(__APPLE__) */
 
 #endif /* __HASH_NATIVE_H__ */
