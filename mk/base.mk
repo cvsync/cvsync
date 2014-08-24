@@ -56,6 +56,11 @@ OSVER  ?= ${_OSVER}
 BINGRP	= admin
 endif # Darwin
 
+ifeq (${HOST_OS}, DragonFly)
+_OSVER := $(shell /sbin/sysctl -n kern.osreldate)
+OSVER  ?= ${_OSVER}
+endif # DragonFly
+
 ifeq (${HOST_OS}, FreeBSD)
 _OSVER := $(shell /sbin/sysctl -n kern.osreldate)
 OSVER  ?= ${_OSVER}

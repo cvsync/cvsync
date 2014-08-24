@@ -48,7 +48,12 @@ _PTHREAD_LIBS	= -lpthread
 endif # CYGWIN
 
 ifeq (${HOST_OS}, DragonFly)
+ifeq ($(shell ${TEST} ${OSVER} -lt 200000 && ${ECHO} yes), yes) # 2.0-RELEASE
 _PTHREAD_LIBS	= -lc_r
+else # 2.0-RELEASE
+_PTHREAD_CFLAGS+= -pthread
+_PTHREAD_LDFLAGS= -pthread
+endif # 2.0-RELEASE
 endif # DragonFly
 
 ifeq (${HOST_OS}, FreeBSD)
