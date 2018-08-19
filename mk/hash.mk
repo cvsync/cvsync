@@ -40,7 +40,12 @@ HASH_TYPE      ?= none
 endif # CYGWIN
 
 ifeq (${HOST_OS}, Darwin)
-HASH_TYPE      ?= none
+ifeq ($(shell ${TEST} ${OSVER} -lt 15 && ${ECHO} yes), yes)
+HASH_TYPE      ?= openssl
+endif
+ifeq ($(shell ${TEST} ${OSVER} -gt 15 && ${ECHO} yes), yes)
+HASH_TYPE      ?= native
+endif
 endif # Darwin
 
 ifeq (${HOST_OS}, Linux)

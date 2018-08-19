@@ -48,21 +48,9 @@ endif # CYGWIN
 
 ifeq (${HOST_OS}, Darwin)
 HAVE_SOCKLEN_T ?= no
-ifeq ($(shell ${TEST} ${OSVER} = "12.0.0" && ${ECHO} yes), yes) # OS X 10.8
+ifeq ($(shell ${TEST} ${OSVER} -ge 12 && ${ECHO} yes), yes) # OS X 10.8+
 HAVE_SOCKLEN_T	= yes
-endif # OS X 10.8
-ifeq ($(shell ${TEST} ${OSVER} = "12.3.0" && ${ECHO} yes), yes) # OS X 10.8.2
-HAVE_SOCKLEN_T	= yes
-endif # OS X 10.8.2
-ifeq ($(shell ${TEST} ${OSVER} = "12.4.0" && ${ECHO} yes), yes) # OS X 10.8.4
-HAVE_SOCKLEN_T	= yes
-endif # OS X 10.8.4
-ifeq ($(shell ${TEST} ${OSVER} = "12.5.0" && ${ECHO} yes), yes) # OS X 10.8.5
-HAVE_SOCKLEN_T	= yes
-endif # OS X 10.8.5
-ifeq ($(shell ${TEST} ${OSVER} = "13.0.0" && ${ECHO} yes), yes) # OS X 10.9
-HAVE_SOCKLEN_T	= yes
-endif # OS X 10.9
+endif
 ifeq (${HAVE_SOCKLEN_T}, no)
 CFLAGS += -Dsocklen_t=int
 endif # HAVE_SOCKLEN_T
