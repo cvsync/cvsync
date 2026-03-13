@@ -572,6 +572,9 @@ filescan_rcs_update(struct filescan_args *fsa)
 			return (false);
 		}
 		break;
+	default:
+		cvsync_fclose(cfp);
+		return (false);
 	}
 
 	SetWord(cmd, len + base - 2);
