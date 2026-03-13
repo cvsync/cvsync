@@ -1,30 +1,5 @@
 /*-
- * Copyright (c) 2003-2012 MAEKAWA Masahide <maekawa@cvsync.org>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the author nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * This software is released under the BSD License, see LICENSE.
  */
 
 #include <sys/types.h>
@@ -86,8 +61,7 @@ cvsup_init(const char *user, const char *group)
 	}
 	glen = strlen(group);
 
-	wn = snprintf(cvsup_userinfo, sizeof(cvsup_userinfo),
-		      "%lu#%.*s%lu#%.*s", (unsigned long)ulen, (int)ulen,
+	wn = snprintf(cvsup_userinfo, sizeof(cvsup_userinfo), "%lu#%.*s%lu#%.*s", (unsigned long)ulen, (int)ulen,
 		      user, (unsigned long)glen, (int)glen, group);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(cvsup_userinfo))) {
 		logmsg_err("Too long user/group name");
@@ -134,13 +108,10 @@ cvsup_write_dirdown(int fd, struct scanfile_attr *attr)
 	ssize_t wrn;
 	int wn;
 
-	if ((namelen = cvsup_escape_name(attr, name,
-					 sizeof(name))) == (size_t)-1) {
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
 		return (false);
-	}
 
-	wn = snprintf(attrstr, sizeof(attrstr), "D %.*s\n",
-		      (int)namelen, name);
+	wn = snprintf(attrstr, sizeof(attrstr), "D %.*s\n", (int)namelen, name);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long DirDown attribute");
 		return (false);
@@ -171,17 +142,13 @@ cvsup_write_dirup(int fd, struct scanfile_attr *attr)
 	if (!attr_rcs_decode_dir(attr->a_aux, attr->a_auxlen, &cattr))
 		return (false);
 
-	if ((namelen = cvsup_escape_name(attr, name,
-					 sizeof(name))) == (size_t)-1) {
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
 		return (false);
-	}
 
 	mlen = snprintf(attrstr, sizeof(attrstr), "%o", cattr.ca_mode);
 
-	wn = snprintf(attrstr, sizeof(attrstr),
-		      "U %.*s 3#1e11#2%.*s%d#%o1#0\n",
-		      (int)namelen, name, cvsup_userinfo_length,
-		      cvsup_userinfo, mlen, cattr.ca_mode);
+	wn = snprintf(attrstr, sizeof(attrstr), "U %.*s 3#1e11#2%.*s%d#%o1#0\n",
+		      (int)namelen, name, cvsup_userinfo_length, cvsup_userinfo, mlen, cattr.ca_mode);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long DirDown attribute");
 		return (false);
@@ -212,23 +179,16 @@ cvsup_write_file(int fd, struct scanfile_attr *attr)
 	if (!attr_rcs_decode_file(attr->a_aux, attr->a_auxlen, &cattr))
 		return (false);
 
-	if ((namelen = cvsup_escape_name(attr, name,
-					 sizeof(name))) == (size_t)-1) {
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
 		return (false);
-	}
 
-	tlen = snprintf(attrstr, sizeof(attrstr), "%lld",
-			(long long)cattr.ca_mtime);
-	slen = snprintf(attrstr, sizeof(attrstr), "%llu",
-			(unsigned long long)cattr.ca_size);
+	tlen = snprintf(attrstr, sizeof(attrstr), "%lld", (long long)cattr.ca_mtime);
+	slen = snprintf(attrstr, sizeof(attrstr), "%llu", (unsigned long long)cattr.ca_size);
 	mlen = snprintf(attrstr, sizeof(attrstr), "%o", cattr.ca_mode);
 
-	wn = snprintf(attrstr, sizeof(attrstr),
-		      "V %.*s 3#1e71#1%d#%lld%d#%llu%.*s%d#%o1#0\n",
-		      (int)namelen, name, tlen, (long long)cattr.ca_mtime,
-		      slen, (unsigned long long)cattr.ca_size,
-		      cvsup_userinfo_length, cvsup_userinfo,
-		      mlen, cattr.ca_mode);
+	wn = snprintf(attrstr, sizeof(attrstr), "V %.*s 3#1e71#1%d#%lld%d#%llu%.*s%d#%o1#0\n",
+		      (int)namelen, name, tlen, (long long)cattr.ca_mtime, slen, (unsigned long long)cattr.ca_size,
+		      cvsup_userinfo_length, cvsup_userinfo, mlen, cattr.ca_mode);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long File attribute");
 		return (false);
@@ -264,19 +224,14 @@ cvsup_write_rcs(int fd, struct scanfile_attr *attr)
 	else /* FILETYPE_RCS_ATTIC */
 		c = 'v';
 
-	if ((namelen = cvsup_escape_name(attr, name,
-					 sizeof(name))) == (size_t)-1) {
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
 		return (false);
-	}
 
-	tlen = snprintf(attrstr, sizeof(attrstr), "%lld",
-			(long long)cattr.ca_mtime);
+	tlen = snprintf(attrstr, sizeof(attrstr), "%lld", (long long)cattr.ca_mtime);
 	mlen = snprintf(attrstr, sizeof(attrstr), "%o", cattr.ca_mode);
 
-	wn = snprintf(attrstr, sizeof(attrstr),
-		      "%c %.*s 3#1e31#1%d#%lld%.*s%d#%o1#0\n",
-		      c, (int)namelen, name, tlen, (long long)cattr.ca_mtime,
-		      cvsup_userinfo_length, cvsup_userinfo,
+	wn = snprintf(attrstr, sizeof(attrstr), "%c %.*s 3#1e31#1%d#%lld%.*s%d#%o1#0\n",
+		      c, (int)namelen, name, tlen, (long long)cattr.ca_mtime, cvsup_userinfo_length, cvsup_userinfo,
 		      mlen, cattr.ca_mode);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long RCS attribute");
@@ -304,14 +259,11 @@ cvsup_write_symlink(int fd, struct scanfile_attr *attr)
 	ssize_t wrn;
 	int wn;
 
-	if ((namelen = cvsup_escape_name(attr, name,
-					 sizeof(name))) == (size_t)-1) {
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
 		return (false);
-	}
 
 	wn = snprintf(attrstr, sizeof(attrstr), "V %.*s 1#91#5%lu#%.*s\n",
-		      (int)namelen, name, (unsigned long)attr->a_auxlen,
-		      (int)attr->a_auxlen, (char *)attr->a_aux);
+		      (int)namelen, name, (unsigned long)attr->a_auxlen, (int)attr->a_auxlen, (char *)attr->a_aux);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long Symlink attribute");
 		return (false);

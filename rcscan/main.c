@@ -1,30 +1,5 @@
 /*-
- * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the author nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * This software is released under the BSD License, see LICENSE.
  */
 
 #include <sys/types.h>
@@ -94,14 +69,12 @@ main(int argc, char *argv[])
 		fname = argv[--argc];
 
 		if ((fd = open(fname, O_RDONLY, 0)) == -1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 
 		if ((size = lseek(fd, (off_t)0, SEEK_END)) == (off_t)-1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
@@ -112,22 +85,18 @@ main(int argc, char *argv[])
 		}
 		size64 = (uint64_t)size;
 		if (size64 > SIZE_MAX) {
-			(void)fprintf(stderr, "%s: %" PRIu64 ": %s\n", fname,
-				      size64, strerror(ERANGE));
+			(void)fprintf(stderr, "%s: %" PRIu64 ": %s\n", fname, size64, strerror(ERANGE));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
-		if ((addr = mmap(NULL, (size_t)size, PROT_READ, MAP_PRIVATE,
-				 fd, (off_t)0)) == MAP_FAILED) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+		if ((addr = mmap(NULL, (size_t)size, PROT_READ, MAP_PRIVATE, fd, (off_t)0)) == MAP_FAILED) {
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
 
 		if (close(fd) == -1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)munmap(addr, (size_t)size);
 			exit(EXIT_FAILURE);
 		}
@@ -146,8 +115,7 @@ main(int argc, char *argv[])
 		}
 
 		if (munmap(addr, (size_t)size) == -1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -239,8 +207,7 @@ rcscan_dump(struct rcslib_file *rcs)
 		iov[2].iov_len = 1;
 		iov[3].iov_base = num->n_str;
 		iov[3].iov_len = num->n_len;
-		len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len +
-		      iov[3].iov_len;
+		len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len + iov[3].iov_len;
 		if ((wn = writev(fd, iov, 4)) == -1) {
 			(void)fprintf(stderr, "%s\n", strerror(errno));
 			return (false);
@@ -272,8 +239,7 @@ rcscan_dump(struct rcslib_file *rcs)
 		iov[2].iov_len = 1;
 		iov[3].iov_base = num->n_str;
 		iov[3].iov_len = num->n_len;
-		len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len +
-		      iov[3].iov_len;
+		len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len + iov[3].iov_len;
 		if ((wn = writev(fd, iov, 4)) == -1) {
 			(void)fprintf(stderr, "%s\n", strerror(errno));
 			return (false);
@@ -319,10 +285,8 @@ rcscan_dump(struct rcslib_file *rcs)
 		iov[8].iov_len = 0;
 	iov[9].iov_base = "\n\n\n";
 	iov[9].iov_len = 3;
-	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len +
-	      iov[3].iov_len + iov[4].iov_len + iov[5].iov_len +
-	      iov[6].iov_len + iov[7].iov_len + iov[8].iov_len +
-	      iov[9].iov_len;
+	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len + iov[3].iov_len + iov[4].iov_len + iov[5].iov_len +
+	      iov[6].iov_len + iov[7].iov_len + iov[8].iov_len + iov[9].iov_len;
 
 	if ((wn = writev(fd, iov, 10)) == -1) {
 		(void)fprintf(stderr, "%s\n", strerror(errno));

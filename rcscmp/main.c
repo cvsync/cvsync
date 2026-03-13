@@ -1,30 +1,5 @@
 /*-
- * Copyright (c) 2000-2012 MAEKAWA Masahide <maekawa@cvsync.org>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the author nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * This software is released under the BSD License, see LICENSE.
  */
 
 #include <sys/types.h>
@@ -68,8 +43,7 @@ main(int argc, char *argv[])
 	argv++;
 
 	if ((type = hash_pton("sha1", 4)) == HASH_UNSPEC) {
-		(void)fprintf(stderr, "The hash type 'sha1' is not supported. "
-			      "Use the 'md5' instead\n");
+		(void)fprintf(stderr, "The hash type 'sha1' is not supported. " "Use the 'md5' instead\n");
 		type = hash_pton("md5", 3);
 	}
 	if (type == HASH_UNSPEC) {
@@ -85,14 +59,12 @@ main(int argc, char *argv[])
 		fname = argv[i];
 
 		if ((fd = open(fname, O_RDONLY, 0)) == -1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 
 		if ((size = lseek(fd, (off_t)0, SEEK_END)) == (off_t)-1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
@@ -103,22 +75,18 @@ main(int argc, char *argv[])
 		}
 		size64 = (uint64_t)size;
 		if (size64 > SIZE_MAX) {
-			(void)fprintf(stderr, "%s: %" PRIu64 ": %s\n", fname,
-				      size64, strerror(ERANGE));
+			(void)fprintf(stderr, "%s: %" PRIu64 ": %s\n", fname, size64, strerror(ERANGE));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
-		if ((addr = mmap(NULL, (size_t)size, PROT_READ, MAP_PRIVATE,
-				 fd, (off_t)0)) == MAP_FAILED) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+		if ((addr = mmap(NULL, (size_t)size, PROT_READ, MAP_PRIVATE, fd, (off_t)0)) == MAP_FAILED) {
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
 
 		if (close(fd) == -1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)munmap(addr, (size_t)size);
 			exit(EXIT_FAILURE);
 		}
@@ -134,8 +102,7 @@ main(int argc, char *argv[])
 		rcslib_destroy(rcs);
 
 		if (munmap(addr, (size_t)size) == -1) {
-			(void)fprintf(stderr, "%s: %s\n", fname,
-				      strerror(errno));
+			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -150,8 +117,7 @@ main(int argc, char *argv[])
 }
 
 void
-rcscmp_hash(struct rcslib_file *rcs, const struct hash_args *hashops,
-	    uint8_t *hash)
+rcscmp_hash(struct rcslib_file *rcs, const struct hash_args *hashops, uint8_t *hash)
 {
 	struct rcslib_revision *rev;
 	struct rcsid *id;
@@ -196,10 +162,8 @@ rcscmp_hash(struct rcslib_file *rcs, const struct hash_args *hashops,
 		(*hashops->update)(ctx, &strict, 1);
 	}
 
-	if (rcs->comment.s_len > 0) {
-		(*hashops->update)(ctx, rcs->comment.s_str,
-				   rcs->comment.s_len);
-	}
+	if (rcs->comment.s_len > 0)
+		(*hashops->update)(ctx, rcs->comment.s_str, rcs->comment.s_len);
 
 	if (rcs->expand.s_len > 0)
 		(*hashops->update)(ctx, rcs->expand.s_str, rcs->expand.s_len);
@@ -208,18 +172,13 @@ rcscmp_hash(struct rcslib_file *rcs, const struct hash_args *hashops,
 		rev = &rcs->delta.rd_rev[i];
 		(*hashops->update)(ctx, rev->num.n_str, rev->num.n_len);
 		(*hashops->update)(ctx, rev->author.i_id, rev->author.i_len);
-		if (rev->state.i_len > 0) {
-			(*hashops->update)(ctx, rev->state.i_id,
-					   rev->state.i_len);
-		}
+		if (rev->state.i_len > 0)
+			(*hashops->update)(ctx, rev->state.i_id, rev->state.i_len);
 		for (j = 0 ; j < rev->branches.rb_count ; j++) {
-			(*hashops->update)(ctx, rev->branches.rb_num[j].n_str,
-				   rev->branches.rb_num[j].n_len);
+			(*hashops->update)(ctx, rev->branches.rb_num[j].n_str, rev->branches.rb_num[j].n_len);
 		}
-		if (rev->next.n_len > 0) {
-			(*hashops->update)(ctx, rev->next.n_str,
-					   rev->next.n_len);
-		}
+		if (rev->next.n_len > 0)
+			(*hashops->update)(ctx, rev->next.n_str, rev->next.n_len);
 	}
 
 	if (rcs->desc.s_len > 0)
@@ -227,14 +186,10 @@ rcscmp_hash(struct rcslib_file *rcs, const struct hash_args *hashops,
 
 	for (i = 0 ; i < rcs->delta.rd_count ; i++) {
 		rev = &rcs->delta.rd_rev[i];
-		if (rev->log.s_len > 0) {
-			(*hashops->update)(ctx, rev->log.s_str,
-					   rev->log.s_len);
-		}
-		if (rev->text.s_len > 0) {
-			(*hashops->update)(ctx, rev->text.s_str,
-					   rev->text.s_len);
-		}
+		if (rev->log.s_len > 0)
+			(*hashops->update)(ctx, rev->log.s_str, rev->log.s_len);
+		if (rev->text.s_len > 0)
+			(*hashops->update)(ctx, rev->text.s_str, rev->text.s_len);
 	}
 
 	(*hashops->final)(ctx, hash);
