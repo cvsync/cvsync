@@ -5,11 +5,11 @@
 #ifndef CVSYNC_COMPAT_SIGNAL_H
 #define	CVSYNC_COMPAT_SIGNAL_H
 
-#if defined(CVSYNC_bsdi)
+#if defined(__bsdi__)
 #ifdef SIG_IGN
 #undef SIG_IGN
 #define	SIG_IGN		((void (*)(int))1)
 #endif /* SIG_IGN */
-#endif /* defined(CVSYNC_bsdi) */
+#endif /* defined(__bsdi__) */
 
 #endif /* CVSYNC_COMPAT_SIGNAL_H */

@@ -6,14 +6,14 @@
 #define	CVSYNC_COMPAT_LIMITS_H
 
 #ifndef CVSYNC_NAME_MAX
-#if defined(CVSYNC_APPLE__) || defined(__DragonFly__) || defined(__FreeBSD) || \
-    defined(CVSYNC_INTERIX) || defined(__NetBSD__) || defined(__OpenBSD)
+#if defined(__APPLE__) || defined(__DragonFly__) || defined(__FreeBSD__) || \
+    defined(__INTERIX) || defined(__NetBSD__) || defined(__OpenBSD__)
 #define	CVSYNC_NAME_MAX		NAME_MAX
-#else /* CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
-	 CVSYNC_NetBSD__ || __OpenBSD */
+#else /* __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
+	 __NetBSD__ || __OpenBSD__ */
 #define	CVSYNC_NAME_MAX		(255)
-#endif /* CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
-	  CVSYNC_NetBSD__ || __OpenBSD */
+#endif /* __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
+	  __NetBSD__ || __OpenBSD__ */
 #endif /* CVSYNC_NAME_MAX */
 
 #endif /* CVSYNC_COMPAT_LIMITS_H */

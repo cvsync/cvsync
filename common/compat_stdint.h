@@ -5,12 +5,12 @@
 #ifndef CVSYNC_COMPAT_STDINT_H
 #define	CVSYNC_COMPAT_STDINT_H
 
-#if defined(CVSYNC_APPLE__) || defined(__NetBSD__) || defined(__QNX) || \
+#if defined(__APPLE__) || defined(__NetBSD__) || defined(__QNX__) || \
     defined(__sun)
 #if !defined(NO_STDINT_H)
 #include <stdint.h>
 #endif /* defined(NO_STDINT_H) */
-#endif /* CVSYNC_APPLE__ || __NetBSD__ || __QNX__ || sun */
+#endif /* __APPLE__ || __NetBSD__ || __QNX__ || __sun */
 
 #ifndef INT64_MAX
 #define	INT64_MAX	(9223372036854775807LL)

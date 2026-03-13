@@ -6,15 +6,15 @@
 #define	CVSYNC_COMPAT_DIRENT_H
 
 #ifndef DIRENT_NAMLEN
-#if defined(_AIX) || defined(CVSYNC_APPLE__) || defined(__DragonFly) || \
-    defined(CVSYNC_FreeBSD__) || defined(__INTERIX) || defined(__NetBSD) || \
-    defined(CVSYNC_OpenBSD)
+#if defined(_AIX) || defined(__APPLE__) || defined(__DragonFly__) || \
+    defined(__FreeBSD__) || defined(__INTERIX) || defined(__NetBSD__) || \
+    defined(__OpenBSD__)
 #define	DIRENT_NAMLEN(p)	((p)->d_namlen)
-#else /* _AIX || CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
-	 CVSYNC_NetBSD__ || __OpenBSD */
+#else /* _AIX || __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
+	 __NetBSD__ || __OpenBSD__ */
 #define	DIRENT_NAMLEN(p)	(strlen((p)->d_name))
-#endif /* _AIX || CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
-	  CVSYNC_NetBSD__ || __OpenBSD */
+#endif /* _AIX || __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
+	  __NetBSD__ || __OpenBSD__ */
 #endif /* DIRENT_NAMLEN */
 
 #endif /* CVSYNC_COMPAT_DIRENT_H */

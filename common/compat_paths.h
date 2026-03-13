@@ -6,9 +6,9 @@
 #define	CVSYNC_COMPAT_PATHS_H
 
 #ifndef CVSYNC_PATH_DEV_NULL
-#if defined(CVSYNC_CYGWIN)
+#if defined(__CYGWIN__)
 #define	CVSYNC_PATH_DEV_NULL	NULL
-#endif /* CVSYNC_CYGWIN */
+#endif /* __CYGWIN__ */
 #if defined(__sun)
 #define	CVSYNC_PATH_DEV_NULL	"/dev/null"
 #endif /* defined(__sun) */
