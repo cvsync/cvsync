@@ -51,7 +51,7 @@ bool filescan_rcs_update_rcs_deltatext(struct filescan_args *,
 bool filescan_rcs_update_symlink(struct filescan_args *);
 bool filescan_rcs_replace(struct filescan_args *);
 
-static const uint8_t _cmde[3] = { 0x00, 0x01, FILECMP_UPDATE_END };
+static const uint8_t cmde[3] = { 0x00, 0x01, FILECMP_UPDATE_END };
 
 bool
 filescan_rcs(struct filescan_args *fsa)
@@ -668,7 +668,7 @@ filescan_rcs_update_rcs(struct filescan_args *fsa, struct cvsync_file *cfp)
 
 	rcslib_destroy(rcs);
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
@@ -734,7 +734,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			}
 		}
 	}
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	/* symbols */
@@ -776,7 +776,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			}
 		}
 	}
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	/* locks */
@@ -808,7 +808,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			}
 		}
 	}
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	/* comment */
@@ -841,7 +841,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 		}
 	}
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
@@ -912,7 +912,7 @@ filescan_rcs_update_rcs_delta(struct filescan_args *fsa,
 			return (false);
 	}
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
@@ -970,7 +970,7 @@ filescan_rcs_update_rcs_deltatext(struct filescan_args *fsa,
 			return (false);
 	}
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
