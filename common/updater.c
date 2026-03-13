@@ -54,7 +54,7 @@ updater_init(struct mux *mx, struct collection *cls, uint32_t proto, int type)
 	if ((uda->uda_buffer = malloc(uda->uda_bufsize)) == NULL) {
 		logmsg_err("%s", strerror(errno));
 		free(uda);
-		return (false);
+		return (NULL);
 	}
 
 	if (!hash_set(type, &uda->uda_hash_ops)) {

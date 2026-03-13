@@ -64,7 +64,7 @@ scanfile_rcs_init(struct scanfile_create_args *sca)
 	sra->sra_scanfile.sa_scanfile_name = sca->sca_name;
 	if (!scanfile_create_tmpfile(&sra->sra_scanfile, sca->sca_mode)) {
 		free(sra);
-		return (false);
+		return (NULL);
 	}
 
 	if (stat(sca->sca_prefix, &st) == -1) {

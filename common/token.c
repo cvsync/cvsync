@@ -28,7 +28,7 @@ token_get_keyword(FILE *fp, const struct token_keyword *keys)
 
 	if (!token_skip_whitespace(fp)) {
 		logmsg_err("premature EOF");
-		return (false);
+		return (NULL);
 	}
 
 	tk.length = 0;
@@ -56,7 +56,7 @@ token_get_keyword(FILE *fp, const struct token_keyword *keys)
 	tk.token[tk.length] = '\0';
 
 	if (ungetc(c, fp) == EOF)
-		return (false);
+		return (NULL);
 
 	for (key = keys ; key->name != NULL ; key++) {
 		if ((tk.length == key->namelen) &&
