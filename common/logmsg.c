@@ -36,7 +36,7 @@ static bool logmsg_do_debug[DEBUG_MAX] = {
 	false	/* DEBUG_ZLIB */
 };
 
-void __logmsg(int, FILE *, const char *, va_list);
+void logmsg_internal(int, FILE *, const char *, va_list);
 
 bool
 logmsg_open(const char *logname, bool use_syslog)
@@ -101,7 +101,7 @@ logmsg(const char *message, ...)
 		return;
 
 	va_start(ap, message);
-	__logmsg(LOG_INFO, logmsg_stdout, message, ap);
+	logmsg_internal(LOG_INFO, logmsg_stdout, message, ap);
 	va_end(ap);
 }
 
@@ -116,7 +116,7 @@ logmsg_debug(int priority, const char *message, ...)
 		return;
 
 	va_start(ap, message);
-	__logmsg(LOG_DEBUG, logmsg_stdout, message, ap);
+	logmsg_internal(LOG_DEBUG, logmsg_stdout, message, ap);
 	va_end(ap);
 }
 
@@ -128,7 +128,7 @@ logmsg_err(const char *message, ...)
 	logmsg_intr();
 
 	va_start(ap, message);
-	__logmsg(LOG_ERR, logmsg_stderr, message, ap);
+	logmsg_internal(LOG_ERR, logmsg_stderr, message, ap);
 	va_end(ap);
 }
 
@@ -145,7 +145,7 @@ logmsg_verbose(const char *message, ...)
 		return;
 
 	va_start(ap, message);
-	__logmsg(LOG_INFO, logmsg_stdout, message, ap);
+	logmsg_internal(LOG_INFO, logmsg_stdout, message, ap);
 	va_end(ap);
 }
 
@@ -197,7 +197,7 @@ logmsg_intr(void)
 }
 
 void
-__logmsg(int priority, FILE *fp, const char *message, va_list ap)
+logmsg_internal(int priority, FILE *fp, const char *message, va_list ap)
 {
 	struct tm tm;
 	time_t now;
