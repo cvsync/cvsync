@@ -21,7 +21,7 @@ struct listent {
 typedef void (*list_destructor)(void *);
 
 #define	list_set_destructor(l, f) \
-		list_set_destructor_internal((l), (list_destructor)(f))
+		list_set_destructor_internal((l), (list_destructor)(void *)(f))
 
 struct list *list_init(void);
 void list_destroy(struct list *);

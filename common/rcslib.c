@@ -727,7 +727,7 @@ rcslib_parse_access(char *sp, const char *bp, struct rcslib_access *access)
 
 	if (access->ra_count > 0) {
 		qsort(access->ra_id, access->ra_count, RCSID_SIZE,
-		      (rcslib_cmp_func)rcslib_cmp_id);
+		      (rcslib_cmp_func)(void *)rcslib_cmp_id);
 	}
 
 	return (sp);
@@ -811,7 +811,7 @@ rcslib_parse_symbols(char *sp, const char *bp, struct rcslib_symbols *symbols)
 
 	if (symbols->rs_count > 0) {
 		qsort(symbols->rs_symbols, symbols->rs_count,
-		      RCSLIB_SYMBOL_SIZE, (rcslib_cmp_func)rcslib_cmp_symbol);
+		      RCSLIB_SYMBOL_SIZE, (rcslib_cmp_func)(void *)rcslib_cmp_symbol);
 	}
 
 	return (sp);
@@ -917,7 +917,7 @@ do_parse_strict:
 
 	if (locks->rl_count > 0) {
 		qsort(locks, locks->rl_count, RCSLIB_LOCK_SIZE,
-		      (rcslib_cmp_func)rcslib_cmp_lock);
+		      (rcslib_cmp_func)(void *)rcslib_cmp_lock);
 	}
 
 	return (sp);
@@ -1778,5 +1778,5 @@ rcslib_sort_revision(struct rcslib_file *rcs)
 	}
 
 	qsort(rcs->delta.rd_rev, rcs->delta.rd_count, RCSLIB_REVISION_SIZE,
-	      (rcslib_cmp_func)rcslib_cmp_num);
+	      (rcslib_cmp_func)(void *)rcslib_cmp_num);
 }
