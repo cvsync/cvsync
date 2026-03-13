@@ -25,8 +25,8 @@
 bool
 filescan_generic_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 {
-	static const uint8_t _cmds[3] = { 0x00, 0x01, FILECMP_UPDATE_GENERIC };
-	static const uint8_t _cmde[3] = { 0x00, 0x01, FILECMP_UPDATE_END };
+	static const uint8_t cmds[3] = { 0x00, 0x01, FILECMP_UPDATE_GENERIC };
+	static const uint8_t cmde[3] = { 0x00, 0x01, FILECMP_UPDATE_END };
 	const struct hash_args *hashops = fsa->fsa_hash_ops;
 	struct cvsync_attr *cap = &fsa->fsa_attr;
 	uint8_t *cmd = fsa->fsa_cmd;
@@ -37,7 +37,7 @@ filescan_generic_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 		return (false);
 	}
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmds, sizeof(_cmds)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmds, sizeof(cmds)))
 		return (false);
 
 	if (!(*hashops->init)(&fsa->fsa_hash_ctx))
@@ -49,7 +49,7 @@ filescan_generic_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, hashops->length))
 		return (false);
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);

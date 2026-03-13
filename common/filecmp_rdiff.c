@@ -30,8 +30,8 @@
 bool
 filecmp_rdiff_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 {
-	static const uint8_t _cmds[3] = { 0x00, 0x01, UPDATER_UPDATE_RDIFF };
-	static const uint8_t _cmde[3] = { 0x00, 0x01, UPDATER_UPDATE_END };
+	static const uint8_t cmds[3] = { 0x00, 0x01, UPDATER_UPDATE_RDIFF };
+	static const uint8_t cmde[3] = { 0x00, 0x01, UPDATER_UPDATE_END };
 	const struct hash_args *hashops = fca->fca_hash_ops;
 	struct cvsync_attr *cap = &fca->fca_attr;
 	uint64_t fsize, offset = 0;
@@ -55,7 +55,7 @@ filecmp_rdiff_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 	else
 		rsize = bsize;
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmds, sizeof(_cmds)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmds, sizeof(cmds)))
 		return (false);
 
 	sp = cfp->cf_addr;
@@ -153,7 +153,7 @@ filecmp_rdiff_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, hashops->length))
 		return (false);
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmde, sizeof(_cmde)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);

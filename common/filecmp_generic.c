@@ -26,8 +26,8 @@
 bool
 filecmp_generic_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 {
-	static const uint8_t _cmds[3] = { 0x00, 0x01, UPDATER_UPDATE_GENERIC };
-	static const uint8_t _cmde[3] = { 0x00, 0x01, UPDATER_UPDATE_END };
+	static const uint8_t cmds[3] = { 0x00, 0x01, UPDATER_UPDATE_GENERIC };
+	static const uint8_t cmde[3] = { 0x00, 0x01, UPDATER_UPDATE_END };
 	const struct hash_args *hashops = fca->fca_hash_ops;
 	struct cvsync_attr *cap = &fca->fca_attr;
 	uint8_t *cmd = fca->fca_cmd;
@@ -38,7 +38,7 @@ filecmp_generic_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 		return (false);
 	}
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmds, sizeof(_cmds)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmds, sizeof(cmds)))
 		return (false);
 
 	SetDDWord(cmd, cfp->cf_size);
@@ -53,7 +53,7 @@ filecmp_generic_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 		return (false);
 	}
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmde, sizeof(_cmde)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);

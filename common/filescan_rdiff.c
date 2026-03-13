@@ -26,8 +26,8 @@
 bool
 filescan_rdiff_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 {
-	static const uint8_t _cmds[3] = { 0x00, 0x01, FILECMP_UPDATE_RDIFF };
-	static const uint8_t _cmde[3] = { 0x00, 0x01, FILECMP_UPDATE_END };
+	static const uint8_t cmds[3] = { 0x00, 0x01, FILECMP_UPDATE_RDIFF };
+	static const uint8_t cmde[3] = { 0x00, 0x01, FILECMP_UPDATE_END };
 	const struct hash_args *hashops = fsa->fsa_hash_ops;
 	struct cvsync_attr *cap = &fsa->fsa_attr;
 	uint32_t weak, bsize = RDIFF_MIN_BLOCKSIZE;
@@ -49,7 +49,7 @@ filescan_rdiff_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 		return (false);
 	}
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmds, sizeof(_cmds)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmds, sizeof(cmds)))
 		return (false);
 
 	SetDDWord(cmd, (uint64_t)cfp->cf_size);
@@ -80,7 +80,7 @@ filescan_rdiff_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 		sp += len;
 	}
 
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, _cmde, sizeof(_cmde)))
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);

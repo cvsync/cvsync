@@ -72,7 +72,7 @@ bool filecmp_rcs_ignore_rcs_deltatext(struct filecmp_args *, uint32_t);
 bool filecmp_rcs_ignore_rcs_list(struct filecmp_args *, uint8_t);
 bool filecmp_rcs_ignore_rcs_string(struct filecmp_args *, uint8_t);
 
-static const uint8_t _cmde[3] = { 0x00, 0x01, UPDATER_UPDATE_END };
+static const uint8_t cmde[3] = { 0x00, 0x01, UPDATER_UPDATE_END };
 
 bool
 filecmp_rcs(struct filecmp_args *fca)
@@ -432,7 +432,7 @@ filecmp_rcs_add_file(struct filecmp_args *fca)
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, hashops->length))
 		return (false);
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmde, sizeof(_cmde)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
@@ -1046,7 +1046,7 @@ filecmp_rcs_update_rcs(struct filecmp_args *fca, struct cvsync_file *cfp)
 
 	rcslib_destroy(rcs);
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmde, sizeof(_cmde)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
@@ -1288,7 +1288,7 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 	if (cmd[2] != FILECMP_UPDATE_END)
 		return (false);
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmde, sizeof(_cmde)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
@@ -1763,7 +1763,7 @@ filecmp_rcs_delta(struct filecmp_args *fca, struct rcslib_file *rcs,
 	if (cmd[2] != FILECMP_UPDATE_END)
 		return (false);
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmde, sizeof(_cmde)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);
 
 	*ndeltas = n;
@@ -2134,7 +2134,7 @@ filecmp_rcs_deltatext(struct filecmp_args *fca, struct rcslib_file *rcs,
 	if (cmd[2] != FILECMP_UPDATE_END)
 		return (false);
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, _cmde, sizeof(_cmde)))
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);
 
 	return (true);
