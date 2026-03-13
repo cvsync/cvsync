@@ -719,7 +719,7 @@ rcslib_parse_access(char *sp, const char *bp, struct rcslib_access *access)
 		return (NULL);
 	}
 
-	RCS_SKIP_NORET(sp, bp);
+	RCS_SKIP_NORET(sp, bp)
 	if (sp > bp) {
 		free(access->ra_id);
 		return (NULL);
