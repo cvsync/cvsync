@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __ATTRIBUTE_H__
-#define	__ATTRIBUTE_H__
+#ifndef CVSYNC_ATTRIBUTE_H
+#define	CVSYNC_ATTRIBUTE_H
 
 struct cvsync_attr;
 
@@ -53,4 +53,4 @@ bool attr_rcs_decode_dir(uint8_t *, size_t, struct cvsync_attr *);
 bool attr_rcs_decode_file(uint8_t *, size_t, struct cvsync_attr *);
 bool attr_rcs_decode_rcs(uint8_t *, size_t, struct cvsync_attr *);
 
-#endif /* __ATTRIBUTE_H__ */
+#endif /* CVSYNC_ATTRIBUTE_H */

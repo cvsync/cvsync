@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_STDLIB_H__
-#define	__COMPAT_STDLIB_H__
+#ifndef CVSYNC_COMPAT_STDLIB_H
+#define	CVSYNC_COMPAT_STDLIB_H
 
 #if defined(NO_PROTOTYPE_MKSTEMP)
 int mkstemp(char *);
@@ -38,4 +38,4 @@ int mkstemp(char *);
 char *realpath(const char *, char *);
 #endif /* defined(NO_PROTOTYPE_REALPATH) */
 
-#endif /* __COMPAT_STDLIB_H__ */
+#endif /* CVSYNC_COMPAT_STDLIB_H */

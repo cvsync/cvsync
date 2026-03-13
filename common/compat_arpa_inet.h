@@ -27,11 +27,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_ARPA_INET_H__
-#define	__COMPAT_ARPA_INET_H__
+#ifndef CVSYNC_COMPAT_ARPA_INET_H
+#define	CVSYNC_COMPAT_ARPA_INET_H
 
 #if defined(NO_PROTOTYPE_INET_PTON)
 int inet_pton(int, const char *, void *);
 #endif /* defined(NO_PROTOTYPE_INET_PTON) */
 
-#endif /* __COMPAT_ARPA_INET_H__ */
+#endif /* CVSYNC_COMPAT_ARPA_INET_H */

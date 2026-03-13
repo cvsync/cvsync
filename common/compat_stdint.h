@@ -27,15 +27,15 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_STDINT_H__
-#define	__COMPAT_STDINT_H__
+#ifndef CVSYNC_COMPAT_STDINT_H
+#define	CVSYNC_COMPAT_STDINT_H
 
-#if defined(__APPLE__) || defined(__NetBSD__) || defined(__QNX__) || \
+#if defined(CVSYNC_APPLE__) || defined(__NetBSD__) || defined(__QNX) || \
     defined(__sun)
 #if !defined(NO_STDINT_H)
 #include <stdint.h>
 #endif /* defined(NO_STDINT_H) */
-#endif /* __APPLE__ || __NetBSD__ || __QNX__ || __sun */
+#endif /* CVSYNC_APPLE__ || __NetBSD__ || __QNX__ || sun */
 
 #ifndef INT64_MAX
 #define	INT64_MAX	(9223372036854775807LL)
@@ -57,4 +57,4 @@
 #define	SIZE_MAX	((size_t)-1)
 #endif /* SIZE_MAX */
 
-#endif /* __COMPAT_STDINT_H__ */
+#endif /* CVSYNC_COMPAT_STDINT_H */

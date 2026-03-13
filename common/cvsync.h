@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __CVSYNC_H__
-#define	__CVSYNC_H__
+#ifndef CVSYNC_CVSYNC_H
+#define	CVSYNC_CVSYNC_H
 
 #define	CVSYNC_MAXCMDLEN	(2048)
 #define	CVSYNC_MAXADDRLEN	(128)
@@ -124,4 +124,4 @@ bool cvsync_rcs_remove_attic(char *, size_t);
 bool cvsync_rcs_filename(const char *, size_t);
 bool cvsync_rcs_pathname(const char *, size_t);
 
-#endif /* __CVSYNC_H__ */
+#endif /* CVSYNC_CVSYNC_H */

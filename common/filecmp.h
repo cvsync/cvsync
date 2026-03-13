@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __FILECMP_H__
-#define	__FILECMP_H__
+#ifndef CVSYNC_FILECMP_H
+#define	CVSYNC_FILECMP_H
 
 struct collection;
 struct cvsync_attr;
@@ -108,4 +108,4 @@ bool filecmp_rdiff_update(struct filecmp_args *, struct cvsync_file *);
 bool filecmp_rdiff_ignore(struct filecmp_args *);
 bool filecmp_rdiff_ischanged(struct filecmp_args *, struct cvsync_file *);
 
-#endif /* __FILECMP_H__ */
+#endif /* CVSYNC_FILECMP_H */

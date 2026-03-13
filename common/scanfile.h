@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __SCANFILE_H__
-#define	__SCANFILE_H__
+#ifndef CVSYNC_SCANFILE_H
+#define	CVSYNC_SCANFILE_H
 
 struct cvsync_file;
 
@@ -86,4 +86,4 @@ bool scanfile_update(struct scanfile_args *, uint8_t, void *, size_t, void *,
 bool scanfile_create(struct scanfile_create_args *);
 bool scanfile_rcs(struct scanfile_create_args *);
 
-#endif /* __SCANFILE_H__ */
+#endif /* CVSYNC_SCANFILE_H */

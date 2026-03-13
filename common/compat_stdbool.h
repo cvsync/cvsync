@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_STDBOOL_H__
-#define	__COMPAT_STDBOOL_H__
+#ifndef CVSYNC_COMPAT_STDBOOL_H
+#define	CVSYNC_COMPAT_STDBOOL_H
 
 #if !defined(NO_STDBOOL_H)
 #include <stdbool.h>
@@ -41,4 +41,4 @@
 #define	__bool_true_false_are_defined	(1)
 #endif /* defined(NO_STDBOOL_H) */
 
-#endif /* __COMPAT_STDBOOL_H__ */
+#endif /* CVSYNC_COMPAT_STDBOOL_H */

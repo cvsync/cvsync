@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __FILESCAN_H__
-#define	__FILESCAN_H__
+#ifndef CVSYNC_FILESCAN_H
+#define	CVSYNC_FILESCAN_H
 
 struct collection;
 struct cvsync_file;
@@ -81,4 +81,4 @@ bool filescan_rcs(struct filescan_args *);
 bool filescan_generic_update(struct filescan_args *, struct cvsync_file *);
 bool filescan_rdiff_update(struct filescan_args *, struct cvsync_file *);
 
-#endif /* __FILESCAN_H__ */
+#endif /* CVSYNC_FILESCAN_H */

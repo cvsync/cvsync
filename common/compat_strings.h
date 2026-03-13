@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_STRINGS_H__
-#define	__COMPAT_STRINGS_H__
+#ifndef CVSYNC_COMPAT_STRINGS_H
+#define	CVSYNC_COMPAT_STRINGS_H
 
 #if defined(NO_PROTOTYPE_STRCASECMP)
 int strcasecmp(const char *, const char *);
@@ -38,4 +38,4 @@ int strcasecmp(const char *, const char *);
 int strncasecmp(const char *, const char *, size_t);
 #endif /* defined(NO_PROTOTYPE_STRNCASECMP) */
 
-#endif /* __COMPAT_STRINGS_H__ */
+#endif /* CVSYNC_COMPAT_STRINGS_H */

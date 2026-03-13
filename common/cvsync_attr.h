@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __CVSYNC_ATTR_H__
-#define	__CVSYNC_ATTR_H__
+#ifndef CVSYNC_CVSYNC_ATTR_H
+#define	CVSYNC_CVSYNC_ATTR_H
 
 #define	CVSYNC_MAXAUXLEN	(PATH_MAX + CVSYNC_NAME_MAX)
 
@@ -45,4 +45,4 @@ struct cvsync_attr {
 	size_t		ca_auxlen;
 };
 
-#endif /* __CVSYNC_ATTR_H__ */
+#endif /* CVSYNC_CVSYNC_ATTR_H */

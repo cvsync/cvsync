@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __DIRSCAN_H__
-#define	__DIRSCAN_H__
+#ifndef CVSYNC_DIRSCAN_H
+#define	CVSYNC_DIRSCAN_H
 
 struct collection;
 struct mux;
@@ -59,4 +59,4 @@ bool dirscan_end(struct dirscan_args *);
 bool dirscan_rcs(struct dirscan_args *);
 bool dirscan_rcs_scanfile(struct dirscan_args *);
 
-#endif /* __DIRSCAN_H__ */
+#endif /* CVSYNC_DIRSCAN_H */

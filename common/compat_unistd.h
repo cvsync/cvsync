@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_UNISTD_H__
-#define	__COMPAT_UNISTD_H__
+#ifndef CVSYNC_COMPAT_UNISTD_H
+#define	CVSYNC_COMPAT_UNISTD_H
 
 #if defined(NO_PROTOTYPE_READLINK)
 ssize_t readlink(const char *, char *, size_t);
@@ -38,4 +38,4 @@ ssize_t readlink(const char *, char *, size_t);
 int symlink(const char *, const char *);
 #endif /* defined(NO_PROTOTYPE_SYMLINK) */
 
-#endif /* __COMPAT_UNISTD_H__ */
+#endif /* CVSYNC_COMPAT_UNISTD_H */

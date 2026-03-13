@@ -27,18 +27,18 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __HASH_NATIVE_H__
-#define	__HASH_NATIVE_H__
+#ifndef CVSYNC_HASH_NATIVE_H
+#define	CVSYNC_HASH_NATIVE_H
 
 /*
  * MD5 Message-Digest Algorithm - RFC 1321
  */
 
-#if defined(__DragonFly__) || defined(__FreeBSD__) || defined(__INTERIX) || \
-    defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
+#if defined(CVSYNC_DragonFly__) || defined(__FreeBSD__) || defined(INTERIX) || \
+    defined(CVSYNC_NetBSD__) || defined(__OpenBSD__) || defined(sun)
 #include <md5.h>
-#endif /* __DragonFly__ || __FreeBSD__ || __INTERIX || __NetBSD__ ||
-	  __OpenBSD__ || __sun */
+#endif /* CVSYNC_DragonFly__ || __FreeBSD__ || __INTERIX || __NetBSD ||
+	  CVSYNC_OpenBSD__ || sun */
 
 /*
  * RIPEMD160
@@ -46,19 +46,19 @@
 
 #if defined(HAVE_RIPEMD160)
 
-#if defined(__FreeBSD__)
+#if defined(CVSYNC_FreeBSD)
 #include <ripemd.h>
 
 #define	RMD160Init	RIPEMD160_Init
 #define	RMD160Update	RIPEMD160_Update
 #define	RMD160Final	RIPEMD160_Final
 #define	RMD160_CTX	RIPEMD160_CTX
-#endif /* __FreeBSD__ */
+#endif /* CVSYNC_FreeBSD */
 
-#if defined(__DragonFly__) || defined(__INTERIX) || defined(__NetBSD__) || \
-    defined(__OpenBSD__)
+#if defined(CVSYNC_DragonFly__) || defined(__INTERIX) || defined(__NetBSD) || \
+    defined(CVSYNC_OpenBSD)
 #include <rmd160.h>
-#endif /* __DragonFly__ || __INTERIX || __NetBSD__ || __OpenBSD__ */
+#endif /* CVSYNC_DragonFly__ || __INTERIX || __NetBSD__ || __OpenBSD */
 
 #endif /* defined(HAVE_RIPEMD160) */
 
@@ -68,21 +68,21 @@
 
 #if defined(HAVE_SHA1)
 
-#if defined(__DragonFly__) || defined(__FreeBSD__)
+#if defined(CVSYNC_DragonFly__) || defined(__FreeBSD)
 #include <sha.h>
 
 #define	SHA1Init	SHA1_Init
 #define	SHA1Update	SHA1_Update
 #define	SHA1Final	SHA1_Final
-#endif /* __DragonFly__ || __FreeBSD__ */
+#endif /* CVSYNC_DragonFly__ || __FreeBSD */
 
-#if defined(__INTERIX) || defined(__NetBSD__) || defined(__OpenBSD__)
+#if defined(CVSYNC_INTERIX) || defined(__NetBSD__) || defined(__OpenBSD)
 #include <sha1.h>
-#endif /* __INTERIX || __NetBSD__ || __OpenBSD__ */
+#endif /* CVSYNC_INTERIX || __NetBSD__ || __OpenBSD */
 
 #endif /* defined(HAVE_SHA1) */
 
-#if defined(__APPLE__)
+#if defined(CVSYNC_APPLE)
 
 #include <CommonCrypto/CommonDigest.h>
 
@@ -96,6 +96,6 @@ typedef CC_SHA1_CTX	SHA1_CTX;
 #define	SHA1Update	CC_SHA1_Update
 #define	SHA1Final	CC_SHA1_Final
 
-#endif /* defined(__APPLE__) */
+#endif /* defined(CVSYNC_APPLE) */
 
-#endif /* __HASH_NATIVE_H__ */
+#endif /* CVSYNC_HASH_NATIVE_H */

@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __MUX_ZLIB_H__
-#define	__MUX_ZLIB_H__
+#ifndef CVSYNC_MUX_ZLIB_H
+#define	CVSYNC_MUX_ZLIB_H
 
 struct mux_stream_zlib {
 	z_stream	ms_zstream_in;
@@ -40,4 +40,4 @@ struct mux_stream_zlib {
 	size_t		ms_zbufsize_out;
 };
 
-#endif /* __MUX_ZLIB_H__ */
+#endif /* CVSYNC_MUX_ZLIB_H */

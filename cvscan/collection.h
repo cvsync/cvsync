@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COLLECTION_H__
-#define	__COLLECTION_H__
+#ifndef CVSYNC_COLLECTION_H
+#define	CVSYNC_COLLECTION_H
 
 struct collection {
 	struct collection	*cl_next;
@@ -56,4 +56,4 @@ struct collection *collection_lookup(struct collection *, const char *,
 				     const char *);
 bool collection_set_default(struct collection *, const char *);
 
-#endif /* __COLLECTION_H__ */
+#endif /* CVSYNC_COLLECTION_H */

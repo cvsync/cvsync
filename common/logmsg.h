@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LOGMSG_H__
-#define	__LOGMSG_H__
+#ifndef CVSYNC_LOGMSG_H
+#define	CVSYNC_LOGMSG_H
 
 enum {
 	DEBUG_BASE = 0,
@@ -49,4 +49,4 @@ void logmsg_intr(void);
 
 extern bool logmsg_detail, logmsg_quiet;
 
-#endif /* __LOGMSG_H__ */
+#endif /* CVSYNC_LOGMSG_H */

@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __RDIFF_H__
-#define	__RDIFF_H__
+#ifndef CVSYNC_RDIFF_H
+#define	CVSYNC_RDIFF_H
 
 struct hash_args;
 struct mux;
@@ -54,4 +54,4 @@ bool rdiff_copy(struct mux *, uint8_t, off_t, size_t);
 bool rdiff_data(struct mux *, uint8_t, const void *, size_t);
 bool rdiff_eof(struct mux *, uint8_t);
 
-#endif /* __RDIFF_H__ */
+#endif /* CVSYNC_RDIFF_H */

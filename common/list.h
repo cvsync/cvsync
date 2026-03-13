@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LIST_H__
-#define	__LIST_H__
+#ifndef CVSYNC_LIST_H
+#define	CVSYNC_LIST_H
 
 struct listent;
 
@@ -58,4 +58,4 @@ void *list_remove_head(struct list *);
 void *list_remove_tail(struct list *);
 bool list_isempty(struct list *);
 
-#endif /* __LIST_H__ */
+#endif /* CVSYNC_LIST_H */

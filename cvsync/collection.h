@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COLLECTION_H__
-#define	__COLLECTION_H__
+#ifndef CVSYNC_COLLECTION_H
+#define	CVSYNC_COLLECTION_H
 
 struct refuse_args;
 struct scanfile_args;
@@ -58,4 +58,4 @@ void collection_destroy(struct collection *);
 void collection_destroy_all(struct collection *);
 bool collection_resolv_prefix(struct collection *);
 
-#endif /* __COLLECTION_H__ */
+#endif /* CVSYNC_COLLECTION_H */

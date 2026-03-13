@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __DIRCMP_H__
-#define	__DIRCMP_H__
+#ifndef CVSYNC_DIRCMP_H
+#define	CVSYNC_DIRCMP_H
 
 struct collection;
 struct cvsync_attr;
@@ -80,4 +80,4 @@ bool dircmp_access_scanfile(struct dircmp_args *, struct scanfile_attr *);
 bool dircmp_rcs(struct dircmp_args *);
 bool dircmp_rcs_scanfile(struct dircmp_args *);
 
-#endif /* __DIRCMP_H__ */
+#endif /* CVSYNC_DIRCMP_H */

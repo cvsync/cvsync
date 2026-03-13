@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __REFUSE_H__
-#define	__REFUSE_H__
+#ifndef CVSYNC_REFUSE_H
+#define	CVSYNC_REFUSE_H
 
 struct cvsync_attr;
 
@@ -41,4 +41,4 @@ struct refuse_args *refuse_open(const char *);
 void refuse_close(struct refuse_args *);
 bool refuse_access(struct refuse_args *, struct cvsync_attr *);
 
-#endif /* __REFUSE_H__ */
+#endif /* CVSYNC_REFUSE_H */

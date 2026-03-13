@@ -27,19 +27,19 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_DIRENT_H__
-#define	__COMPAT_DIRENT_H__
+#ifndef CVSYNC_COMPAT_DIRENT_H
+#define	CVSYNC_COMPAT_DIRENT_H
 
 #ifndef DIRENT_NAMLEN
-#if defined(_AIX) || defined(__APPLE__) || defined(__DragonFly__) || \
-    defined(__FreeBSD__) || defined(__INTERIX) || defined(__NetBSD__) || \
-    defined(__OpenBSD__)
+#if defined(_AIX) || defined(CVSYNC_APPLE__) || defined(__DragonFly) || \
+    defined(CVSYNC_FreeBSD__) || defined(__INTERIX) || defined(__NetBSD) || \
+    defined(CVSYNC_OpenBSD)
 #define	DIRENT_NAMLEN(p)	((p)->d_namlen)
-#else /* _AIX || __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
-	 __NetBSD__ || __OpenBSD__ */
+#else /* _AIX || CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
+	 CVSYNC_NetBSD__ || __OpenBSD */
 #define	DIRENT_NAMLEN(p)	(strlen((p)->d_name))
-#endif /* _AIX || __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
-	  __NetBSD__ || __OpenBSD__ */
+#endif /* _AIX || CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
+	  CVSYNC_NetBSD__ || __OpenBSD */
 #endif /* DIRENT_NAMLEN */
 
-#endif /* __COMPAT_DIRENT_H__ */
+#endif /* CVSYNC_COMPAT_DIRENT_H */

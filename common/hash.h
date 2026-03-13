@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __HASH_H__
-#define	__HASH_H__
+#ifndef CVSYNC_HASH_H
+#define	CVSYNC_HASH_H
 
 enum {
 	HASH_UNSPEC	= 0,
@@ -74,4 +74,4 @@ extern const struct hash_args SHA1_args;
 extern const struct hash_args TIGER192_args;
 #endif /* defined(HAVE_TIGER192) */
 
-#endif /* __HASH_H__ */
+#endif /* CVSYNC_HASH_H */

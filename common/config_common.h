@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __CONFIG_COMMON_H__
-#define	__CONFIG_COMMON_H__
+#ifndef CVSYNC_CONFIG_COMMON_H
+#define	CVSYNC_CONFIG_COMMON_H
 
 struct config;
 
@@ -55,4 +55,4 @@ bool config_resolv_prefix(struct config *, struct collection *, bool);
 bool config_resolv_scanfile(struct config *, struct collection *);
 bool config_set_string(struct config_args *);
 
-#endif /* __CONFIG_COMMON_H__ */
+#endif /* CVSYNC_CONFIG_COMMON_H */

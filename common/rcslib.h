@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __RCSLIB_H__
-#define	__RCSLIB_H__
+#ifndef CVSYNC_RCSLIB_H
+#define	CVSYNC_RCSLIB_H
 
 #define	RCSLIB_HASH_INIT	(5381)
 #define	RCSLIB_HASH(h, k)	((uint32_t)(((h) * 33) + (int)(k)))
@@ -171,4 +171,4 @@ int rcslib_cmp_sym(const struct rcssym *, const struct rcssym *);
 
 bool rcslib_is_ancestor(const struct rcsnum *, const struct rcsnum *);
 
-#endif /* __RCSLIB_H__ */
+#endif /* CVSYNC_RCSLIB_H */

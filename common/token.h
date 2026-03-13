@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __TOKEN_H__
-#define	__TOKEN_H__
+#ifndef CVSYNC_TOKEN_H
+#define	CVSYNC_TOKEN_H
 
 #define	MAX_TOKEN_LENGTH	(2048)
 
@@ -51,4 +51,4 @@ bool token_skip_whitespace(FILE *);
 
 extern size_t lineno;
 
-#endif /* __TOKEN_H__ */
+#endif /* CVSYNC_TOKEN_H */

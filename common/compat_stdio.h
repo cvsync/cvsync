@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_STDIO_H__
-#define	__COMPAT_STDIO_H__
+#ifndef CVSYNC_COMPAT_STDIO_H
+#define	CVSYNC_COMPAT_STDIO_H
 
 #if defined(NO_PROTOTYPE_FDOPEN)
 FILE *fdopen(int, const char *);
@@ -42,4 +42,4 @@ int snprintf(char *, size_t, const char *, ...);
 int vsnprintf(char *, size_t, const char *, va_list);
 #endif /* defined(NO_PROTOTYPE_VSNPRINTF) */
 
-#endif /* __COMPAT_STDIO_H__ */
+#endif /* CVSYNC_COMPAT_STDIO_H */

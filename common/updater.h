@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __UPDATER_H__
-#define	__UPDATER_H__
+#ifndef CVSYNC_UPDATER_H
+#define	CVSYNC_UPDATER_H
 
 struct collection;
 struct cvsync_attr;
@@ -117,4 +117,4 @@ bool updater_rcs_scanfile_update(struct updater_args *);
 bool updater_generic_update(struct updater_args *);
 bool updater_rdiff_update(struct updater_args *);
 
-#endif /* __UPDATER_H__ */
+#endif /* CVSYNC_UPDATER_H */

@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __MUX_H__
-#define	__MUX_H__
+#ifndef CVSYNC_MUX_H
+#define	CVSYNC_MUX_H
 
 #define	MUX_MAXCHANNELS		(2)
 #define	MUX_IN			(0)
@@ -115,4 +115,4 @@ void mux_destroy_zlib(struct mux *);
 bool mux_send_zlib(struct mux *, uint8_t, const void *, size_t);
 bool mux_flush_zlib(struct mux *, uint8_t);
 
-#endif /* __MUX_H__ */
+#endif /* CVSYNC_MUX_H */

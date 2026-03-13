@@ -27,18 +27,18 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_LIMITS_H__
-#define	__COMPAT_LIMITS_H__
+#ifndef CVSYNC_COMPAT_LIMITS_H
+#define	CVSYNC_COMPAT_LIMITS_H
 
 #ifndef CVSYNC_NAME_MAX
-#if defined(__APPLE__) || defined(__DragonFly__) || defined(__FreeBSD__) || \
-    defined(__INTERIX) || defined(__NetBSD__) || defined(__OpenBSD__)
+#if defined(CVSYNC_APPLE__) || defined(__DragonFly__) || defined(__FreeBSD) || \
+    defined(CVSYNC_INTERIX) || defined(__NetBSD__) || defined(__OpenBSD)
 #define	CVSYNC_NAME_MAX		NAME_MAX
-#else /* __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
-	 __NetBSD__ || __OpenBSD__ */
+#else /* CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
+	 CVSYNC_NetBSD__ || __OpenBSD */
 #define	CVSYNC_NAME_MAX		(255)
-#endif /* __APPLE__ || __DragonFly__ || __FreeBSD__ || __INTERIX ||
-	  __NetBSD__ || __OpenBSD__ */
+#endif /* CVSYNC_APPLE__ || __DragonFly__ || __FreeBSD__ || INTERIX ||
+	  CVSYNC_NetBSD__ || __OpenBSD */
 #endif /* CVSYNC_NAME_MAX */
 
-#endif /* __COMPAT_LIMITS_H__ */
+#endif /* CVSYNC_COMPAT_LIMITS_H */

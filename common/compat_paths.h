@@ -27,13 +27,13 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_PATHS_H__
-#define	__COMPAT_PATHS_H__
+#ifndef CVSYNC_COMPAT_PATHS_H
+#define	CVSYNC_COMPAT_PATHS_H
 
 #ifndef CVSYNC_PATH_DEV_NULL
-#if defined(__CYGWIN__)
+#if defined(CVSYNC_CYGWIN)
 #define	CVSYNC_PATH_DEV_NULL	NULL
-#endif /* __CYGWIN__ */
+#endif /* CVSYNC_CYGWIN */
 #if defined(__sun)
 #define	CVSYNC_PATH_DEV_NULL	"/dev/null"
 #endif /* defined(__sun) */
@@ -43,4 +43,4 @@
 #define	CVSYNC_PATH_DEV_NULL	_PATH_DEVNULL
 #endif /* CVSYNC_PATH_DEV_NULL */
 
-#endif /* __COMPAT_PATHS_H__ */
+#endif /* CVSYNC_COMPAT_PATHS_H */

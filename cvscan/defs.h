@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __DEFS_H__
-#define	__DEFS_H__
+#ifndef CVSYNC_DEFS_H
+#define	CVSYNC_DEFS_H
 
 struct config_include;
 
@@ -58,4 +58,4 @@ void config_acquire(struct config *);
 void config_revoke(struct config *);
 bool config_ischanged(struct config *);
 
-#endif /* __DEFS_H__ */
+#endif /* CVSYNC_DEFS_H */

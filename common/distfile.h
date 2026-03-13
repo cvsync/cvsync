@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __DISTFILE_H__
-#define	__DISTFILE_H__
+#ifndef CVSYNC_DISTFILE_H
+#define	CVSYNC_DISTFILE_H
 
 enum {
 	DISTFILE_ALLOW,
@@ -50,4 +50,4 @@ struct distfile_args *distfile_open(const char *);
 void distfile_close(struct distfile_args *);
 int distfile_access(struct distfile_args *, const char *);
 
-#endif /* __DISTFILE_H__ */
+#endif /* CVSYNC_DISTFILE_H */

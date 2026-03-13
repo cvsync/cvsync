@@ -27,14 +27,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_SIGNAL_H__
-#define	__COMPAT_SIGNAL_H__
+#ifndef CVSYNC_COMPAT_SIGNAL_H
+#define	CVSYNC_COMPAT_SIGNAL_H
 
-#if defined(__bsdi__)
+#if defined(CVSYNC_bsdi)
 #ifdef SIG_IGN
 #undef SIG_IGN
 #define	SIG_IGN		((void (*)(int))1)
 #endif /* SIG_IGN */
-#endif /* defined(__bsdi__) */
+#endif /* defined(CVSYNC_bsdi) */
 
-#endif /* __COMPAT_SIGNAL_H__ */
+#endif /* CVSYNC_COMPAT_SIGNAL_H */

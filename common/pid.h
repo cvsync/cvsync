@@ -27,10 +27,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __PID_H__
-#define	__PID_H__
+#ifndef CVSYNC_PID_H
+#define	CVSYNC_PID_H
 
 char *pid_create(const char *);
 bool pid_remove(void);
 
-#endif /* __PID_H__ */
+#endif /* CVSYNC_PID_H */

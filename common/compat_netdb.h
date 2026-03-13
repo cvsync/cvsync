@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __COMPAT_NETDB_H__
-#define	__COMPAT_NETDB_H__
+#ifndef CVSYNC_COMPAT_NETDB_H
+#define	CVSYNC_COMPAT_NETDB_H
 
 #if defined(_AIX)
 #ifndef DECLARE_ADDRINFO
@@ -102,4 +102,4 @@ int getnameinfo(const struct sockaddr *, socklen_t, char *, socklen_t, char *,
 		socklen_t, unsigned);
 #endif /* defined(NO_PROTOTYPE_GETNAMEINFO) */
 
-#endif /* __COMPAT_NETDB_H__ */
+#endif /* CVSYNC_COMPAT_NETDB_H */

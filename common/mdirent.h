@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __MDIRENT_H__
-#define	__MDIRENT_H__
+#ifndef CVSYNC_MDIRENT_H
+#define	CVSYNC_MDIRENT_H
 
 struct mDIR {
 	void		*m_entries;
@@ -65,4 +65,4 @@ int malphasort(const void *, const void *);
 
 struct mDIR *mopendir_rcs(char *, size_t, size_t, struct mdirent_args *);
 
-#endif /* __MDIRENT_H__ */
+#endif /* CVSYNC_MDIRENT_H */

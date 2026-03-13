@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __NETWORK_H__
-#define	__NETWORK_H__
+#ifndef CVSYNC_NETWORK_H
+#define	CVSYNC_NETWORK_H
 
 #define	CVSYNC_MAXHOST	(1025)
 #define	CVSYNC_MAXSERV	(32)
@@ -62,4 +62,4 @@ bool sock_recv(int, void *, size_t);
 bool sock_getpeeraddr(int, int *, void *, size_t);
 void sock_resolv_addr(int, const char *, char *, size_t);
 
-#endif /* __NETWORK_H__ */
+#endif /* CVSYNC_NETWORK_H */

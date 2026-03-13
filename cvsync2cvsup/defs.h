@@ -2,8 +2,8 @@
  * This software is released under the BSD License, see LICENSE.
  */
 
-#ifndef __DEFS_H__
-#define	__DEFS_H__
+#ifndef CVSYNC_DEFS_H
+#define	CVSYNC_DEFS_H
 
 struct scanfile_attr;
 
@@ -15,4 +15,4 @@ bool cvsup_write_file(int, struct scanfile_attr *);
 bool cvsup_write_rcs(int, struct scanfile_attr *);
 bool cvsup_write_symlink(int, struct scanfile_attr *);
 
-#endif /* __DEFS_H__ */
+#endif /* CVSYNC_DEFS_H */

@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __FILETYPES_H__
-#define	__FILETYPES_H__
+#ifndef CVSYNC_FILETYPES_H
+#define	CVSYNC_FILETYPES_H
 
 #define	IS_DIR_ATTIC(n, l)	(((l) == 5) && ((n)[0] == 'A') &&	\
 				 ((n)[1] == 't') && ((n)[2] == 't') &&	\
@@ -67,4 +67,4 @@
 #define	FILETYPE_RCS_ATTIC	'r'
 #define	FILETYPE_SYMLINK	'S'
 
-#endif /* __FILETYPES_H__ */
+#endif /* CVSYNC_FILETYPES_H */

@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __DEFS_H__
-#define	__DEFS_H__
+#ifndef CVSYNC_DEFS_H
+#define	CVSYNC_DEFS_H
 
 struct config {
 	struct config		*cf_next;
@@ -53,4 +53,4 @@ bool compress_exchange(int, struct config *);
 bool hash_exchange(int, struct config *);
 bool protocol_exchange(int, struct config *);
 
-#endif /* __DEFS_H__ */
+#endif /* CVSYNC_DEFS_H */

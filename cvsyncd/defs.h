@@ -2,8 +2,8 @@
  * This software is released under the BSD License, see LICENSE.
  */
 
-#ifndef __DEFS_H__
-#define	__DEFS_H__
+#ifndef CVSYNC_DEFS_H
+#define	CVSYNC_DEFS_H
 
 struct config_include;
 
@@ -79,4 +79,4 @@ struct collection *collectionlist_exchange(int, struct config *);
 bool protocol_exchange(int, int, uint8_t, uint32_t *);
 int hash_exchange(int, struct config *);
 
-#endif /* __DEFS_H__ */
+#endif /* CVSYNC_DEFS_H */

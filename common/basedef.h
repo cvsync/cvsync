@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BASEDEF_H__
-#define	__BASEDEF_H__
+#ifndef CVSYNC_BASEDEF_H
+#define	CVSYNC_BASEDEF_H
 
 #define	GetWord(w)	((uint16_t)((((uint16_t)((w)[0])) << 8) | \
 				    (((uint16_t)((w)[1])) << 0)))
@@ -73,4 +73,4 @@
 		(w)[7] = (uint8_t)((uint64_t)(v) >>  0); \
 	} while (/* CONSTCOND */ 0)
 
-#endif /* __BASEDEF_H__ */
+#endif /* CVSYNC_BASEDEF_H */

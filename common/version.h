@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __VERSION_H__
-#define	__VERSION_H__
+#ifndef CVSYNC_VERSION_H
+#define	CVSYNC_VERSION_H
 
 #define	CVSYNC_MAJOR		(0)
 #define	CVSYNC_MINOR		(24)
@@ -42,4 +42,4 @@
 
 #define	CVSYNC_URL	"http://www.cvsync.org/"
 
-#endif /* __VERSION_H__ */
+#endif /* CVSYNC_VERSION_H */
