@@ -6,9 +6,13 @@
 
 #include <stdlib.h>
 
+#include <openssl/evp.h>
+
+#if defined(OSSL_DEPRECATEDIN_3_0)
 #include <openssl/md5.h>
 #include <openssl/ripemd.h>
 #include <openssl/sha.h>
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
 
 #include "compat_stdbool.h"
 #include "compat_stdint.h"
@@ -48,13 +52,21 @@ const struct hash_args SHA1_args = {
 bool
 cvsync_MD5_init(void **ctx)
 {
-	MD5_CTX *md5ctx;
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	EVP_MD_CTX *mdctx;
 
-	if ((md5ctx = malloc(sizeof(*md5ctx))) == NULL)
+	if ((mdctx = EVP_MD_CTX_new()) == NULL)
 		return (false);
-	MD5_Init(md5ctx);
+	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
+	MD5_CTX *mdctx;
 
-	*ctx = md5ctx;
+	if ((mdctx = malloc(sizeof(*mdctx))) == NULL)
+		return (false);
+	MD5_Init(mdctx);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
+
+	*ctx = mdctx;
 
 	return (true);
 }
@@ -62,26 +74,44 @@ cvsync_MD5_init(void **ctx)
 void
 cvsync_MD5_update(void *ctx, const void *buffer, size_t bufsize)
 {
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	EVP_DigestUpdate(ctx, buffer, bufsize);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
 	MD5_Update(ctx, buffer, (unsigned long)bufsize);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
 }
 
 void
 cvsync_MD5_final(void *ctx, uint8_t *buffer)
 {
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	unsigned int s = HASH_MAXLEN;
+	EVP_DigestFinal_ex(ctx, buffer, &s);
+	EVP_MD_CTX_free(ctx);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
 	MD5_Final(buffer, ctx);
 	free(ctx);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
 }
 
 bool
 cvsync_RIPEMD160_init(void **ctx)
 {
-	RIPEMD160_CTX *ripemd160ctx;
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	EVP_MD_CTX *mdctx;
 
-	if ((ripemd160ctx = malloc(sizeof(*ripemd160ctx))) == NULL)
+	if ((mdctx = EVP_MD_CTX_new()) == NULL)
 		return (false);
-	RIPEMD160_Init(ripemd160ctx);
+	EVP_DigestInit_ex(mdctx, EVP_ripemd160(), NULL);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
+	RIPEMD160_CTX *mdctx;
 
-	*ctx = ripemd160ctx;
+	if ((mdctx = malloc(sizeof(*mdctx))) == NULL)
+		return (false);
+	RIPEMD160_Init(mdctx);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
+
+	*ctx = mdctx;
 
 	return (true);
 }
@@ -89,26 +119,44 @@ cvsync_RIPEMD160_init(void **ctx)
 void
 cvsync_RIPEMD160_update(void *ctx, const void *buffer, size_t bufsize)
 {
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	EVP_DigestUpdate(ctx, buffer, bufsize);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
 	RIPEMD160_Update(ctx, buffer, (unsigned long)bufsize);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
 }
 
 void
 cvsync_RIPEMD160_final(void *ctx, uint8_t *buffer)
 {
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	unsigned int s = HASH_MAXLEN;
+	EVP_DigestFinal_ex(ctx, buffer, &s);
+	EVP_MD_CTX_free(ctx);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
 	RIPEMD160_Final(buffer, ctx);
 	free(ctx);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
 }
 
 bool
 cvsync_SHA1_init(void **ctx)
 {
-	SHA_CTX *sha1ctx;
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	EVP_MD_CTX *mdctx;
 
-	if ((sha1ctx = malloc(sizeof(*sha1ctx))) == NULL)
+	if ((mdctx = EVP_MD_CTX_new()) == NULL)
 		return (false);
-	SHA1_Init(sha1ctx);
+	EVP_DigestInit_ex(mdctx, EVP_sha1(), NULL);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
+	SHA_CTX *mdctx;
 
-	*ctx = sha1ctx;
+	if ((mdctx = malloc(sizeof(*mdctx))) == NULL)
+		return (false);
+	SHA1_Init(mdctx);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
+
+	*ctx = mdctx;
 
 	return (true);
 }
@@ -116,14 +164,24 @@ cvsync_SHA1_init(void **ctx)
 void
 cvsync_SHA1_update(void *ctx, const void *buffer, size_t bufsize)
 {
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	EVP_DigestUpdate(ctx, buffer, bufsize);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
 	SHA1_Update(ctx, buffer, (unsigned long)bufsize);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
 }
 
 void
 cvsync_SHA1_final(void *ctx, uint8_t *buffer)
 {
+#if defined(OSSL_DEPRECATEDIN_3_0)
+	unsigned int s = HASH_MAXLEN;
+	EVP_DigestFinal_ex(ctx, buffer, &s);
+	EVP_MD_CTX_free(ctx);
+#else /* defined(OSSL_DEPRECATEDIN_3_0) */
 	SHA1_Final(buffer, ctx);
 	free(ctx);
+#endif /* defined(OSSL_DEPRECATEDIN_3_0) */
 }
 
 void
