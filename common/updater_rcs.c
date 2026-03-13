@@ -787,6 +787,8 @@ updater_rcs_attic(struct updater_args *uda)
 			return (false);
 		}
 		break;
+	default:
+		return (false);
 	}
 
 	if (rename(uda->uda_tmpfile, uda->uda_path) == -1) {
