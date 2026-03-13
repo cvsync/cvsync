@@ -15,19 +15,19 @@
 #include "cvsync.h"
 #include "filetypes.h"
 
-static const char *_attic = "Attic/";
-static const size_t _atticlen = 6;
+static const char *attic = "Attic/";
+static const size_t atticlen = 6;
 
 bool
 cvsync_rcs_append_attic(char *path, size_t pathlen, size_t pathmax)
 {
 	size_t len;
 
-	if ((len = pathlen + _atticlen + 1) >= pathmax)
+	if ((len = pathlen + atticlen + 1) >= pathmax)
 		return (false);
 
 	path[pathlen] = '/';
-	(void)memcpy(&path[pathlen + 1], _attic, _atticlen);
+	(void)memcpy(&path[pathlen + 1], attic, atticlen);
 	path[len] = '\0';
 
 	return (true);
@@ -39,7 +39,7 @@ cvsync_rcs_insert_attic(char *path, size_t pathlen, size_t pathmax)
 	char *rpath;
 	size_t len;
 
-	if ((len = pathlen + _atticlen) >= pathmax)
+	if ((len = pathlen + atticlen) >= pathmax)
 		return (false);
 
 	rpath = &path[pathlen - 1];
@@ -54,8 +54,8 @@ cvsync_rcs_insert_attic(char *path, size_t pathlen, size_t pathmax)
 		rpath--;
 	}
 	len = pathlen - (size_t)(rpath - path);
-	(void)memmove(&rpath[_atticlen], rpath, len + 1); /* incl. NULL */
-	(void)memcpy(rpath, _attic, _atticlen);
+	(void)memmove(&rpath[atticlen], rpath, len + 1); /* incl. NULL */
+	(void)memcpy(rpath, attic, atticlen);
 
 	return (true);
 }
