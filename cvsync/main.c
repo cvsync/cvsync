@@ -17,6 +17,7 @@
 
 #include "compat_stdbool.h"
 #include "compat_stdint.h"
+#include "compat_stdnoreturn.h"
 #include "compat_inttypes.h"
 #include "compat_limits.h"
 
@@ -40,8 +41,8 @@
 #include "defs.h"
 
 bool client(struct config *);
-void usage(void);
-void version(void);
+NORETURN void usage(void);
+NORETURN void version(void);
 
 static pthread_attr_t attr;
 
@@ -351,7 +352,7 @@ client(struct config *cf)
 	return (rv);
 }
 
-void
+NORETURN void
 usage(void)
 {
 	logmsg_err("Usage: cvsync [-46LVZhqvz] [-c <file>] [-p <file>]");
@@ -365,7 +366,7 @@ usage(void)
 	exit(EXIT_FAILURE);
 }
 
-void
+NORETURN void
 version(void)
 {
 	logmsg_err("cvsync version %u.%u.%u (protocol %u.%u)", CVSYNC_MAJOR,

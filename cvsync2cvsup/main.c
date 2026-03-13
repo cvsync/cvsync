@@ -17,6 +17,7 @@
 #include "compat_stdbool.h"
 #include "compat_stdint.h"
 #include "compat_stdio.h"
+#include "compat_stdnoreturn.h"
 #include "compat_inttypes.h"
 #include "compat_limits.h"
 
@@ -35,7 +36,7 @@ bool cvsync2cvsup_isparent(struct scanfile_attr *, struct scanfile_attr *);
 bool cvsync2cvsup_insert_attr(struct scanfile_args *, struct scanfile_attr *);
 void cvsync2cvsup_remove_attr(struct scanfile_args *, struct scanfile_attr *);
 
-void usage(void);
+NORETURN void usage(void);
 
 int
 main(int argc, char *argv[])
@@ -347,7 +348,7 @@ cvsync2cvsup_remove_attr(struct scanfile_args *sa, struct scanfile_attr *attr)
 	}
 }
 
-void
+NORETURN void
 usage(void)
 {
 	logmsg_err("Usage: cvsync2cvsup [-hqv] -i <cvsync-scanfile> -o <cvsup-scanfile>");

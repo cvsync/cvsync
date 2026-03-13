@@ -15,6 +15,7 @@
 #include "compat_stdbool.h"
 #include "compat_stdint.h"
 #include "compat_stdlib.h"
+#include "compat_stdnoreturn.h"
 #include "compat_inttypes.h"
 #include "compat_limits.h"
 
@@ -31,7 +32,7 @@ bool cvsup2cvsync(struct cvsync_file *, struct scanfile_args *);
 bool cvsup2cvsync_write_attr(struct scanfile_args *, struct cvsync_attr *);
 bool cvsup2cvsync_create_tmpfile(const char *, char *, struct scanfile_args *);
 
-void usage(void);
+NORETURN void usage(void);
 
 uint16_t mode_umask = CVSYNC_UMASK_UNSPEC;
 
@@ -340,7 +341,7 @@ cvsup2cvsync_create_tmpfile(const char *ofile, char *resolved_ofile,
 	return (true);
 }
 
-void
+NORETURN void
 usage(void)
 {
 	logmsg_err("Usage: cvsup2cvsync [-hqv] [-u <umask>] "

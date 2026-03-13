@@ -17,12 +17,13 @@
 
 #include "compat_stdbool.h"
 #include "compat_stdint.h"
+#include "compat_stdnoreturn.h"
 #include "compat_inttypes.h"
 
 #include "rcslib.h"
 
 bool rcscan_dump(struct rcslib_file *);
-void usage(void);
+NORETURN void usage(void);
 
 int
 main(int argc, char *argv[])
@@ -326,7 +327,7 @@ rcscan_dump(struct rcslib_file *rcs)
 	return (true);
 }
 
-void
+NORETURN void
 usage(void)
 {
 	(void)fprintf(stderr, "Usage: rcscan [-qv] <file> ...\n");

@@ -15,6 +15,7 @@
 
 #include "compat_stdbool.h"
 #include "compat_stdint.h"
+#include "compat_stdnoreturn.h"
 #include "compat_inttypes.h"
 #include "compat_limits.h"
 
@@ -29,7 +30,7 @@
 #include "defs.h"
 
 bool cvscan(struct collection *);
-void usage(void);
+NORETURN void usage(void);
 
 int
 main(int argc, char *argv[])
@@ -229,7 +230,7 @@ cvscan(struct collection *cl)
 	return (true);
 }
 
-void
+NORETURN void
 usage(void)
 {
 	logmsg_err("Usage: cvscan [-hqv] [-r <release>] -c <file> [<name>]\n"

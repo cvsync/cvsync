@@ -21,6 +21,7 @@
 #include "compat_stdint.h"
 #include "compat_stdio.h"
 #include "compat_stdlib.h"
+#include "compat_stdnoreturn.h"
 #include "compat_inttypes.h"
 #include "compat_limits.h"
 
@@ -49,8 +50,8 @@
 #endif /* CVSYNCD_DEFAULT_PIDFILE */
 
 void *server(void *);
-void usage(void);
-void version(void);
+NORETURN void usage(void);
+NORETURN void version(void);
 
 static pthread_attr_t attr;
 static char cvsync_confname[PATH_MAX + CVSYNC_NAME_MAX + 1];
@@ -489,7 +490,7 @@ server(void *arg)
 	return (CVSYNC_THREAD_SUCCESS);
 }
 
-void
+NORETURN void
 usage(void)
 {
 	logmsg_err("Usage: cvsyncd [-Vfhqv] [-c <file>] [-g <group>] "
@@ -505,7 +506,7 @@ usage(void)
 	exit(EXIT_FAILURE);
 }
 
-void
+NORETURN void
 version(void)
 {
 	logmsg_err("cvsyncd version %u.%u.%u (protocol %u.%u)",

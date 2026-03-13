@@ -43,7 +43,6 @@ ifeq (${CC_TYPE}, clang) # Clang
 CC	= clang
 CFLAGS += -Werror -Weverything
 CFLAGS += -Wno-format-nonliteral
-CFLAGS += -Wno-missing-noreturn
 CFLAGS += -Wno-padded
 CFLAGS += -Wno-shorten-64-to-32
 CFLAGS += -Wno-unsafe-buffer-usage
