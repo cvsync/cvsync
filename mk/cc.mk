@@ -46,4 +46,6 @@ CFLAGS += -Wno-format-nonliteral
 CFLAGS += -Wno-padded
 CFLAGS += -Wno-shorten-64-to-32
 CFLAGS += -Wno-unsafe-buffer-usage
+CFLAGS += -Wno-thread-safety-negative
+CFLAGS += -Wno-thread-safety-analysis
 endif # Clang
