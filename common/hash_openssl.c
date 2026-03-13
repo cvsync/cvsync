@@ -34,19 +34,19 @@ void cvsync_openssl_destroy(void *);
 const struct hash_args MD5_args = {
 	cvsync_MD5_init, cvsync_MD5_update, cvsync_MD5_final,
 	cvsync_openssl_destroy,
-	16
+	HASH_SIZE_MD5
 };
 
 const struct hash_args RIPEMD160_args = {
 	cvsync_RIPEMD160_init, cvsync_RIPEMD160_update, cvsync_RIPEMD160_final,
 	cvsync_openssl_destroy,
-	20
+	HASH_SIZE_RIPEMD160
 };
 
 const struct hash_args SHA1_args = {
 	cvsync_SHA1_init, cvsync_SHA1_update, cvsync_SHA1_final,
 	cvsync_openssl_destroy,
-	20
+	HASH_SIZE_SHA1
 };
 
 bool
@@ -85,7 +85,7 @@ void
 cvsync_MD5_final(void *ctx, uint8_t *buffer)
 {
 #if defined(OSSL_DEPRECATEDIN_3_0)
-	unsigned int s = HASH_MAXLEN;
+	unsigned int s = HASH_SIZE_MD5;
 	EVP_DigestFinal_ex(ctx, buffer, &s);
 	EVP_MD_CTX_free(ctx);
 #else /* defined(OSSL_DEPRECATEDIN_3_0) */
@@ -130,7 +130,7 @@ void
 cvsync_RIPEMD160_final(void *ctx, uint8_t *buffer)
 {
 #if defined(OSSL_DEPRECATEDIN_3_0)
-	unsigned int s = HASH_MAXLEN;
+	unsigned int s = HASH_SIZE_RIPEMD160;
 	EVP_DigestFinal_ex(ctx, buffer, &s);
 	EVP_MD_CTX_free(ctx);
 #else /* defined(OSSL_DEPRECATEDIN_3_0) */
@@ -175,7 +175,7 @@ void
 cvsync_SHA1_final(void *ctx, uint8_t *buffer)
 {
 #if defined(OSSL_DEPRECATEDIN_3_0)
-	unsigned int s = HASH_MAXLEN;
+	unsigned int s = HASH_SIZE_SHA1;
 	EVP_DigestFinal_ex(ctx, buffer, &s);
 	EVP_MD_CTX_free(ctx);
 #else /* defined(OSSL_DEPRECATEDIN_3_0) */

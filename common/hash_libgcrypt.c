@@ -28,25 +28,25 @@ void cvsync_libgcrypt_destroy(void *);
 const struct hash_args MD5_args = {
 	cvsync_MD5_init, cvsync_libgcrypt_update, cvsync_MD5_final,
 	cvsync_libgcrypt_destroy,
-	16
+	HASH_SIZE_MD5
 };
 
 const struct hash_args RIPEMD160_args = {
 	cvsync_RIPEMD160_init, cvsync_libgcrypt_update, cvsync_RIPEMD160_final,
 	cvsync_libgcrypt_destroy,
-	20
+	HASH_SIZE_RIPEMD160
 };
 
 const struct hash_args SHA1_args = {
 	cvsync_SHA1_init, cvsync_libgcrypt_update, cvsync_SHA1_final,
 	cvsync_libgcrypt_destroy,
-	20
+	HASH_SIZE_SHA1
 };
 
 const struct hash_args TIGER192_args = {
 	cvsync_TIGER192_init, cvsync_libgcrypt_update, cvsync_TIGER192_final,
 	cvsync_libgcrypt_destroy,
-	20
+	HASH_SIZE_TIGER192
 };
 
 bool
@@ -78,7 +78,7 @@ cvsync_MD5_final(void *ctx, uint8_t *buffer)
 	void *res;
 
 	res = (void *)gcry_md_read(ctx, GCRY_MD_MD5);
-	(void)memcpy(buffer, res, 16);
+	(void)memcpy(buffer, res, HASH_SIZE_MD5);
 	gcry_md_close(ctx);
 }
 
@@ -111,7 +111,7 @@ cvsync_RIPEMD160_final(void *ctx, uint8_t *buffer)
 	void *res;
 
 	res = (void *)gcry_md_read(ctx, GCRY_MD_RMD160);
-	(void)memcpy(buffer, res, 20);
+	(void)memcpy(buffer, res, HASH_SIZE_RIPEMD160);
 	gcry_md_close(ctx);
 }
 
@@ -144,7 +144,7 @@ cvsync_SHA1_final(void *ctx, uint8_t *buffer)
 	void *res;
 
 	res = (void *)gcry_md_read(ctx, GCRY_MD_SHA1);
-	(void)memcpy(buffer, res, 20);
+	(void)memcpy(buffer, res, HASH_SIZE_SHA1);
 	gcry_md_close(ctx);
 }
 
@@ -177,7 +177,7 @@ cvsync_TIGER192_final(void *ctx, uint8_t *buffer)
 	void *res;
 
 	res = (void *)gcry_md_read(ctx, GCRY_MD_TIGER);
-	(void)memcpy(buffer, res, 20);
+	(void)memcpy(buffer, res, HASH_SIZE_TIGER192);
 	gcry_md_close(ctx);
 }
 

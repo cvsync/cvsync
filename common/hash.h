@@ -26,6 +26,11 @@ enum {
 
 #define	HASH_MAXLEN	(64)	/* 512bits */
 
+#define	HASH_SIZE_MD5		(16)
+#define	HASH_SIZE_RIPEMD160	(20)
+#define	HASH_SIZE_SHA1		(20)
+#define	HASH_SIZE_TIGER192	(20)
+
 struct hash_args {
 	bool	(*init)(void **);
 	void	(*update)(void *, const void *, size_t);

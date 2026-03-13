@@ -31,14 +31,14 @@ void cvsync_native_destroy(void *);
 const struct hash_args MD5_args = {
 	cvsync_MD5_init, cvsync_MD5_update, cvsync_MD5_final,
 	cvsync_native_destroy,
-	16
+	HASH_SIZE_MD5
 };
 
 #if defined(HAVE_RIPEMD160)
 const struct hash_args RIPEMD160_args = {
 	cvsync_RIPEMD160_init, cvsync_RIPEMD160_update, cvsync_RIPEMD160_final,
 	cvsync_native_destroy,
-	20
+	HASH_SIZE_RIPEMD160
 };
 #endif /* defined(HAVE_RIPEMD160) */
 
@@ -46,7 +46,7 @@ const struct hash_args RIPEMD160_args = {
 const struct hash_args SHA1_args = {
 	cvsync_SHA1_init, cvsync_SHA1_update, cvsync_SHA1_final,
 	cvsync_native_destroy,
-	20
+	HASH_SIZE_SHA1
 };
 #endif /* defined(HAVE_SHA1) */
 
