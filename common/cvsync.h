@@ -5,6 +5,8 @@
 #ifndef CVSYNC_CVSYNC_H
 #define	CVSYNC_CVSYNC_H
 
+#include "compat__compiler.h"
+
 #define	CVSYNC_MAXCMDLEN	(2048)
 #define	CVSYNC_MAXADDRLEN	(128)
 

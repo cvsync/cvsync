@@ -331,6 +331,7 @@ cvsync_signal(int sig)
 	case SIGINT:
 		cvsync_process_terminated = true;
 		/* FALLTHROUGH */
+		FALLTHROUGH;
 	case SIGTERM:
 		cvsync_process_interrupted = true;
 		break;

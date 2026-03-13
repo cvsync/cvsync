@@ -202,6 +202,7 @@ filecmp_rcs_fetch(struct filecmp_args *fca)
 			}
 			break;
 		}
+		FALLTHROUGH;
 		/* FALLTHROUGH */
 	case FILECMP_SETATTR:
 		switch (cap->ca_type) {

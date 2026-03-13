@@ -181,6 +181,7 @@ filescan_rcs_fetch(struct filescan_args *fsa)
 			}
 			break;
 		}
+		FALLTHROUGH;
 		/* FALLTHROUGH */
 	case FILESCAN_SETATTR:
 		switch (cap->ca_type) {

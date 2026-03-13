@@ -190,6 +190,7 @@ updater_rcs_fetch(struct updater_args *uda)
 			}
 			break;
 		}
+		FALLTHROUGH;
 		/* FALLTHROUGH */
 	case UPDATER_SETATTR:
 		switch (cap->ca_type) {
