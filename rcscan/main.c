@@ -302,7 +302,7 @@ rcscan_dump(struct rcslib_file *rcs)
 			return (false);
 	}
 
-	iov[0].iov_base = "\ndesc\n@",
+	iov[0].iov_base = "\ndesc\n@";
 	iov[0].iov_len = 7;
 	iov[1].iov_base = rcs->desc.s_str;
 	iov[1].iov_len = rcs->desc.s_len;
