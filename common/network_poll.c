@@ -18,8 +18,8 @@
 #include "logmsg.h"
 #include "network.h"
 
-static struct pollfd *__fds = NULL;
-static nfds_t __nfds = 0;
+static struct pollfd *fds = NULL;
+static nfds_t nfds = 0;
 
 bool
 sock_init(int *socks)
@@ -27,16 +27,16 @@ sock_init(int *socks)
 	nfds_t i;
 
 	for (i = 0 ; socks[i] != -1 ; i++)
-		__nfds++;
-	if (__nfds == 0)
+		nfds++;
+	if (nfds == 0)
 		return (false);
-	if ((__fds = malloc(__nfds * sizeof(*__fds))) == NULL) {
+	if ((fds = malloc(nfds * sizeof(*fds))) == NULL) {
 		logmsg_err("%s", strerror(errno));
 		return (false);
 	}
-	for (i = 0 ; i < __nfds ; i++) {
-		__fds[i].fd = socks[i];
-		__fds[i].events = POLLIN;
+	for (i = 0 ; i < nfds ; i++) {
+		fds[i].fd = socks[i];
+		fds[i].events = POLLIN;
 	}
 
 	return (true);
@@ -45,7 +45,7 @@ sock_init(int *socks)
 void
 sock_destroy(void)
 {
-	free(__fds);
+	free(fds);
 }
 
 bool
@@ -53,10 +53,10 @@ sock_select(void)
 {
 	nfds_t i;
 
-	for (i = 0 ; i < __nfds ; i++)
-		__fds[i].revents = 0;
+	for (i = 0 ; i < nfds ; i++)
+		fds[i].revents = 0;
 
-	if (poll(__fds, __nfds, 1000 /* 1sec */) == -1)
+	if (poll(fds, nfds, 1000 /* 1sec */) == -1)
 		return (false);
 
 	return (true);
@@ -68,11 +68,11 @@ sock_accept(void)
 	nfds_t i;
 	int sock = -1;
 
-	for (i = 0 ; i < __nfds ; i++) {
-		if (!(__fds[i].revents & POLLIN))
+	for (i = 0 ; i < nfds ; i++) {
+		if (!(fds[i].revents & POLLIN))
 			continue;
 
-		if ((sock = accept(__fds[i].fd, NULL, NULL)) == -1) {
+		if ((sock = accept(fds[i].fd, NULL, NULL)) == -1) {
 			if (errno == EINTR) {
 				logmsg_intr();
 				return (-1);
@@ -93,7 +93,7 @@ sock_accept(void)
 bool
 sock_wait(int sock, int dir)
 {
-	struct pollfd fds[1];
+	struct pollfd fds0[1];
 	short events;
 	int tmout, rv;
 
@@ -102,12 +102,12 @@ sock_wait(int sock, int dir)
 	else /* dir == CVSYNC_SOCKDIR_IN */
 		events = POLLIN;
 
-	fds[0].fd = sock;
-	fds[0].events = events;
-	fds[0].revents = 0;
+	fds0[0].fd = sock;
+	fds0[0].events = events;
+	fds0[0].revents = 0;
 
 	for (tmout = 0 ; tmout < CVSYNC_TIMEOUT ; tmout += CVSYNC_TICKS) {
-		if ((rv = poll(fds, 1, CVSYNC_TICKS)) == -1) {
+		if ((rv = poll(fds0, 1, CVSYNC_TICKS)) == -1) {
 			if (errno != EINTR) {
 				logmsg_err("Socket Error: poll: %s",
 					   strerror(errno));
@@ -122,7 +122,7 @@ sock_wait(int sock, int dir)
 			}
 			continue;
 		}
-		if (!(fds[0].revents & events)) {
+		if (!(fds0[0].revents & events)) {
 			logmsg_err("Socket Error: poll");
 			return (false);
 		}
