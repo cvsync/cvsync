@@ -316,7 +316,7 @@ collectionlist_exchange(int sock, struct config *cf)
 			for (prev = cls ;
 			     prev->cl_next != NULL ;
 			     prev = prev->cl_next) {
-				/* Nothing to do */;
+				/* Nothing to do */
 			}
 			prev->cl_next = cl;
 		}
