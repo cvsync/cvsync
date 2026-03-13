@@ -128,7 +128,7 @@ main(int argc, char *argv[])
 	if (!cvsup2cvsync_create_tmpfile(ofile, resolved_ofile, &sa))
 		exit(EXIT_FAILURE);
 
-	if (cvsync_isinterrupted()) {
+	if (cvsync_is_interrupted()) {
 		logmsg_intr();
 		exit(EXIT_FAILURE);
 	}
@@ -143,7 +143,7 @@ main(int argc, char *argv[])
 	if (!cvsync_mmap(cfp, (off_t)0, cfp->cf_size))
 		exit(EXIT_FAILURE);
 
-	if (cvsync_isinterrupted()) {
+	if (cvsync_is_interrupted()) {
 		logmsg_intr();
 		cvsync_fclose(cfp);
 		scanfile_remove_tmpfile(&sa);
@@ -183,7 +183,7 @@ cvsup2cvsync(struct cvsync_file *ifile, struct scanfile_args *ofile)
 		return (false);
 
 	while (sp < bp) {
-		if (cvsync_isinterrupted()) {
+		if (cvsync_is_interrupted()) {
 			logmsg_intr();
 			return (false);
 		}

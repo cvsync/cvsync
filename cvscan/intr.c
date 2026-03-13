@@ -8,17 +8,17 @@
 
 #include "cvsync.h"
 
-extern bool __cvsync_isinterrupted(void);
-extern bool __cvsync_isterminated(void);
+extern bool cvsync_is_interrupted_internal(void);
+extern bool cvsync_is_terminated_internal(void);
 
 bool
-cvsync_isinterrupted(void)
+cvsync_is_interrupted(void)
 {
-	return (__cvsync_isinterrupted() || __cvsync_isterminated());
+	return (cvsync_is_interrupted_internal() || cvsync_is_terminated_internal());
 }
 
 bool
-cvsync_isterminated(void)
+cvsync_is_terminated(void)
 {
 	return (false);
 }

@@ -332,7 +332,7 @@ main(int argc, char *argv[])
 	}
 
 	for (;;) {
-		if (cvsync_isinterrupted())
+		if (cvsync_is_interrupted())
 			break;
 
 		if ((stat(cf->cf_halt_name, &st) == 0) &&

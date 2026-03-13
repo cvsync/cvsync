@@ -59,7 +59,7 @@ dirscan_rcs_scanfile(struct dirscan_args *dsa)
 	list_set_destructor(lp, free);
 
 	while (args.sa_start < args.sa_end) {
-		if (cvsync_isinterrupted()) {
+		if (cvsync_is_interrupted()) {
 			list_destroy(lp);
 			if (dirattr != NULL)
 				free(dirattr);

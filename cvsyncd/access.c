@@ -118,7 +118,7 @@ access_destroy(void)
 
 	pthread_mutex_lock(&mtx);
 
-	if (cvsync_isterminated()) {
+	if (cvsync_is_terminated()) {
 		for (i = 0 ; i < acl_size ; i++) {
 			if ((sa = acl[i]) == NULL)
 				continue;
@@ -159,7 +159,7 @@ access_authorize(int sock, struct config *cf)
 	size_t n, i;
 	int wn;
 
-	if (cvsync_isterminated())
+	if (cvsync_is_terminated())
 		return (NULL);
 
 	if ((sa = malloc(sizeof(*sa))) == NULL) {
@@ -168,7 +168,7 @@ access_authorize(int sock, struct config *cf)
 	}
 	sa->sa_error = CVSYNC_NO_ERROR;
 
-	if (cvsync_isinterrupted()) {
+	if (cvsync_is_interrupted()) {
 		sa->sa_status = ACL_DENY;
 		sa->sa_error = CVSYNC_ERROR_UNAVAIL;
 		return (sa);

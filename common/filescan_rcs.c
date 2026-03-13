@@ -59,7 +59,7 @@ filescan_rcs(struct filescan_args *fsa)
 	struct cvsync_attr *cap = &fsa->fsa_attr;
 
 	for (;;) {
-		if (cvsync_isinterrupted())
+		if (cvsync_is_interrupted())
 			return (false);
 
 		if (!filescan_rcs_fetch(fsa))

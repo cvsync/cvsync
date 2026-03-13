@@ -165,7 +165,7 @@ scanfile_rcs(struct scanfile_create_args *sca)
 		}
 
 		while (mdirp->m_offset < mdirp->m_nentries) {
-			if (cvsync_isinterrupted()) {
+			if (cvsync_is_interrupted()) {
 				mclosedir(mdirp);
 				list_destroy(lp);
 				scanfile_rcs_destroy(sra);

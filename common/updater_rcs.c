@@ -64,7 +64,7 @@ updater_rcs(struct updater_args *uda)
 	struct cvsync_attr *cap = &uda->uda_attr;
 
 	for (;;) {
-		if (cvsync_isinterrupted())
+		if (cvsync_is_interrupted())
 			return (false);
 
 		if (!updater_rcs_fetch(uda))

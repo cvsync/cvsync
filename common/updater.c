@@ -83,7 +83,7 @@ updater(void *arg)
 		if (cl->cl_flags & CLFLAGS_DISABLE)
 			continue;
 
-		if (cvsync_isinterrupted()) {
+		if (cvsync_is_interrupted()) {
 			mux_abort(uda->uda_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}

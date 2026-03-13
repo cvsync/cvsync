@@ -282,7 +282,7 @@ client(struct config *cf)
 		return (false);
 	}
 
-	if (cvsync_isinterrupted()) {
+	if (cvsync_is_interrupted()) {
 		mux_destroy(mx);
 		sock_close(sock);
 		return (false);

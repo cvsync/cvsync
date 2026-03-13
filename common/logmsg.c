@@ -162,7 +162,7 @@ logmsg_intr(void)
 	if (logmsg_stderr == NULL)
 		logmsg_stderr = stderr;
 
-	if (!cvsync_isinterrupted() || cvsync_isterminated())
+	if (!cvsync_is_interrupted() || cvsync_is_terminated())
 		return;
 
 	if (logmsg_file || logmsg_syslog)
@@ -171,7 +171,7 @@ logmsg_intr(void)
 	pthread_mutex_lock(&mtx);
 
 	if (!logmsg_interrupted) {
-		if (!cvsync_isterminated()) {
+		if (!cvsync_is_terminated()) {
 			(void)fflush(NULL);
 
 			if (!logmsg_file) {

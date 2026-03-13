@@ -90,8 +90,8 @@ bool cvsync_fclose(struct cvsync_file *);
 bool cvsync_mmap(struct cvsync_file *, off_t, off_t);
 bool cvsync_munmap(struct cvsync_file *);
 void cvsync_signal(int);
-bool cvsync_isinterrupted(void);
-bool cvsync_isterminated(void);
+bool cvsync_is_interrupted(void);
+bool cvsync_is_terminated(void);
 
 bool cvsync_rcs_append_attic(char *, size_t, size_t);
 bool cvsync_rcs_insert_attic(char *, size_t, size_t);

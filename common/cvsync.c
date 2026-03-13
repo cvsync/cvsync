@@ -48,8 +48,8 @@ static const struct cvsync_token_type cvsync_release_types[] = {
 	{ NULL,		CVSYNC_RELEASE_UNKNOWN },
 };
 
-bool __cvsync_isinterrupted(void);
-bool __cvsync_isterminated(void);
+bool cvsync_is_interrupted_internal(void);
+bool cvsync_is_terminated_internal(void);
 
 static struct sigaction cvsync_sig_ign;
 static bool cvsync_process_interrupted = false;
@@ -340,13 +340,13 @@ cvsync_signal(int sig)
 }
 
 bool
-__cvsync_isinterrupted(void)
+cvsync_is_interrupted_internal(void)
 {
 	return (cvsync_process_interrupted);
 }
 
 bool
-__cvsync_isterminated(void)
+cvsync_is_terminated_internal(void)
 {
 	return (cvsync_process_terminated);
 }

@@ -67,7 +67,7 @@ dirscan_rcs(struct dirscan_args *dsa)
 	}
 
 	do {
-		if (cvsync_isinterrupted()) {
+		if (cvsync_is_interrupted()) {
 			list_destroy(lp);
 			return (false);
 		}

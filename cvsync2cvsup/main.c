@@ -160,7 +160,7 @@ cvsync2cvsup(struct scanfile_args *sa, const char *ofile)
 	(void)memset(&dirattr, 0, sizeof(dirattr));
 
 	while (sa->sa_start < sa->sa_end) {
-		if (cvsync_isinterrupted()) {
+		if (cvsync_is_interrupted()) {
 			logmsg_intr();
 			(void)unlink(new_ofile);
 			return (false);

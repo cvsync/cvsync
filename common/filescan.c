@@ -77,7 +77,7 @@ filescan(void *arg)
 		if (cl->cl_flags & CLFLAGS_DISABLE)
 			continue;
 
-		if (cvsync_isinterrupted()) {
+		if (cvsync_is_interrupted()) {
 			mux_abort(fsa->fsa_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
