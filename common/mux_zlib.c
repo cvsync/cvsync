@@ -93,7 +93,7 @@ mux_send_zlib(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 		}
 	}
 	z->next_in = (void *)(unsigned long)buffer;
-	z->avail_in = bufsize;
+	z->avail_in = (unsigned int)bufsize;
 	if (deflate(z, Z_FINISH) != Z_STREAM_END) {
 		logmsg_err("Mux(SEND) Error: DEFLATE: %s", z->msg);
 		return (false);

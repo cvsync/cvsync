@@ -103,7 +103,7 @@ receiver_data_zlib(struct mux *mx, uint8_t chnum)
 		}
 
 		z->next_out = &mxb->mxb_buffer[tail];
-		z->avail_out = len1;
+		z->avail_out = (unsigned int)len1;
 		err = inflate(z, zflag);
 		if ((err != Z_STREAM_END) && (err != Z_OK)) {
 			logmsg_err("Receiver(DATA) Error: INFLATE: %s",
@@ -115,7 +115,7 @@ receiver_data_zlib(struct mux *mx, uint8_t chnum)
 
 		if ((z->avail_in != 0) && (len2 > 0)) {
 			z->next_out = mxb->mxb_buffer;
-			z->avail_out = len2;
+			z->avail_out = (unsigned int)len2;
 			err = inflate(z, Z_FINISH);
 			if ((err != Z_STREAM_END) && (err != Z_OK)) {
 				logmsg_err("Receiver(DATA) Error: INFLATE: %s",
