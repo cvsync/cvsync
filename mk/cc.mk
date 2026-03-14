@@ -44,6 +44,10 @@ CC	= clang
 CFLAGS += -Werror -Weverything
 CFLAGS += -Wno-format-nonliteral
 CFLAGS += -Wno-padded
+ifeq (${HASH_TYPE}, openssl) # OpenSSL
+CFLAGS += -Wno-reserved-identifier
+CFLAGS += -Wno-reserved-macro-identifier
+endif # OpenSSL
 CFLAGS += -Wno-shorten-64-to-32
 CFLAGS += -Wno-unsafe-buffer-usage
 CFLAGS += -Wno-thread-safety-negative
