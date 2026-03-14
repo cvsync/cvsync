@@ -33,6 +33,7 @@ HASH_TYPE      ?= native
 ifeq (${HASH_TYPE}, native)
 
 ifeq (${HOST_OS}, DragonFly)
+HAVE_SHA256	= no
 LIBS   += -lmd
 endif # DragonFly
 
@@ -43,11 +44,13 @@ endif # 4.1-RELEASE
 
 ifeq ($(shell ${TEST} ${OSVER} -lt 400000 && ${ECHO} yes), yes) # 4.0-RELEASE
 HAVE_SHA1	= no
+HAVE_SHA256	= no
 endif # 4.0-RELEASE
 LIBS   += -lmd
 endif # FreeBSD
 
 ifeq (${HOST_OS}, Interix)
+HAVE_SHA256	= no
 HAVE_RIPEMD160	= yes
 LIBS   += -lcrypt
 endif # Interix
@@ -59,21 +62,24 @@ endif # 1.5C
 
 ifeq ($(shell ${TEST} ${OSVER} -lt 106010000 && ${ECHO} yes), yes) # 1.6A
 HAVE_SHA1	= no
+HAVE_SHA256	= no
 endif # 1.6A
 endif # NetBSD
 
 ifeq (${HOST_OS}, OpenBSD)
 ifeq ($(shell ${TEST} ${OSVER} -ge 199711 && ${ECHO} yes), yes) # 2.2
-HAVE_RIPEMD160 ?= yes
+HAVE_RIPEMD160	= yes
 endif # 2.2
 
 ifeq ($(shell ${TEST} ${OSVER} -lt 200311 && ${ECHO} yes), yes) # 3.4
-HAVE_SHA1      ?= no
+HAVE_SHA1	= no
+HAVE_SHA256	= no
 endif # 3.4
 endif # OpenBSD
 
 ifeq (${HOST_OS}, SunOS)
 HAVE_SHA1	= no
+HAVE_SHA256	= no
 LIBS   += -lmd5
 endif # SunOS
 
@@ -118,17 +124,22 @@ LDFLAGS+= ${HASH_LDFLAGS}
 LIBS   += ${HASH_LIBS}
 endif # !native
 
-HAVE_RIPEMD160 ?= no
 HAVE_SHA1      ?= yes
+HAVE_SHA256    ?= yes
+HAVE_RIPEMD160 ?= no
 HAVE_TIGER192  ?= no
-
-ifeq (${HAVE_RIPEMD160}, yes)
-CFLAGS += -DHAVE_RIPEMD160
-endif # HAVE_RIPEMD160
 
 ifeq (${HAVE_SHA1}, yes)
 CFLAGS += -DHAVE_SHA1
 endif # HAVE_SHA1
+
+ifeq (${HAVE_SHA256}, yes)
+CFLAGS += -DHAVE_SHA256
+endif # HAVE_SHA256
+
+ifeq (${HAVE_RIPEMD160}, yes)
+CFLAGS += -DHAVE_RIPEMD160
+endif # HAVE_RIPEMD160
 
 ifeq (${HAVE_TIGER192}, yes)
 CFLAGS += -DHAVE_TIGER192

@@ -57,6 +57,32 @@
 
 #endif /* defined(HAVE_SHA1) */
 
+/*
+ * Secure Hash Standard (SHS) - FIPS 180-2, RFC 4634
+ */
+
+#if defined(HAVE_SHA256)
+
+#if defined(__FreeBSD__)
+#include <sha256.h>
+#endif /* __FreeBSD__ */
+
+#if defined(__NetBSD__) || defined(__OpenBSD__)
+#include <sha2.h>
+#endif /* __NetBSD__ || __OpenBSD__ */
+
+#if defined(__OpenBSD__)
+typedef	SHA2_CTX	SHA256_CTX;
+#endif /* __OpenBSD__ */
+
+#if defined(__FreeBSD__) || defined(__NetBSD__)
+#define	SHA256Init	SHA256_Init
+#define	SHA256Update	SHA256_Update
+#define	SHA256Final	SHA256_Final
+#endif /* __FreeBSD__ || __NetBSD__ */
+
+#endif /* defined(HAVE_SHA256) */
+
 #if defined(__APPLE__)
 
 #include <CommonCrypto/CommonDigest.h>

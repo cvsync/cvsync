@@ -22,12 +22,15 @@ struct hashent {
 
 static const struct hashent hashents[] = {
 	{ "MD5",	3,	HASH_MD5 },
-#if defined(HAVE_RIPEMD160)
-	{ "RIPEMD160",	9,	HASH_RIPEMD160 },
-#endif /* defined(HAVE_RIPEMD160) */
 #if defined(HAVE_SHA1)
 	{ "SHA1",	4,	HASH_SHA1 },
 #endif /* defined(HAVE_SHA1) */
+#if defined(HAVE_SHA256)
+	{ "SHA256",	6,	HASH_SHA256 },
+#endif /* defined(HAVE_SHA256) */
+#if defined(HAVE_RIPEMD160)
+	{ "RIPEMD160",	9,	HASH_RIPEMD160 },
+#endif /* defined(HAVE_RIPEMD160) */
 #if defined(HAVE_TIGER192)
 	{ "TIGER192",	8,	HASH_TIGER192 },
 #endif /* defined(HAVE_TIGER192) */
@@ -73,16 +76,21 @@ hash_set(int type, const struct hash_args **args)
 	case HASH_MD5:
 		*args = &MD5_args;
 		break;
-#if defined(HAVE_RIPEMD160)
-	case HASH_RIPEMD160:
-		*args = &RIPEMD160_args;
-		break;
-#endif /* defined(HAVE_RIPEMD160) */
 #if defined(HAVE_SHA1)
 	case HASH_SHA1:
 		*args = &SHA1_args;
 		break;
 #endif /* defined(HAVE_SHA1) */
+#if defined(HAVE_SHA256)
+	case HASH_SHA256:
+		*args = &SHA256_args;
+		break;
+#endif /* defined(HAVE_SHA256) */
+#if defined(HAVE_RIPEMD160)
+	case HASH_RIPEMD160:
+		*args = &RIPEMD160_args;
+		break;
+#endif /* defined(HAVE_RIPEMD160) */
 #if defined(HAVE_TIGER192)
 	case HASH_TIGER192:
 		*args = &TIGER192_args;
