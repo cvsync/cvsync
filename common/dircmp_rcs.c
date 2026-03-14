@@ -751,7 +751,7 @@ dircmp_rcs_update(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 	uint16_t mode = RCS_MODE(st->st_mode, dca->dca_collection->cl_umask);
 	uint8_t *cmd = dca->dca_cmd;
 	size_t base, len, rlen;
-	int wn;
+	ssize_t wn;
 
 	if ((len = dca->dca_pathlen + mdp->md_namelen) >= dca->dca_pathmax)
 		return (false);

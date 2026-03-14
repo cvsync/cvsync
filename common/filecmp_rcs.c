@@ -445,7 +445,7 @@ filecmp_rcs_add_symlink(struct filecmp_args *fca)
 	struct cvsync_attr *cap = &fca->fca_attr;
 	uint8_t *cmd = fca->fca_cmd;
 	size_t len;
-	int wn;
+	ssize_t wn;
 
 	if ((len = cap->ca_namelen + 6) > fca->fca_cmdmax)
 		return (false);
