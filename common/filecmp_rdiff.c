@@ -103,7 +103,7 @@ filecmp_rdiff_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 
 		if (length == 0) {
 			offset = i * bsize;
-			length = len;
+			length = (uint32_t)len;
 			continue;
 		}
 		if (offset + length == i * bsize) {
