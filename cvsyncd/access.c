@@ -78,9 +78,6 @@ static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 bool
 access_init(size_t sz)
 {
-#if !defined(NO_INITSTATE)
-	static char acl_random_state[256];
-#endif /* !defined(NO_INITSTATE) */
 	struct timeval tv;
 
 	if ((acl = malloc(sz * sizeof(*acl))) == NULL) {
@@ -96,12 +93,7 @@ access_init(size_t sz)
 
 	(void)gettimeofday(&tv, NULL);
 
-#if !defined(NO_INITSTATE)
-	initstate((unsigned long)tv.tv_usec, acl_random_state,
-		  sizeof(acl_random_state));
-#else /* !defined(NO_INITSTATE) */
-	srandom((unsigned long)tv.tv_usec);
-#endif /* !defined(NO_INITSTATE) */
+	srandom((unsigned int)tv.tv_usec);
 
 	acl_name[0] = '\0';
 	acl_size = sz;
