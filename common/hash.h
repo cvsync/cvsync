@@ -15,12 +15,6 @@ enum {
 #if defined(HAVE_SHA256)
 	HASH_SHA256,
 #endif /* defined(HAVE_SHA256) */
-#if defined(HAVE_RIPEMD160)
-	HASH_RIPEMD160,
-#endif /* defined(HAVE_RIPEMD160) */
-#if defined(HAVE_TIGER192)
-	HASH_TIGER192,
-#endif /* defined(HAVE_TIGER192) */
 
 	HASH_MAX
 };
@@ -32,8 +26,6 @@ enum {
 #define	HASH_SIZE_MD5		(16)
 #define	HASH_SIZE_SHA1		(20)
 #define	HASH_SIZE_SHA256	(32)
-#define	HASH_SIZE_RIPEMD160	(20)
-#define	HASH_SIZE_TIGER192	(20)
 
 struct hash_args {
 	bool	(*init)(void **);
@@ -54,11 +46,5 @@ extern const struct hash_args SHA1_args;
 #if defined(HAVE_SHA256)
 extern const struct hash_args SHA256_args;
 #endif /* defined(HAVE_SHA256) */
-#if defined(HAVE_RIPEMD160)
-extern const struct hash_args RIPEMD160_args;
-#endif /* defined(HAVE_RIPEMD160) */
-#if defined(HAVE_TIGER192)
-extern const struct hash_args TIGER192_args;
-#endif /* defined(HAVE_TIGER192) */
 
 #endif /* CVSYNC_HASH_H */

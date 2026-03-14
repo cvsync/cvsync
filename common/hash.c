@@ -28,12 +28,6 @@ static const struct hashent hashents[] = {
 #if defined(HAVE_SHA256)
 	{ "SHA256",	6,	HASH_SHA256 },
 #endif /* defined(HAVE_SHA256) */
-#if defined(HAVE_RIPEMD160)
-	{ "RIPEMD160",	9,	HASH_RIPEMD160 },
-#endif /* defined(HAVE_RIPEMD160) */
-#if defined(HAVE_TIGER192)
-	{ "TIGER192",	8,	HASH_TIGER192 },
-#endif /* defined(HAVE_TIGER192) */
 	{ NULL,		0,	HASH_UNSPEC }
 };
 
@@ -86,16 +80,6 @@ hash_set(int type, const struct hash_args **args)
 		*args = &SHA256_args;
 		break;
 #endif /* defined(HAVE_SHA256) */
-#if defined(HAVE_RIPEMD160)
-	case HASH_RIPEMD160:
-		*args = &RIPEMD160_args;
-		break;
-#endif /* defined(HAVE_RIPEMD160) */
-#if defined(HAVE_TIGER192)
-	case HASH_TIGER192:
-		*args = &TIGER192_args;
-		break;
-#endif /* defined(HAVE_TIGER192) */
 	default:
 		return (false);
 	}

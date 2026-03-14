@@ -38,10 +38,6 @@ LIBS   += -lmd
 endif # DragonFly
 
 ifeq (${HOST_OS}, FreeBSD)
-ifeq ($(shell ${TEST} ${OSVER} -ge 400002 && ${ECHO} yes), yes) # 4.1-RELEASE
-HAVE_RIPEMD160	= yes
-endif # 4.1-RELEASE
-
 ifeq ($(shell ${TEST} ${OSVER} -lt 400000 && ${ECHO} yes), yes) # 4.0-RELEASE
 HAVE_SHA1	= no
 HAVE_SHA256	= no
@@ -51,15 +47,10 @@ endif # FreeBSD
 
 ifeq (${HOST_OS}, Interix)
 HAVE_SHA256	= no
-HAVE_RIPEMD160	= yes
 LIBS   += -lcrypt
 endif # Interix
 
 ifeq (${HOST_OS}, NetBSD)
-ifeq ($(shell ${TEST} ${OSVER} -ge 105030000 && ${ECHO} yes), yes) # 1.5C
-HAVE_RIPEMD160	= yes
-endif # 1.5C
-
 ifeq ($(shell ${TEST} ${OSVER} -lt 106010000 && ${ECHO} yes), yes) # 1.6A
 HAVE_SHA1	= no
 HAVE_SHA256	= no
@@ -67,10 +58,6 @@ endif # 1.6A
 endif # NetBSD
 
 ifeq (${HOST_OS}, OpenBSD)
-ifeq ($(shell ${TEST} ${OSVER} -ge 199711 && ${ECHO} yes), yes) # 2.2
-HAVE_RIPEMD160	= yes
-endif # 2.2
-
 ifeq ($(shell ${TEST} ${OSVER} -lt 200311 && ${ECHO} yes), yes) # 3.4
 HAVE_SHA1	= no
 HAVE_SHA256	= no
@@ -89,16 +76,11 @@ endif # native
 ifeq (${HASH_TYPE}, libgcrypt) # libgcrypt
 HASH_SRCS	= hash_libgcrypt.c
 HASH_LIBS      ?= -lgcrypt
-
-HAVE_RIPEMD160	= yes
-HAVE_TIGER192	= yes
 endif # libgcrypt
 
 ifeq (${HASH_TYPE}, openssl) # OpenSSL
 HASH_SRCS	= hash_openssl.c
 HASH_LIBS      ?= -lcrypto
-
-HAVE_RIPEMD160	= yes
 
 ifeq (${HOST_OS}, BSD/OS)
 HASH_PREFIX    ?= /usr/contrib
@@ -126,8 +108,6 @@ endif # !native
 
 HAVE_SHA1      ?= yes
 HAVE_SHA256    ?= yes
-HAVE_RIPEMD160 ?= no
-HAVE_TIGER192  ?= no
 
 ifeq (${HAVE_SHA1}, yes)
 CFLAGS += -DHAVE_SHA1
@@ -136,14 +116,6 @@ endif # HAVE_SHA1
 ifeq (${HAVE_SHA256}, yes)
 CFLAGS += -DHAVE_SHA256
 endif # HAVE_SHA256
-
-ifeq (${HAVE_RIPEMD160}, yes)
-CFLAGS += -DHAVE_RIPEMD160
-endif # HAVE_RIPEMD160
-
-ifeq (${HAVE_TIGER192}, yes)
-CFLAGS += -DHAVE_TIGER192
-endif # HAVE_TIGER192
 
 ifeq (${HASH_TYPE}, none) # no hash support
 hash-error:

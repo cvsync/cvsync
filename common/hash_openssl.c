@@ -17,9 +17,6 @@
 bool cvsync_MD5_init(void **);
 void cvsync_MD5_update(void *, const void *, size_t);
 void cvsync_MD5_final(void *, uint8_t *);
-bool cvsync_RIPEMD160_init(void **);
-void cvsync_RIPEMD160_update(void *, const void *, size_t);
-void cvsync_RIPEMD160_final(void *, uint8_t *);
 bool cvsync_SHA1_init(void **);
 void cvsync_SHA1_update(void *, const void *, size_t);
 void cvsync_SHA1_final(void *, uint8_t *);
@@ -44,12 +41,6 @@ const struct hash_args SHA256_args = {
 	cvsync_SHA256_init, cvsync_SHA256_update, cvsync_SHA256_final,
 	cvsync_openssl_destroy,
 	HASH_SIZE_SHA256
-};
-
-const struct hash_args RIPEMD160_args = {
-	cvsync_RIPEMD160_init, cvsync_RIPEMD160_update, cvsync_RIPEMD160_final,
-	cvsync_openssl_destroy,
-	HASH_SIZE_RIPEMD160
 };
 
 bool
@@ -134,35 +125,6 @@ void
 cvsync_SHA256_final(void *ctx, uint8_t *buffer)
 {
 	unsigned int s = HASH_SIZE_SHA256;
-
-	EVP_DigestFinal_ex(ctx, buffer, &s);
-	EVP_MD_CTX_free(ctx);
-}
-
-bool
-cvsync_RIPEMD160_init(void **ctx)
-{
-	EVP_MD_CTX *mdctx;
-
-	if ((mdctx = EVP_MD_CTX_new()) == NULL)
-		return (false);
-	EVP_DigestInit_ex(mdctx, EVP_ripemd160(), NULL);
-
-	*ctx = mdctx;
-
-	return (true);
-}
-
-void
-cvsync_RIPEMD160_update(void *ctx, const void *buffer, size_t bufsize)
-{
-	EVP_DigestUpdate(ctx, buffer, bufsize);
-}
-
-void
-cvsync_RIPEMD160_final(void *ctx, uint8_t *buffer)
-{
-	unsigned int s = HASH_SIZE_RIPEMD160;
 
 	EVP_DigestFinal_ex(ctx, buffer, &s);
 	EVP_MD_CTX_free(ctx);

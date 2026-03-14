@@ -16,28 +16,6 @@
 	  __OpenBSD__ || __sun */
 
 /*
- * RIPEMD160
- */
-
-#if defined(HAVE_RIPEMD160)
-
-#if defined(__FreeBSD__)
-#include <ripemd.h>
-
-#define	RMD160Init	RIPEMD160_Init
-#define	RMD160Update	RIPEMD160_Update
-#define	RMD160Final	RIPEMD160_Final
-#define	RMD160_CTX	RIPEMD160_CTX
-#endif /* __FreeBSD__ */
-
-#if defined(__DragonFly__) || defined(__INTERIX) || defined(__NetBSD__) || \
-    defined(__OpenBSD__)
-#include <rmd160.h>
-#endif /* __DragonFly__ || __INTERIX || __NetBSD__ || __OpenBSD__ */
-
-#endif /* defined(HAVE_RIPEMD160) */
-
-/*
  * Secure Hash Algorithm 1 - FIPS 180-1, RFC 3174
  */
 

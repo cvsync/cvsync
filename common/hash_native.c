@@ -26,11 +26,6 @@ bool cvsync_SHA256_init(void **);
 void cvsync_SHA256_update(void *, const void *, size_t);
 void cvsync_SHA256_final(void *, uint8_t *);
 #endif /* defined(HAVE_SHA256) */
-#if defined(HAVE_RIPEMD160)
-bool cvsync_RIPEMD160_init(void **);
-void cvsync_RIPEMD160_update(void *, const void *, size_t);
-void cvsync_RIPEMD160_final(void *, uint8_t *);
-#endif /* defined(HAVE_RIPEMD160) */
 void cvsync_native_destroy(void *);
 
 const struct hash_args MD5_args = {
@@ -54,14 +49,6 @@ const struct hash_args SHA256_args = {
 	HASH_SIZE_SHA256
 };
 #endif /* defined(HAVE_SHA256) */
-
-#if defined(HAVE_RIPEMD160)
-const struct hash_args RIPEMD160_args = {
-	cvsync_RIPEMD160_init, cvsync_RIPEMD160_update, cvsync_RIPEMD160_final,
-	cvsync_native_destroy,
-	HASH_SIZE_RIPEMD160
-};
-#endif /* defined(HAVE_RIPEMD160) */
 
 bool
 cvsync_MD5_init(void **ctx)
@@ -147,35 +134,6 @@ cvsync_SHA256_final(void *ctx, uint8_t *buffer)
 	free(ctx);
 }
 #endif /* defined(HAVE_SHA256) */
-
-#if defined(HAVE_RIPEMD160)
-bool
-cvsync_RIPEMD160_init(void **ctx)
-{
-	RMD160_CTX *ripemd160ctx;
-
-	if ((ripemd160ctx = malloc(sizeof(*ripemd160ctx))) == NULL)
-		return (false);
-	RMD160Init(ripemd160ctx);
-
-	*ctx = ripemd160ctx;
-
-	return (true);
-}
-
-void
-cvsync_RIPEMD160_update(void *ctx, const void *buffer, size_t bufsize)
-{
-	RMD160Update(ctx, buffer, bufsize);
-}
-
-void
-cvsync_RIPEMD160_final(void *ctx, uint8_t *buffer)
-{
-	RMD160Final(buffer, ctx);
-	free(ctx);
-}
-#endif /* defined(HAVE_RIPEMD160) */
 
 void
 cvsync_native_destroy(void *ctx)
