@@ -88,14 +88,6 @@ HAVE_RIPEMD160	= yes
 HAVE_TIGER192	= yes
 endif # libgcrypt
 
-ifeq (${HASH_TYPE}, mhash) # mhash
-HASH_SRCS	= hash_mhash.c
-HASH_LIBS      ?= -lmhash
-
-HAVE_RIPEMD160	= yes
-HAVE_TIGER192	= yes
-endif # mhash
-
 ifeq (${HASH_TYPE}, openssl) # OpenSSL
 HASH_SRCS	= hash_openssl.c
 HASH_LIBS      ?= -lcrypto
@@ -146,7 +138,6 @@ ifeq (${HASH_TYPE}, none) # no hash support
 hash-error:
 	@${ECHO} "WARNING! Please specify the HASH_TYPE."
 	@${ECHO} "  libgcrypt"
-	@${ECHO} "  mhash"
 	@${ECHO} "  native (default)"
 	@${ECHO} "  openssl"
 	@exit 1;
