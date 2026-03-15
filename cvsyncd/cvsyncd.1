@@ -1,7 +1,7 @@
 .\"
 .\" This software is released under the BSD License, see LICENSE.
 .\"
-.Dd Jun 23, 2005
+.Dd Mar 15, 2026
 .Dt CVSYNCD 1
 .Os
 .Sh NAME
@@ -154,14 +154,11 @@ This keyword is valid in
 .Ql config .
 .It Sy hash Ar type
 Specifies the hash type to validate the distributed files and deltas.
-.Ql md5
-shall be supported in any environments.
-.Ql ripemd160 ,
+.Ql md5 ,
 .Ql sha1 ,
-.Ql tiger192
-and, any other types are optional.
-The default value is
-.Ql md5 .
+and 
+.Ql sha256
+are supported.
 This keyword is valid in
 .Ql config .
 .It Sy listen Ar address
