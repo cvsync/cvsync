@@ -59,9 +59,10 @@ bool
 cvsync_init(void)
 {
 	struct sigaction act;
+	int rv;
 
 	cvsync_sig_ign.sa_handler = cvsync_signal;
-	if (sigemptyset(&cvsync_sig_ign.sa_mask) == -1) {
+	if ((rv = sigemptyset(&cvsync_sig_ign.sa_mask)) == -1) {
 		logmsg_err("sigemptyset: %s", strerror(errno));
 		return (false);
 	}
