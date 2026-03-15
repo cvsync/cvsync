@@ -20,6 +20,7 @@ HASH_TYPE      ?= openssl
 endif # OS X El Capitan (10.11)
 ifeq ($(shell ${TEST} ${OSVER} -ge 15 && ${ECHO} yes), yes) # OS X El Capitan (10.11)
 HASH_TYPE      ?= native
+HAVE_MD5	= no
 endif # OS X El Capitan (10.11)
 endif # Darwin
 
@@ -111,8 +112,13 @@ LDFLAGS+= ${HASH_LDFLAGS}
 LIBS   += ${HASH_LIBS}
 endif # !native
 
+HAVE_MD5       ?= yes
 HAVE_SHA1      ?= yes
 HAVE_SHA256    ?= yes
+
+ifeq (${HAVE_MD5}, yes)
+CFLAGS += -DHAVE_MD5
+endif # HAVE_MD5
 
 ifeq (${HAVE_SHA1}, yes)
 CFLAGS += -DHAVE_SHA1
@@ -122,11 +128,18 @@ ifeq (${HAVE_SHA256}, yes)
 CFLAGS += -DHAVE_SHA256
 endif # HAVE_SHA256
 
-ifeq (${HASH_TYPE}, none) # no hash support
+ifeq (${HASH_TYPE}, none) # no hash library
 hash-error:
 	@${ECHO} "WARNING! Please specify the HASH_TYPE."
 	@${ECHO} "  libgcrypt"
 	@${ECHO} "  native (default)"
 	@${ECHO} "  openssl"
 	@exit 1;
-endif # none
+else # no hash library
+ifeq (${HAVE_MD5} ${HAVE_SHA1} ${HAVE_SHA256}, no no no) # no hash algorithm
+hash-error:
+	@${ECHO} "WARNING! No hash algorithms."
+	@${ECHO} "One of MD5, SHA-1, and SHA-256 shall be supported, at least."
+	@exit 1;
+endif # no hash algorithm
+endif # no hash library

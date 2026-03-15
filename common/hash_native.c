@@ -13,9 +13,11 @@
 #include "hash.h"
 #include "hash_native.h"
 
+#if defined(HAVE_MD5)
 bool cvsync_MD5_init(void **);
 void cvsync_MD5_update(void *, const void *, size_t);
 void cvsync_MD5_final(void *, uint8_t *);
+#endif /* defined(HAVE_MD5) */
 #if defined(HAVE_SHA1)
 bool cvsync_SHA1_init(void **);
 void cvsync_SHA1_update(void *, const void *, size_t);
@@ -28,11 +30,13 @@ void cvsync_SHA256_final(void *, uint8_t *);
 #endif /* defined(HAVE_SHA256) */
 void cvsync_native_destroy(void *);
 
+#if defined(HAVE_MD5)
 const struct hash_args MD5_args = {
 	cvsync_MD5_init, cvsync_MD5_update, cvsync_MD5_final,
 	cvsync_native_destroy,
 	HASH_SIZE_MD5
 };
+#endif /* defined(HAVE_MD5) */
 
 #if defined(HAVE_SHA1)
 const struct hash_args SHA1_args = {
@@ -50,6 +54,7 @@ const struct hash_args SHA256_args = {
 };
 #endif /* defined(HAVE_SHA256) */
 
+#if defined(HAVE_MD5)
 bool
 cvsync_MD5_init(void **ctx)
 {
@@ -76,6 +81,7 @@ cvsync_MD5_final(void *ctx, uint8_t *buffer)
 	MD5Final(buffer, ctx);
 	free(ctx);
 }
+#endif /* defined(HAVE_MD5) */
 
 #if defined(HAVE_SHA1)
 bool

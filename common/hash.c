@@ -21,7 +21,9 @@ struct hashent {
 };
 
 static const struct hashent hashents[] = {
+#if defined(HAVE_MD5)
 	{ "MD5",	3,	HASH_MD5 },
+#endif /* defined(HAVE_MD5) */
 #if defined(HAVE_SHA1)
 	{ "SHA1",	4,	HASH_SHA1 },
 #endif /* defined(HAVE_SHA1) */
@@ -67,9 +69,11 @@ bool
 hash_set(int type, const struct hash_args **args)
 {
 	switch (type) {
+#if defined(HAVE_MD5)
 	case HASH_MD5:
 		*args = &MD5_args;
 		break;
+#endif /* defined(HAVE_MD5) */
 #if defined(HAVE_SHA1)
 	case HASH_SHA1:
 		*args = &SHA1_args;

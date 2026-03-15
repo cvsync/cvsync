@@ -8,7 +8,9 @@
 enum {
 	HASH_UNSPEC	= 0,
 
+#if defined(HAVE_MD5)
 	HASH_MD5,
+#endif /* defined(HAVE_MD5) */
 #if defined(HAVE_SHA1)
 	HASH_SHA1,
 #endif /* defined(HAVE_SHA1) */
@@ -19,7 +21,15 @@ enum {
 	HASH_MAX
 };
 
+#if !defined(HASH_DEFAULT_TYPE) && defined(HAVE_SHA256)
+#define	HASH_DEFAULT_TYPE	HASH_SHA256
+#endif /* defined(HAVE_SHA256) */
+#if !defined(HASH_DEFAULT_TYPE) && defined(HAVE_SHA1)
+#define	HASH_DEFAULT_TYPE	HASH_SHA1
+#endif /* defined(HAVE_SHA1) */
+#if !defined(HASH_DEFAULT_TYPE) && defined(HAVE_MD5)
 #define	HASH_DEFAULT_TYPE	HASH_MD5
+#endif /* defined(HAVE_MD5) */
 
 #define	HASH_MAXLEN	(64)	/* 512bits */
 
@@ -39,7 +49,9 @@ int hash_pton(const char *, size_t);
 size_t hash_ntop(int, void *, size_t);
 bool hash_set(int, const struct hash_args **);
 
+#if defined(HAVE_MD5)
 extern const struct hash_args MD5_args;
+#endif /* defined(HAVE_MD5) */
 #if defined(HAVE_SHA1)
 extern const struct hash_args SHA1_args;
 #endif /* defined(HAVE_SHA1) */
