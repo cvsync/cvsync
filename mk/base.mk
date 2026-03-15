@@ -26,7 +26,7 @@ TEST	= /usr/bin/test
 endif # CYGWIN
 
 ifeq (${HOST_OS}, Darwin)
-_OSVER := $(shell /usr/sbin/sysctl -n kern.osrelease)
+_OSVER := $(shell /usr/sbin/sysctl -n kern.osrelease | /usr/bin/cut -d . -f 1)
 OSVER  ?= ${_OSVER}
 BINGRP	= admin
 endif # Darwin

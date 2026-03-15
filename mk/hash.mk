@@ -15,7 +15,12 @@ HASH_TYPE      ?= none
 endif # CYGWIN
 
 ifeq (${HOST_OS}, Darwin)
-HASH_TYPE      ?= none
+ifeq ($(shell ${TEST} ${OSVER} -lt 15 && ${ECHO} yes), yes) # OS X El Capitan (10.11)
+HASH_TYPE      ?= openssl
+endif # OS X El Capitan (10.11)
+ifeq ($(shell ${TEST} ${OSVER} -ge 15 && ${ECHO} yes), yes) # OS X El Capitan (10.11)
+HASH_TYPE      ?= native
+endif # OS X El Capitan (10.11)
 endif # Darwin
 
 ifeq (${HOST_OS}, Linux)

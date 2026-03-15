@@ -75,6 +75,11 @@ typedef CC_SHA1_CTX	SHA1_CTX;
 #define	SHA1Update	CC_SHA1_Update
 #define	SHA1Final	CC_SHA1_Final
 
+typedef CC_SHA256_CTX	SHA256_CTX;
+#define	SHA256Init	CC_SHA256_Init
+#define	SHA256Update	CC_SHA256_Update
+#define	SHA256Final	CC_SHA256_Final
+
 #endif /* defined(__APPLE__) */
 
 #endif /* CVSYNC_HASH_NATIVE_H */
