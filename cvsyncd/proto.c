@@ -164,9 +164,9 @@ hash_exchange(int sock, struct config *cf)
 		return (HASH_UNSPEC);
 
 	if ((type = hash_pton(name, len)) == HASH_UNSPEC)
-		type = HASH_MD5;
+		type = HASH_DEFAULT_TYPE;
 	if (type != cf->cf_hash)
-		type = HASH_MD5;
+		type = HASH_DEFAULT_TYPE;
 
 	if ((len = hash_ntop(type, name, sizeof(name))) == 0)
 		return (HASH_UNSPEC);
