@@ -1,3 +1,15 @@
+2026-03-15  MAEKAWA Masahide  <maekawa@cvsync.org>
+
+	* Fix build problem with current Clang.
+
+	* Fix return wrong values.
+
+	* Support SHA-256.
+
+	* Drop mhash support.
+
+	* Drop RIPEMD160/TIGER192 support.
+
 2008-05-11  MAEKAWA Masahide  <maekawa@cvsync.org>
 
 	* Fix build problem on DragonFly 1.11 or later.
