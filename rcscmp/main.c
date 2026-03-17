@@ -33,7 +33,7 @@ main(int argc, char *argv[])
 	uint8_t hash[2][HASH_MAXLEN];
 	void *addr;
 	off_t size;
-	int fd, type, i;
+	int fd, i;
 
 	if (argc != 3) {
 		(void)fprintf(stderr, "Usage: rcscmp <file1> <file2>\n");
@@ -42,16 +42,8 @@ main(int argc, char *argv[])
 	argc--;
 	argv++;
 
-	if ((type = hash_pton("sha1", 4)) == HASH_UNSPEC) {
-		(void)fprintf(stderr, "The hash type 'sha1' is not supported. " "Use the 'md5' instead\n");
-		type = hash_pton("md5", 3);
-	}
-	if (type == HASH_UNSPEC) {
-		(void)fprintf(stderr, "No strong hash is available\n");
-		exit(EXIT_FAILURE);
-	}
-	if (!hash_set(type, &hashops)) {
-		(void)fprintf(stderr, "No strong hash is available\n");
+	if (!hash_set(HASH_DEFAULT_TYPE, &hashops)) {
+		(void)fprintf(stderr, "default hash is not available\n");
 		exit(EXIT_FAILURE);
 	}
 
