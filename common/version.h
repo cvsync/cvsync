@@ -15,6 +15,6 @@
 
 #define	CVSYNC_PROTO(j, n)	((uint32_t)(((j) << 16) | (n)))
 
-#define	CVSYNC_URL	"http://www.cvsync.org/"
+#define	CVSYNC_URL	"https://www.cvsync.org/"
 
 #endif /* CVSYNC_VERSION_H */
