@@ -33,7 +33,6 @@ struct collection {
 
 void collection_destroy(struct collection *);
 void collection_destroy_all(struct collection *);
-struct collection *collection_lookup(struct collection *, const char *,
-				     const char *);
+struct collection *collection_lookup(struct collection *, const char *, const char *);
 
 #endif /* CVSYNC_COLLECTION_H */

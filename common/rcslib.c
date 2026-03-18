@@ -158,9 +158,8 @@ rcslib_destroy_delta(struct rcslib_file *rcs)
 		}
 	}
 	free(rcs->delta.rd_rev);
-	if (rcs->delta.rd_rev_deltatext != NULL) {
+	if (rcs->delta.rd_rev_deltatext != NULL)
 		free(rcs->delta.rd_rev_deltatext);
-	}
 }
 
 bool
@@ -182,8 +181,7 @@ rcslib_parse_rcstext(struct rcslib_file *rcs, char *sp, const char *bp)
 		rcslib_sort_revision(rcs);
 
 	/* desc string */
-	if ((sp + rcskey->namelen > bp) ||
-	    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+	if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
 		rcslib_destroy_admin(rcs);
 		rcslib_destroy_delta(rcs);
 		return (false);
@@ -246,10 +244,9 @@ rcslib_parse_rcstext(struct rcslib_file *rcs, char *sp, const char *bp)
 		}
 		if (rev->next.n_len == 0)
 			continue;
-		if (i + 1 == rcs->delta.rd_count)
+		if ((i + 1) == rcs->delta.rd_count)
 			continue;
-		if (rcslib_cmp_num(&rcs->delta.rd_rev[i + 1].num,
-				   &rev->next) == 0) {
+		if (rcslib_cmp_num(&rcs->delta.rd_rev[i + 1].num, &rev->next) == 0) {
 			rev->rv_next = &rcs->delta.rd_rev[i + 1];
 			continue;
 		}
@@ -279,10 +276,8 @@ rcslib_parse_admin(struct rcslib_file *rcs, char *sp, const char *bp)
 
 	/* head {num}; */
 	rcskey = &rcs_keywords[RCS_HEAD];
-	if ((sp + rcskey->namelen > bp) ||
-	    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+	if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0))
 		return (NULL);
-	}
 	sp += rcskey->namelen;
 
 	p = sp;
@@ -302,8 +297,7 @@ rcslib_parse_admin(struct rcslib_file *rcs, char *sp, const char *bp)
 
 	/* { branch {num}; } */
 	rcskey = &rcs_keywords[RCS_BRANCH];
-	if ((sp + rcskey->namelen < bp) &&
-	    (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
+	if (((sp + rcskey->namelen) < bp) && (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
 		sp += rcskey->namelen;
 		p = sp;
 		RCS_SKIP(sp, bp)
@@ -335,8 +329,7 @@ rcslib_parse_admin(struct rcslib_file *rcs, char *sp, const char *bp)
 
 	/* { comment {string}; } */
 	rcskey = &rcs_keywords[RCS_COMMENT];
-	if ((sp + rcskey->namelen < bp) &&
-	    (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
+	if (((sp + rcskey->namelen) < bp) && (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
 		sp += rcskey->namelen;
 		RCS_SKIP(sp, bp)
 
@@ -353,8 +346,7 @@ rcslib_parse_admin(struct rcslib_file *rcs, char *sp, const char *bp)
 
 	/* { expand {string}; } */
 	rcskey = &rcs_keywords[RCS_EXPAND];
-	if ((sp + rcskey->namelen < bp) &&
-	    (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
+	if (((sp + rcskey->namelen) < bp) && (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
 		sp += rcskey->namelen;
 		RCS_SKIP(sp, bp)
 
@@ -397,12 +389,10 @@ rcslib_parse_delta(struct rcslib_file *rcs, char *sp, const char *bp)
 				return (NULL);
 			}
 			if (size > 0) {
-				(void)memcpy(rev, delta->rd_rev,
-					     size * RCSLIB_REVISION_SIZE);
+				(void)memcpy(rev, delta->rd_rev, size * RCSLIB_REVISION_SIZE);
 				free(delta->rd_rev);
 			}
-			(void)memset(rev + size, 0,
-				     (new - size) * RCSLIB_REVISION_SIZE);
+			(void)memset(rev + size, 0, (new - size) * RCSLIB_REVISION_SIZE);
 			delta->rd_rev = rev;
 			delta->rd_size = new;
 		}
@@ -443,8 +433,7 @@ rcslib_parse_delta(struct rcslib_file *rcs, char *sp, const char *bp)
 
 		/* author id; */
 		rcskey = &rcs_keywords[RCS_AUTHOR];
-		if ((sp + rcskey->namelen > bp) ||
-		    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+		if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
 			free(delta->rd_rev);
 			return (NULL);
 		}
@@ -476,8 +465,7 @@ rcslib_parse_delta(struct rcslib_file *rcs, char *sp, const char *bp)
 
 		/* state {id}; */
 		rcskey = &rcs_keywords[RCS_STATE];
-		if ((sp + rcskey->namelen > bp) ||
-		    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+		if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
 			free(delta->rd_rev);
 			return (NULL);
 		}
@@ -513,8 +501,7 @@ rcslib_parse_delta(struct rcslib_file *rcs, char *sp, const char *bp)
 		}
 
 		/* branches {num}*; */
-		if ((sp = rcslib_parse_branches(sp, bp,
-						&rev->branches)) == NULL) {
+		if ((sp = rcslib_parse_branches(sp, bp, &rev->branches)) == NULL) {
 			free(delta->rd_rev);
 			return (NULL);
 		}
@@ -527,8 +514,7 @@ rcslib_parse_delta(struct rcslib_file *rcs, char *sp, const char *bp)
 
 		/* next {num}; */
 		rcskey = &rcs_keywords[RCS_NEXT];
-		if ((sp + rcskey->namelen > bp) ||
-		    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+		if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
 			free(delta->rd_rev);
 			return (NULL);
 		}
@@ -606,10 +592,8 @@ rcslib_parse_deltatext(struct rcslib_file *rcs, char *sp, const char *bp)
 
 		/* log string */
 		rcskey = &rcs_keywords[RCS_LOG];
-		if ((sp + rcskey->namelen > bp) ||
-		    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+		if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0))
 			return (NULL);
-		}
 		sp += rcskey->namelen;
 
 		p = sp;
@@ -629,10 +613,8 @@ rcslib_parse_deltatext(struct rcslib_file *rcs, char *sp, const char *bp)
 
 		/* text string */
 		rcskey = &rcs_keywords[RCS_TEXT];
-		if ((sp + rcskey->namelen > bp) ||
-		    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+		if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0))
 			return (NULL);
-		}
 		sp += rcskey->namelen;
 
 		p = sp;
@@ -664,10 +646,8 @@ rcslib_parse_access(char *sp, const char *bp, struct rcslib_access *access)
 	struct rcsid *id;
 	char *p;
 
-	if ((sp + rcskey->namelen > bp) ||
-	    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+	if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0))
 		return (NULL);
-	}
 	sp += rcskey->namelen;
 
 	p = sp;
@@ -690,8 +670,7 @@ rcslib_parse_access(char *sp, const char *bp, struct rcslib_access *access)
 				return (NULL);
 			}
 			if (size > 0) {
-				(void)memcpy(id, access->ra_id,
-					     size * RCSID_SIZE);
+				(void)memcpy(id, access->ra_id, size * RCSID_SIZE);
 				free(access->ra_id);
 			}
 			access->ra_id = id;
@@ -726,8 +705,7 @@ rcslib_parse_access(char *sp, const char *bp, struct rcslib_access *access)
 	}
 
 	if (access->ra_count > 0) {
-		qsort(access->ra_id, access->ra_count, RCSID_SIZE,
-		      (rcslib_cmp_func)(void *)rcslib_cmp_id);
+		qsort(access->ra_id, access->ra_count, RCSID_SIZE, (rcslib_cmp_func)(void *)rcslib_cmp_id);
 	}
 
 	return (sp);
@@ -740,8 +718,7 @@ rcslib_parse_symbols(char *sp, const char *bp, struct rcslib_symbols *symbols)
 	struct rcslib_symbol *sym;
 	char *p;
 
-	if ((sp + rcskey->namelen > bp) ||
-	    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+	if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
 		return (NULL);
 	}
 	sp += rcskey->namelen;
@@ -769,8 +746,7 @@ rcslib_parse_symbols(char *sp, const char *bp, struct rcslib_symbols *symbols)
 				return (NULL);
 			}
 			if (size > 0) {
-				(void)memcpy(sym, symbols->rs_symbols,
-					     size * RCSLIB_SYMBOL_SIZE);
+				(void)memcpy(sym, symbols->rs_symbols, size * RCSLIB_SYMBOL_SIZE);
 				free(symbols->rs_symbols);
 			}
 			symbols->rs_symbols = sym;
@@ -810,8 +786,8 @@ rcslib_parse_symbols(char *sp, const char *bp, struct rcslib_symbols *symbols)
 	}
 
 	if (symbols->rs_count > 0) {
-		qsort(symbols->rs_symbols, symbols->rs_count,
-		      RCSLIB_SYMBOL_SIZE, (rcslib_cmp_func)(void *)rcslib_cmp_symbol);
+		qsort(symbols->rs_symbols, symbols->rs_count, RCSLIB_SYMBOL_SIZE,
+		      (rcslib_cmp_func)(void *)rcslib_cmp_symbol);
 	}
 
 	return (sp);
@@ -824,10 +800,8 @@ rcslib_parse_locks(char *sp, const char *bp, struct rcslib_locks *locks)
 	struct rcslib_lock *lock;
 	char *p;
 
-	if ((sp + rcskey->namelen > bp) ||
-	    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+	if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0))
 		return (NULL);
-	}
 	sp += rcskey->namelen;
 
 	p = sp;
@@ -849,8 +823,7 @@ rcslib_parse_locks(char *sp, const char *bp, struct rcslib_locks *locks)
 				return (NULL);
 			}
 			if (size > 0) {
-				(void)memcpy(lock, locks->rl_locks,
-					     size * RCSLIB_LOCK_SIZE);
+				(void)memcpy(lock, locks->rl_locks, size * RCSLIB_LOCK_SIZE);
 				free(locks->rl_locks);
 			}
 			locks->rl_locks = lock;
@@ -896,8 +869,7 @@ do_parse_strict:
 	}
 
 	rcskey = &rcs_keywords[RCS_STRICT];
-	if ((sp + rcskey->namelen < bp) &&
-	    (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
+	if (((sp + rcskey->namelen) < bp) && (memcmp(sp, rcskey->name, rcskey->namelen) == 0)) {
 		sp += rcskey->namelen;
 		RCS_SKIP_NORET(sp, bp)
 		if ((sp > bp) || (*sp++ != ';')) {
@@ -916,8 +888,7 @@ do_parse_strict:
 	}
 
 	if (locks->rl_count > 0) {
-		qsort(locks, locks->rl_count, RCSLIB_LOCK_SIZE,
-		      (rcslib_cmp_func)(void *)rcslib_cmp_lock);
+		qsort(locks, locks->rl_count, RCSLIB_LOCK_SIZE, (rcslib_cmp_func)(void *)rcslib_cmp_lock);
 	}
 
 	return (sp);
@@ -930,10 +901,8 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 	char *sv_sp, *p;
 	int n, c;
 
-	if ((sp + rcskey->namelen > bp) ||
-	    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+	if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0))
 		return (NULL);
-	}
 	sp += rcskey->namelen;
 
 	p = sp;
@@ -953,10 +922,10 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 	n = 0;
 	while (isdigit((int)(*sp))) {
 		c = *sp - '0';
-		if (INT_MAX / 10 < n)
+		if ((INT_MAX) / 10 < n)
 			return (NULL);
 		n *= 10;
-		if (INT_MAX - n < c)
+		if ((INT_MAX - n) < c)
 			return (NULL);
 		n += c;
 		if (++sp > bp)
@@ -970,7 +939,7 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 		return (NULL);
 
 	/* month */
-	if (sp + 2 > bp)
+	if ((sp + 2) > bp)
 		return (NULL);
 	if (!isdigit((int)(*sp)))
 		return (NULL);
@@ -986,7 +955,7 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 		return (NULL);
 
 	/* day */
-	if (sp + 2 > bp)
+	if ((sp + 2) > bp)
 		return (NULL);
 	if (!isdigit((int)(*sp)))
 		return (NULL);
@@ -1002,7 +971,7 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 		return (NULL);
 
 	/* hour */
-	if (sp + 2 > bp)
+	if ((sp + 2) > bp)
 		return (NULL);
 	if (!isdigit((int)(*sp)))
 		return (NULL);
@@ -1018,7 +987,7 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 		return (NULL);
 
 	/* minute */
-	if (sp + 2 > bp)
+	if ((sp + 2) > bp)
 		return (NULL);
 	if (!isdigit((int)(*sp)))
 		return (NULL);
@@ -1034,7 +1003,7 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 		return (NULL);
 
 	/* second */
-	if (sp + 2 > bp)
+	if ((sp + 2) > bp)
 		return (NULL);
 	if (!isdigit((int)(*sp)))
 		return (NULL);
@@ -1053,17 +1022,14 @@ rcslib_parse_date(char *sp, const char *bp, struct rcslib_date *date)
 }
 
 char *
-rcslib_parse_branches(char *sp, const char *bp,
-		      struct rcslib_branches *branches)
+rcslib_parse_branches(char *sp, const char *bp, struct rcslib_branches *branches)
 {
 	const struct rcs_keyword *rcskey = &rcs_keywords[RCS_BRANCHES];
 	struct rcsnum *num;
 	char *p;
 
-	if ((sp + rcskey->namelen > bp) ||
-	    (memcmp(sp, rcskey->name, rcskey->namelen) != 0)) {
+	if (((sp + rcskey->namelen) > bp) || (memcmp(sp, rcskey->name, rcskey->namelen) != 0))
 		return (NULL);
-	}
 	sp += rcskey->namelen;
 
 	p = sp;
@@ -1087,8 +1053,7 @@ rcslib_parse_branches(char *sp, const char *bp,
 				return (NULL);
 			}
 			if (size > 0) {
-				(void)memcpy(num, branches->rb_num,
-					     size * RCSNUM_SIZE);
+				(void)memcpy(num, branches->rb_num, size * RCSNUM_SIZE);
 				free(branches->rb_num);
 			}
 			branches->rb_num = num;
@@ -1134,10 +1099,8 @@ rcslib_parse_newphrase(char *sp, const char *bp)
 		}
 
 		for (rcskey = rcs_keywords ; rcskey->name != NULL ; rcskey++) {
-			if ((id.i_len >= rcskey->namelen) &&
-			    (memcmp(id.i_id, rcskey->name, id.i_len) == 0)) {
+			if ((id.i_len >= rcskey->namelen) && (memcmp(id.i_id, rcskey->name, id.i_len) == 0))
 				return (NULL);
-			}
 		}
 
 		p = sp;
@@ -1190,10 +1153,10 @@ rcslib_parse_rcsdiff(char *sp, const char *bp, struct rcslib_rcsdiff *rd)
 		c = (size_t)(*sp - '0');
 		if (++sp == bp)
 			return (NULL);
-		if (SIZE_MAX / 10 < n)
+		if ((SIZE_MAX / 10) < n)
 			return (NULL);
 		n *= 10;
-		if (SIZE_MAX - n < c)
+		if ((SIZE_MAX - n) < c)
 			return (NULL);
 		n += c;
 	}
@@ -1210,10 +1173,10 @@ rcslib_parse_rcsdiff(char *sp, const char *bp, struct rcslib_rcsdiff *rd)
 		c = (size_t)(*sp - '0');
 		if (++sp == bp)
 			return (NULL);
-		if (SIZE_MAX / 10 < n)
+		if ((SIZE_MAX / 10) < n)
 			return (NULL);
 		n *= 10;
-		if (SIZE_MAX - n < c)
+		if ((SIZE_MAX - n) < c)
 			return (NULL);
 		n += c;
 	}
@@ -1395,11 +1358,8 @@ rcslib_lookup_revision(struct rcslib_file *rcs, const struct rcsnum *num)
 	if (delta->rd_count < 100) {
 		for (i = 0 ; i < delta->rd_count ; i++) {
 			rev = &delta->rd_rev[i];
-			if ((num->n_len == rev->num.n_len) &&
-			    (memcmp(num->n_str, rev->num.n_str,
-				    num->n_len) == 0)) {
+			if ((num->n_len == rev->num.n_len) && (memcmp(num->n_str, rev->num.n_str, num->n_len) == 0))
 				return (rev);
-			}
 		}
 	} else {
 		while (l <= r) {
@@ -1432,8 +1392,7 @@ rcslib_lookup_symbol(struct rcslib_file *rcs, void *symstr, size_t symlen)
 
 	for (i = 0 ; i < rcs->symbols.rs_count ; i++) {
 		symbol = &rcs->symbols.rs_symbols[i];
-		if ((symlen == symbol->sym.s_len) &&
-		    (memcmp(symstr, symbol->sym.s_sym, symlen) == 0)) {
+		if ((symlen == symbol->sym.s_len) && (memcmp(symstr, symbol->sym.s_sym, symlen) == 0)) {
 			num = &symbol->num;
 			break;
 		}
@@ -1537,9 +1496,8 @@ rcslib_write_delta(int fd, const struct rcslib_revision *rev)
 	iov[6].iov_len = rev->state.i_len;
 	iov[7].iov_base = ";\nbranches";
 	iov[7].iov_len = 10;
-	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len +
-	      iov[3].iov_len + iov[4].iov_len + iov[5].iov_len +
-	      iov[6].iov_len + iov[7].iov_len;
+	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len + iov[3].iov_len +
+	      iov[4].iov_len + iov[5].iov_len + iov[6].iov_len + iov[7].iov_len;
 
 	if ((wn = writev(fd, iov, 8)) == -1)
 		return (false);
@@ -1594,9 +1552,8 @@ rcslib_write_deltatext(int fd, const struct rcslib_revision *rev)
 	iov[5].iov_len = rev->text.s_len;
 	iov[6].iov_base = "@\n";
 	iov[6].iov_len = 2;
-	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len +
-	      iov[3].iov_len + iov[4].iov_len + iov[5].iov_len +
-	      iov[6].iov_len;
+	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len + iov[3].iov_len +
+	      iov[4].iov_len + iov[5].iov_len + iov[6].iov_len;
 
 	if ((wn = writev(fd, iov, 7)) == -1)
 		return (false);
@@ -1649,8 +1606,7 @@ rcslib_cmp_lock(const struct rcslib_lock *l1, const struct rcslib_lock *l2)
 }
 
 int
-rcslib_cmp_symbol(const struct rcslib_symbol *s1,
-		  const struct rcslib_symbol *s2)
+rcslib_cmp_symbol(const struct rcslib_symbol *s1, const struct rcslib_symbol *s2)
 {
 	int rv;
 
@@ -1768,15 +1724,13 @@ rcslib_sort_revision(struct rcslib_file *rcs)
 	for (i = 0 ; i < n ; i++) {
 		rev1 = &rcs->delta.rd_rev[i];
 		rev2 = &rcs->delta.rd_rev[i + 1];
-		if (rcslib_cmp_num(&rev1->num, &rev2->num) >= 0) {
+		if (rcslib_cmp_num(&rev1->num, &rev2->num) >= 0)
 			break;
-		}
 	}
 	if (i == n) {
 		/* already sorted */
 		return;
 	}
 
-	qsort(rcs->delta.rd_rev, rcs->delta.rd_count, RCSLIB_REVISION_SIZE,
-	      (rcslib_cmp_func)(void *)rcslib_cmp_num);
+	qsort(rcs->delta.rd_rev, rcs->delta.rd_count, RCSLIB_REVISION_SIZE, (rcslib_cmp_func)(void *)rcslib_cmp_num);
 }

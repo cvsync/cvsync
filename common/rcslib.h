@@ -127,10 +127,8 @@ struct rcslib_rcsdiff {
 struct rcslib_file *rcslib_init(void *, off_t);
 void rcslib_destroy(struct rcslib_file *);
 
-struct rcslib_revision *rcslib_lookup_revision(struct rcslib_file *,
-					       const struct rcsnum *);
-struct rcslib_revision *rcslib_lookup_symbol(struct rcslib_file *,
-					     void *, size_t);
+struct rcslib_revision *rcslib_lookup_revision(struct rcslib_file *, const struct rcsnum *);
+struct rcslib_revision *rcslib_lookup_symbol(struct rcslib_file *, void *, size_t);
 
 bool rcslib_write_delta(int, const struct rcslib_revision *);
 bool rcslib_write_deltatext(int, const struct rcslib_revision *);
@@ -138,8 +136,7 @@ bool rcslib_write_deltatext(int, const struct rcslib_revision *);
 bool rcslib_str2num(void *, size_t, struct rcsnum *);
 
 int rcslib_cmp_lock(const struct rcslib_lock *, const struct rcslib_lock *);
-int rcslib_cmp_symbol(const struct rcslib_symbol *,
-		      const struct rcslib_symbol *);
+int rcslib_cmp_symbol(const struct rcslib_symbol *, const struct rcslib_symbol *);
 int rcslib_cmp_id(const struct rcsid *, const struct rcsid *);
 int rcslib_cmp_num(const struct rcsnum *, const struct rcsnum *);
 int rcslib_cmp_sym(const struct rcssym *, const struct rcssym *);

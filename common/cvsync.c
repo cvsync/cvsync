@@ -294,8 +294,7 @@ cvsync_mmap(struct cvsync_file *cfp, off_t offset, off_t size)
 		cfp->cf_addr = NULL;
 		return (true);
 	}
-	if ((cfp->cf_addr = mmap(NULL, cfp->cf_msize, PROT_READ, MAP_PRIVATE,
-				 cfp->cf_fileno, offset)) == MAP_FAILED) {
+	if ((cfp->cf_addr = mmap(NULL, cfp->cf_msize, PROT_READ, MAP_PRIVATE, cfp->cf_fileno, offset)) == MAP_FAILED) {
 		logmsg_err("%s", strerror(errno));
 		return (false);
 	}

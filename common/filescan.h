@@ -44,8 +44,7 @@ struct filescan_args {
 	const struct hash_args	*fsa_hash_ops;
 };
 
-struct filescan_args *filescan_init(struct mux *, struct collection *,
-				    uint32_t, int);
+struct filescan_args *filescan_init(struct mux *, struct collection *, uint32_t, int);
 void filescan_destroy(struct filescan_args *);
 void *filescan(void *);
 bool filescan_start(struct filescan_args *, const char *, const char *);

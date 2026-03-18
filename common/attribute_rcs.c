@@ -29,8 +29,7 @@ attr_rcs_encode_dir(uint8_t *buffer, size_t bufsize, uint16_t mode)
 }
 
 size_t
-attr_rcs_encode_file(uint8_t *buffer, size_t bufsize, time_t mtime, off_t size,
-		 uint16_t mode)
+attr_rcs_encode_file(uint8_t *buffer, size_t bufsize, time_t mtime, off_t size, uint16_t mode)
 {
 	if (bufsize < RCS_ATTRLEN_FILE)
 		return (0);
@@ -43,8 +42,7 @@ attr_rcs_encode_file(uint8_t *buffer, size_t bufsize, time_t mtime, off_t size,
 }
 
 size_t
-attr_rcs_encode_rcs(uint8_t *buffer, size_t bufsize, time_t mtime,
-		    uint16_t mode)
+attr_rcs_encode_rcs(uint8_t *buffer, size_t bufsize, time_t mtime, uint16_t mode)
 {
 	if (bufsize < RCS_ATTRLEN_RCS)
 		return (0);

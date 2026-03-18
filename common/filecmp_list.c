@@ -44,10 +44,8 @@ filecmp_list(struct filecmp_args *fca)
 	}
 
 	for (cl = fca->fca_collections_list ; cl != NULL ; cl = cl->cl_next) {
-		if ((cvsync_release_pton(cl->cl_release) != type) &&
-		    (type != CVSYNC_RELEASE_MAX)) {
+		if ((cvsync_release_pton(cl->cl_release) != type) && (type != CVSYNC_RELEASE_MAX))
 			continue;
-		}
 
 		namelen = strlen(cl->cl_name);
 		relnamelen = strlen(cl->cl_release);
@@ -64,15 +62,11 @@ filecmp_list(struct filecmp_args *fca)
 			return (false);
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cl->cl_name, namelen))
 			return (false);
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, cl->cl_release,
-			      relnamelen)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, cl->cl_release, relnamelen))
 			return (false);
-		}
 		if (commentlen > 0) {
-			if (!mux_send(fca->fca_mux, MUX_UPDATER,
-				      cl->cl_comment, commentlen)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, cl->cl_comment, commentlen))
 				return (false);
-			}
 		}
 	}
 

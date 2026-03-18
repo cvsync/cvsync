@@ -27,8 +27,7 @@ struct collection {
 void collection_init(struct collection *);
 void collection_destroy(struct collection *);
 void collection_destroy_all(struct collection *);
-struct collection *collection_lookup(struct collection *, const char *,
-				     const char *);
+struct collection *collection_lookup(struct collection *, const char *, const char *);
 bool collection_set_default(struct collection *, const char *);
 
 #endif /* CVSYNC_COLLECTION_H */

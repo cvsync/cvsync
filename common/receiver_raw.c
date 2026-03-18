@@ -42,8 +42,7 @@ receiver_data_raw(struct mux *mx, uint8_t chnum)
 	}
 
 	if ((err = pthread_mutex_lock(&mxb->mxb_lock)) != 0) {
-		logmsg_err("Receiver(DATA) Error: mutex lock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(DATA) Error: mutex lock: %s", strerror(err));
 		return (false);
 	}
 	if (mxb->mxb_state != MUX_STATE_RUNNING) {
@@ -53,22 +52,19 @@ receiver_data_raw(struct mux *mx, uint8_t chnum)
 		return (false);
 	}
 
-	while (mxb->mxb_length + mss > mxb->mxb_bufsize) {
-		logmsg_debug(DEBUG_BASE, "Receiver: Sleep(%u): %u + %u > %u",
-			     chnum, mxb->mxb_length, mss, mxb->mxb_bufsize);
-		if ((err = pthread_cond_wait(&mxb->mxb_wait_in,
-					     &mxb->mxb_lock)) != 0) {
-			logmsg_err("Receiver(DATA) Error: cond wait: %s",
-				   strerror(err));
+	while ((mxb->mxb_length + mss) > mxb->mxb_bufsize) {
+		logmsg_debug(DEBUG_BASE, "Receiver: Sleep(%u): %u + %u > %u", chnum, mxb->mxb_length, mss,
+			     mxb->mxb_bufsize);
+		if ((err = pthread_cond_wait(&mxb->mxb_wait_in, &mxb->mxb_lock)) != 0) {
+			logmsg_err("Receiver(DATA) Error: cond wait: %s", strerror(err));
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
 		}
-		logmsg_debug(DEBUG_BASE, "Receiver: Wakeup(%u): %u, %u, %u",
-			     chnum, mxb->mxb_length, mss, mxb->mxb_bufsize);
+		logmsg_debug(DEBUG_BASE, "Receiver: Wakeup(%u): %u, %u, %u", chnum, mxb->mxb_length, mss,
+			     mxb->mxb_bufsize);
 		if (mxb->mxb_state != MUX_STATE_RUNNING) {
-			logmsg_err("Receiver(DATA) Error: not running: %u",
-				   chnum);
+			logmsg_err("Receiver(DATA) Error: not running: %u", chnum);
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
@@ -102,16 +98,14 @@ receiver_data_raw(struct mux *mx, uint8_t chnum)
 	mxb->mxb_length += mss;
 
 	if ((err = pthread_cond_signal(&mxb->mxb_wait_out)) != 0) {
-		logmsg_err("Receiver(DATA) Error: cond signal: %s",
-			   strerror(err));
+		logmsg_err("Receiver(DATA) Error: cond signal: %s", strerror(err));
 		mxb->mxb_state = MUX_STATE_ERROR;
 		pthread_mutex_unlock(&mxb->mxb_lock);
 		return (false);
 	}
 
 	if ((err = pthread_mutex_unlock(&mxb->mxb_lock)) != 0) {
-		logmsg_err("Receiver(DATA) Error: mutex unlock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(DATA) Error: mutex unlock: %s", strerror(err));
 		return(false);
 	}
 

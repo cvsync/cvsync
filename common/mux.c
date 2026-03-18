@@ -52,8 +52,7 @@ mux_init(int sock, uint16_t mss, int compression, int level)
 		}
 		break;
 	default:
-		logmsg_err("Mux Error: unknown compression type: %d",
-			   mx->mx_compress);
+		logmsg_err("Mux Error: unknown compression type: %d", mx->mx_compress);
 		free(mx);
 		return (NULL);
 	}
@@ -82,8 +81,7 @@ mux_init(int sock, uint16_t mss, int compression, int level)
 	}
 
 	for (i = 0 ; i < MUX_MAXCHANNELS ; i++) {
-		if (!muxbuf_init(&mx->mx_buffer[MUX_IN][i], mss, bufsize,
-				 compression)) {
+		if (!muxbuf_init(&mx->mx_buffer[MUX_IN][i], mss, bufsize, compression)) {
 			mux_destroy(mx);
 			return (NULL);
 		}
@@ -228,14 +226,10 @@ muxbuf_destroy(struct muxbuf *mxb)
 	if ((err = pthread_mutex_unlock(&mxb->mxb_lock)) != 0)
 		logmsg_err("MuxBuffer Error: mutex init: %s", strerror(err));
 
-	if ((err = pthread_cond_destroy(&mxb->mxb_wait_out)) != 0) {
-		logmsg_err("MuxBuffer Error: cond(out) destroy: %s",
-			   strerror(err));
-	}
-	if ((err = pthread_cond_destroy(&mxb->mxb_wait_in)) != 0) {
-		logmsg_err("MuxBuffer Error: cond(in) destroy: %s",
-			   strerror(err));
-	}
+	if ((err = pthread_cond_destroy(&mxb->mxb_wait_out)) != 0)
+		logmsg_err("MuxBuffer Error: cond(out) destroy: %s", strerror(err));
+	if ((err = pthread_cond_destroy(&mxb->mxb_wait_in)) != 0)
+		logmsg_err("MuxBuffer Error: cond(in) destroy: %s", strerror(err));
 	pthread_mutex_destroy(&mxb->mxb_lock);
 	free(mxb->mxb_buffer);
 }
@@ -260,33 +254,27 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 	}
 
 	if (mxb->mxb_length + bufsize < mxb->mxb_size) {
-		(void)memcpy(&mxb->mxb_buffer[mxb->mxb_length], buffer,
-			     bufsize);
+		(void)memcpy(&mxb->mxb_buffer[mxb->mxb_length], buffer, bufsize);
 		mxb->mxb_length += bufsize;
 
 		if ((err = pthread_mutex_unlock(&mxb->mxb_lock)) != 0) {
-			logmsg_err("Mux(SEND) Error: mutex unlock: %s",
-				   strerror(err));
+			logmsg_err("Mux(SEND) Error: mutex unlock: %s", strerror(err));
 			return (false);
 		}
 
 		return (true);
 	}
 
-	while (mxb->mxb_rlength + mxb->mxb_size > mxb->mxb_bufsize) {
-		logmsg_debug(DEBUG_BASE, "Mux(SEND): Sleep(%u): %u + %u > %u",
-			     chnum, mxb->mxb_rlength, mxb->mxb_size,
+	while ((mxb->mxb_rlength + mxb->mxb_size) > mxb->mxb_bufsize) {
+		logmsg_debug(DEBUG_BASE, "Mux(SEND): Sleep(%u): %u + %u > %u", chnum, mxb->mxb_rlength, mxb->mxb_size,
 			     mxb->mxb_bufsize);
-		if ((err = pthread_cond_wait(&mxb->mxb_wait_in,
-					     &mxb->mxb_lock)) != 0) {
-			logmsg_err("Mux(SEND) Error: cond wait: %s",
-				   strerror(err));
+		if ((err = pthread_cond_wait(&mxb->mxb_wait_in, &mxb->mxb_lock)) != 0) {
+			logmsg_err("Mux(SEND) Error: cond wait: %s", strerror(err));
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
 		}
-		logmsg_debug(DEBUG_BASE, "Mux(SEND): Wakeup(%u): %u, %u, %u",
-			     chnum, mxb->mxb_rlength, mxb->mxb_size,
+		logmsg_debug(DEBUG_BASE, "Mux(SEND): Wakeup(%u): %u, %u, %u", chnum, mxb->mxb_rlength, mxb->mxb_size,
 			     mxb->mxb_bufsize);
 		if (mxb->mxb_state != MUX_STATE_RUNNING) {
 			logmsg_err("Mux(SEND) Error: not running: %u", chnum);
@@ -330,8 +318,7 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 		}
 		break;
 	default:
-		logmsg_err("Mux(SEND) Error: unknown compression type: %d",
-			   mx->mx_compress);
+		logmsg_err("Mux(SEND) Error: unknown compression type: %d", mx->mx_compress);
 		pthread_mutex_unlock(&mx->mx_lock);
 		mxb->mxb_state = MUX_STATE_ERROR;
 		pthread_mutex_unlock(&mxb->mxb_lock);
@@ -352,24 +339,19 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 	bufsize -= len;
 
 	while (bufsize >= mxb->mxb_size) {
-		while (mxb->mxb_rlength + mxb->mxb_size > mxb->mxb_bufsize) {
-			logmsg_debug(DEBUG_BASE, "Mux(SEND): Sleep(%u): "
-				     "%u + %u > %u", chnum, mxb->mxb_rlength,
+		while ((mxb->mxb_rlength + mxb->mxb_size) > mxb->mxb_bufsize) {
+			logmsg_debug(DEBUG_BASE, "Mux(SEND): Sleep(%u): %u + %u > %u", chnum, mxb->mxb_rlength,
 				     mxb->mxb_size, mxb->mxb_bufsize);
-			if ((err = pthread_cond_wait(&mxb->mxb_wait_in,
-						     &mxb->mxb_lock)) != 0) {
-				logmsg_err("Mux(SEND) Error: cond wait: %s",
-					   strerror(err));
+			if ((err = pthread_cond_wait(&mxb->mxb_wait_in, &mxb->mxb_lock)) != 0) {
+				logmsg_err("Mux(SEND) Error: cond wait: %s", strerror(err));
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
 				return (false);
 			}
-			logmsg_debug(DEBUG_BASE, "Mux(SEND): Wakeup(%u): "
-				     "%u, %u, %u", chnum, mxb->mxb_rlength,
+			logmsg_debug(DEBUG_BASE, "Mux(SEND): Wakeup(%u): %u, %u, %u", chnum, mxb->mxb_rlength,
 				     mxb->mxb_size, mxb->mxb_bufsize);
 			if (mxb->mxb_state != MUX_STATE_RUNNING) {
-				logmsg_err("Mux(SEND) Error: not running: %u",
-					   chnum);
+				logmsg_err("Mux(SEND) Error: not running: %u", chnum);
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
 				return (false);
@@ -377,8 +359,7 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 		}
 
 		if ((err = pthread_mutex_lock(&mx->mx_lock)) != 0) {
-			logmsg_err("Mux(SEND) Error: mutex lock: %s",
-				   strerror(err));
+			logmsg_err("Mux(SEND) Error: mutex lock: %s", strerror(err));
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
@@ -393,8 +374,7 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 
 		switch (mx->mx_compress) {
 		case CVSYNC_COMPRESS_NO:
-			if (!mux_send_raw(mx, chnum, sp,
-					  (size_t)mxb->mxb_size)) {
+			if (!mux_send_raw(mx, chnum, sp, (size_t)mxb->mxb_size)) {
 				pthread_mutex_unlock(&mx->mx_lock);
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
@@ -402,8 +382,7 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 			}
 			break;
 		case CVSYNC_COMPRESS_ZLIB:
-			if (!mux_send_zlib(mx, chnum, sp,
-					   (size_t)mxb->mxb_size)) {
+			if (!mux_send_zlib(mx, chnum, sp, (size_t)mxb->mxb_size)) {
 				pthread_mutex_unlock(&mx->mx_lock);
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
@@ -411,8 +390,7 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 			}
 			break;
 		default:
-			logmsg_err("Mux(SEND) Error: unknown compression "
-				   "type: %d", mx->mx_compress);
+			logmsg_err("Mux(SEND) Error: unknown compression type: %d", mx->mx_compress);
 			pthread_mutex_unlock(&mx->mx_lock);
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
@@ -420,8 +398,7 @@ mux_send(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 		}
 
 		if ((err = pthread_mutex_unlock(&mx->mx_lock)) != 0) {
-			logmsg_err("Mux(SEND) Error: mutex unlock: %s",
-				   strerror(err));
+			logmsg_err("Mux(SEND) Error: mutex unlock: %s", strerror(err));
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
@@ -467,19 +444,15 @@ mux_recv(struct mux *mx, uint8_t chnum, void *buffer, size_t bufsize)
 	while (bufsize > 0) {
 		while (mxb->mxb_length == 0) {
 			logmsg_debug(DEBUG_BASE, "Mux(RECV): Sleep(%u)", chnum);
-			if ((err = pthread_cond_wait(&mxb->mxb_wait_out,
-						     &mxb->mxb_lock)) != 0) {
-				logmsg_err("Mux(RECV) Error: cond wait: %s",
-					   strerror(err));
+			if ((err = pthread_cond_wait(&mxb->mxb_wait_out, &mxb->mxb_lock)) != 0) {
+				logmsg_err("Mux(RECV) Error: cond wait: %s", strerror(err));
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
 				return (false);
 			}
-			logmsg_debug(DEBUG_BASE, "Mux(RECV): Wakeup(%u): %u",
-				     chnum, mxb->mxb_length);
+			logmsg_debug(DEBUG_BASE, "Mux(RECV): Wakeup(%u): %u", chnum, mxb->mxb_length);
 			if (mxb->mxb_state != MUX_STATE_RUNNING) {
-				logmsg_err("Mux(RECV) Error: not running: %u",
-					   chnum);
+				logmsg_err("Mux(RECV) Error: not running: %u", chnum);
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
 				return (false);
@@ -553,9 +526,8 @@ mux_flush(struct mux *mx, uint8_t chnum)
 	if (mxb->mxb_length == 0)
 		goto done;
 
-	while (mxb->mxb_rlength + mxb->mxb_length > mxb->mxb_bufsize) {
-		if (pthread_cond_wait(&mxb->mxb_wait_in,
-				      &mxb->mxb_lock) != 0) {
+	while ((mxb->mxb_rlength + mxb->mxb_length) > mxb->mxb_bufsize) {
+		if (pthread_cond_wait(&mxb->mxb_wait_in, &mxb->mxb_lock) != 0) {
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
@@ -689,14 +661,12 @@ mux_close_out(struct mux *mx, uint8_t chnum)
 		return (false);
 
 	while (mxb->mxb_state != MUX_STATE_CLOSED) {
-		if (pthread_cond_wait(&mxb->mxb_wait_in,
-				      &mxb->mxb_lock) != 0) {
+		if (pthread_cond_wait(&mxb->mxb_wait_in, &mxb->mxb_lock) != 0) {
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
 		}
-		if ((mxb->mxb_state != MUX_STATE_RUNNING) &&
-		    (mxb->mxb_state != MUX_STATE_CLOSED)) {
+		if ((mxb->mxb_state != MUX_STATE_RUNNING) && (mxb->mxb_state != MUX_STATE_CLOSED)) {
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
@@ -762,8 +732,7 @@ mux_reset(struct mux *mx, struct muxbuf *mxb, uint8_t chnum)
 	}
 
 	if ((err = pthread_mutex_unlock(&mx->mx_lock)) != 0) {
-		logmsg_err("Mux(RESET) Error: mutex unlock: %s",
-			   strerror(err));
+		logmsg_err("Mux(RESET) Error: mutex unlock: %s", strerror(err));
 		return (false);
 	}
 

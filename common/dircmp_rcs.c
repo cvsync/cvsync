@@ -128,16 +128,12 @@ dircmp_rcs(struct dircmp_args *dca)
 		}
 
 		if (mdp->md_namelen == cap->ca_namelen) {
-			rv = memcmp(mdp->md_name, cap->ca_name,
-				    cap->ca_namelen);
+			rv = memcmp(mdp->md_name, cap->ca_name, cap->ca_namelen);
 		} else {
-			if (mdp->md_namelen < cap->ca_namelen) {
-				rv = memcmp(mdp->md_name, cap->ca_name,
-					    mdp->md_namelen);
-			} else {
-				rv = memcmp(mdp->md_name, cap->ca_name,
-					    cap->ca_namelen);
-			}
+			if (mdp->md_namelen < cap->ca_namelen)
+				rv = memcmp(mdp->md_name, cap->ca_name, mdp->md_namelen);
+			else
+				rv = memcmp(mdp->md_name, cap->ca_name, cap->ca_namelen);
 			if (rv == 0) {
 				if (mdp->md_namelen < cap->ca_namelen)
 					rv = -1;
@@ -167,8 +163,7 @@ dircmp_rcs(struct dircmp_args *dca)
 					list_destroy(lp);
 					return (false);
 				}
-				(void)memcpy(&dca->dca_path[dca->dca_pathlen],
-					     mdp->md_name, mdp->md_namelen);
+				(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name, mdp->md_namelen);
 				dca->dca_path[len - 1] = '/';
 				dca->dca_path[len] = '\0';
 
@@ -237,7 +232,7 @@ dircmp_rcs_fetch(struct dircmp_args *dca)
 	if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > dca->dca_cmdmax - 2))
+	if ((len == 0) || (len > (dca->dca_cmdmax - 2)))
 		return (false);
 	if ((cap->ca_tag = cmd[2]) == DIRCMP_END)
 		return (len == 1);
@@ -255,45 +250,31 @@ dircmp_rcs_fetch(struct dircmp_args *dca)
 	switch (cap->ca_tag) {
 	case DIRCMP_DOWN:
 		cap->ca_type = FILETYPE_DIR;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name)) ||
-		    (cap->ca_namelen != len - RCS_ATTRLEN_DIR - 2)) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)) ||
+		    (cap->ca_namelen != (len - RCS_ATTRLEN_DIR - 2))) {
 			return (false);
 		}
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
-		if (!cvsync_rcs_filename((char *)cap->ca_name,
-					 cap->ca_namelen)) {
+		if (!cvsync_rcs_filename((char *)cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd,
-			      RCS_ATTRLEN_DIR)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd, RCS_ATTRLEN_DIR))
 			return (false);
-		}
 		if (!attr_rcs_decode_dir(cmd, RCS_ATTRLEN_DIR, cap))
 			return (false);
 		break;
 	case DIRCMP_FILE:
 		cap->ca_type = FILETYPE_FILE;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name)) ||
-		    (cap->ca_namelen != len - RCS_ATTRLEN_FILE - 2)) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)) ||
+		    (cap->ca_namelen != (len - RCS_ATTRLEN_FILE - 2))) {
 			return (false);
 		}
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
-		if (!cvsync_rcs_filename((char *)cap->ca_name,
-					 cap->ca_namelen)) {
+		if (!cvsync_rcs_filename((char *)cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd,
-			      RCS_ATTRLEN_FILE)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd, RCS_ATTRLEN_FILE))
 			return (false);
-		}
 		if (!attr_rcs_decode_file(cmd, RCS_ATTRLEN_FILE, cap))
 			return (false);
 		break;
@@ -303,49 +284,34 @@ dircmp_rcs_fetch(struct dircmp_args *dca)
 			cap->ca_type = FILETYPE_RCS;
 		else
 			cap->ca_type = FILETYPE_RCS_ATTIC;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name)) ||
-		    (cap->ca_namelen != len - RCS_ATTRLEN_RCS - 2)) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)) ||
+		    (cap->ca_namelen != (len - RCS_ATTRLEN_RCS - 2))) {
 			return (false);
 		}
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
-		if (!cvsync_rcs_filename((char *)cap->ca_name,
-					 cap->ca_namelen)) {
+		if (!cvsync_rcs_filename((char *)cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd,
-			      RCS_ATTRLEN_RCS)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd, RCS_ATTRLEN_RCS))
 			return (false);
-		}
 		if (!attr_rcs_decode_rcs(cmd, RCS_ATTRLEN_RCS, cap))
 			return (false);
 		break;
 	case DIRCMP_SYMLINK:
 		cap->ca_type = FILETYPE_SYMLINK;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name))) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)))
 			return (false);
-		}
-		if (len <= cap->ca_namelen + 2)
+		if (len <= (cap->ca_namelen + 2))
 			return (false);
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
-		if (!cvsync_rcs_filename((char *)cap->ca_name,
-					 cap->ca_namelen)) {
+		if (!cvsync_rcs_filename((char *)cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
 		cap->ca_auxlen = len - cap->ca_namelen - 2;
 		if (cap->ca_auxlen > sizeof(cap->ca_aux))
 			return (false);
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_aux,
-			      cap->ca_auxlen)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_aux, cap->ca_auxlen))
 			return (false);
-		}
 		break;
 	default:
 		return (false);
@@ -383,8 +349,7 @@ dircmp_rcs_add(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 		return (false);
 	}
 
-	(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name,
-		     mdp->md_namelen);
+	(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name, mdp->md_namelen);
 	dca->dca_path[len - 1] = '/';
 	dca->dca_path[len] = '\0';
 
@@ -427,8 +392,7 @@ dircmp_rcs_add(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 					list_destroy(lp);
 					return (false);
 				}
-				(void)memcpy(&dca->dca_path[dca->dca_pathlen],
-					     mdp->md_name, mdp->md_namelen);
+				(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name, mdp->md_namelen);
 				dca->dca_path[len - 1] = '/';
 				dca->dca_path[len] = '\0';
 
@@ -499,10 +463,8 @@ dircmp_rcs_add_dir(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 		return (false);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_rpath, rlen))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name,
-		      mdp->md_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name, mdp->md_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -535,10 +497,8 @@ dircmp_rcs_add_file(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 		return (false);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_rpath, rlen))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name,
-		      mdp->md_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name, mdp->md_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -563,10 +523,8 @@ dircmp_rcs_add_symlink(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 		return (false);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_rpath, rlen))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name,
-		      mdp->md_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name, mdp->md_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -592,8 +550,7 @@ dircmp_rcs_remove(struct dircmp_args *dca)
 		return (false);
 	}
 
-	(void)memcpy(&dca->dca_path[dca->dca_pathlen], cap->ca_name,
-		     cap->ca_namelen);
+	(void)memcpy(&dca->dca_path[dca->dca_pathlen], cap->ca_name, cap->ca_namelen);
 	dca->dca_path[len - 1] = '/';
 	dca->dca_path[len] = '\0';
 	dca->dca_pathlen = len;
@@ -617,10 +574,8 @@ dircmp_rcs_remove(struct dircmp_args *dca)
 					free(plen_stack);
 					return (false);
 				}
-				(void)memcpy(newp, plen_stack,
-					     old * sizeof(*newp));
-				(void)memset(&newp[old], 0,
-					     (new - old) * sizeof(*newp));
+				(void)memcpy(newp, plen_stack, old * sizeof(*newp));
+				(void)memset(&newp[old], 0, (new - old) * sizeof(*newp));
 
 				free(plen_stack);
 				plen_stack = newp;
@@ -634,8 +589,7 @@ dircmp_rcs_remove(struct dircmp_args *dca)
 				return (false);
 			}
 
-			(void)memcpy(&dca->dca_path[dca->dca_pathlen],
-				     cap->ca_name, cap->ca_namelen);
+			(void)memcpy(&dca->dca_path[dca->dca_pathlen], cap->ca_name, cap->ca_namelen);
 			dca->dca_path[len - 1] = '/';
 			dca->dca_path[len] = '\0';
 			dca->dca_pathlen = len;
@@ -716,10 +670,8 @@ dircmp_rcs_remove_file(struct dircmp_args *dca)
 		return (false);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_rpath, rlen))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -774,16 +726,13 @@ dircmp_rcs_update(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 		break;
 	case S_IFREG:
 		if (IS_FILE_RCS(mdp->md_name, mdp->md_namelen)) {
-			if ((cap->ca_type != FILETYPE_RCS) &&
-			    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+			if ((cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 				return (dircmp_rcs_replace(dca, mdp));
-			}
 			if (mdp->md_attic)
 				cmd[3] = FILETYPE_RCS_ATTIC;
 			else
 				cmd[3] = FILETYPE_RCS;
-			if ((cmd[3] == cap->ca_type) &&
-			    ((int64_t)st->st_mtime == cap->ca_mtime) &&
+			if ((cmd[3] == cap->ca_type) && ((int64_t)st->st_mtime == cap->ca_mtime) &&
 			    (mode == cap->ca_mode)) {
 				return (true);
 			}
@@ -795,21 +744,16 @@ dircmp_rcs_update(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 				else
 					cmd[2] = FILESCAN_SETATTR;
 			}
-			if ((len = attr_rcs_encode_rcs(&cmd[6], len,
-						       st->st_mtime,
-						       mode)) == 0) {
+			if ((len = attr_rcs_encode_rcs(&cmd[6], len, st->st_mtime, mode)) == 0)
 				return (false);
-			}
 		} else {
 			if (cap->ca_type != FILETYPE_FILE)
 				return (dircmp_rcs_replace(dca, mdp));
-			if (((int64_t)st->st_mtime == cap->ca_mtime) &&
-			    ((uint64_t)st->st_size == cap->ca_size) &&
+			if (((int64_t)st->st_mtime == cap->ca_mtime) && ((uint64_t)st->st_size == cap->ca_size) &&
 			    (mode == cap->ca_mode)) {
 				return (true);
 			}
-			if (((int64_t)st->st_mtime != cap->ca_mtime) ||
-			    ((uint64_t)st->st_size != cap->ca_size)) {
+			if (((int64_t)st->st_mtime != cap->ca_mtime) || ((uint64_t)st->st_size != cap->ca_size)) {
 				if (st->st_size == 0)
 					return (dircmp_rcs_replace(dca, mdp));
 
@@ -818,29 +762,20 @@ dircmp_rcs_update(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 				cmd[2] = FILESCAN_SETATTR;
 			}
 			cmd[3] = FILETYPE_FILE;
-			if ((len = attr_rcs_encode_file(&cmd[6], len,
-							st->st_mtime,
-							st->st_size,
-							mode)) == 0) {
+			if ((len = attr_rcs_encode_file(&cmd[6], len, st->st_mtime, st->st_size, mode)) == 0)
 				return (false);
-			}
 		}
 		break;
 	case S_IFLNK:
 		if (cap->ca_type != FILETYPE_SYMLINK)
 			return (dircmp_rcs_replace(dca, mdp));
-		(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name,
-			     mdp->md_namelen);
+		(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name, mdp->md_namelen);
 		dca->dca_path[dca->dca_pathlen + mdp->md_namelen] = '\0';
-		if ((wn = readlink(dca->dca_path, dca->dca_symlink,
-				   dca->dca_pathmax)) == -1) {
+		if ((wn = readlink(dca->dca_path, dca->dca_symlink, dca->dca_pathmax)) == -1)
 			return (false);
-		}
 		len = (size_t)wn;
-		if ((len == cap->ca_auxlen) &&
-		    (memcmp(cap->ca_aux, dca->dca_symlink, len) == 0)) {
+		if ((len == cap->ca_auxlen) && (memcmp(cap->ca_aux, dca->dca_symlink, len) == 0))
 			return (true);
-		}
 		cmd[2] = FILESCAN_UPDATE;
 		cmd[3] = FILETYPE_SYMLINK;
 		len = 0;
@@ -855,10 +790,8 @@ dircmp_rcs_update(struct dircmp_args *dca, struct mdirent_rcs *mdp)
 		return (false);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_rpath, rlen))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name,
-		      mdp->md_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, mdp->md_name, mdp->md_namelen))
 		return (false);
-	}
 	if (len > 0) {
 		if (!mux_send(dca->dca_mux, MUX_FILESCAN, &cmd[6], len))
 			return (false);
@@ -883,10 +816,8 @@ dircmp_rcs_opendir(struct dircmp_args *dca, size_t pathlen)
 
 	rpathlen = pathlen - (size_t)(dca->dca_rpath - dca->dca_path);
 	if (rpathlen >= cl->cl_rprefixlen) {
-		if ((mdirp = mopendir_rcs(dca->dca_path, pathlen,
-					  dca->dca_pathmax, &mda)) == NULL) {
+		if ((mdirp = mopendir_rcs(dca->dca_path, pathlen, dca->dca_pathmax, &mda)) == NULL)
 			return (NULL);
-		}
 
 		return (mdirp);
 	}
@@ -912,8 +843,7 @@ dircmp_rcs_opendir(struct dircmp_args *dca, size_t pathlen)
 		free(mdp);
 		return (NULL);
 	}
-	(void)memcpy(&dca->dca_path[cl->cl_prefixlen], cl->cl_rprefix,
-		     rpathlen + mdp->md_namelen);
+	(void)memcpy(&dca->dca_path[cl->cl_prefixlen], cl->cl_rprefix, rpathlen + mdp->md_namelen);
 	dca->dca_path[len] = '\0';
 
 	if (cl->cl_symfollow)

@@ -9,8 +9,7 @@ struct cvsync_attr;
 
 #define	MAXATTRLEN		(18)	/* == max(*_ATTRLEN_*) */
 
-#define	CVSYNC_ALLPERMS		(S_ISUID|S_ISGID|S_ISVTX|\
-				 S_IRWXU|S_IRWXG|S_IRWXO)
+#define	CVSYNC_ALLPERMS		(S_ISUID|S_ISGID|S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO)
 #define	CVSYNC_UMASK_UNSPEC	((uint16_t)-1)
 #define	CVSYNC_UMASK_RCS	(S_IWGRP|S_IWOTH)
 

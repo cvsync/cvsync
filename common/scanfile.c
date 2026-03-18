@@ -63,8 +63,7 @@ scanfile_open(const char *fname)
 		free(sa);
 		return (NULL);
 	}
-	if (!cvsync_mmap(sa->sa_scanfile, (off_t)0,
-			 sa->sa_scanfile->cf_size)) {
+	if (!cvsync_mmap(sa->sa_scanfile, (off_t)0, sa->sa_scanfile->cf_size)) {
 		cvsync_fclose(sa->sa_scanfile);
 		free(sa);
 		return (NULL);
@@ -89,7 +88,7 @@ scanfile_close(struct scanfile_args *sa)
 bool
 scanfile_read_attr(uint8_t *sp, const uint8_t *bp, struct scanfile_attr *attr)
 {
-	if (bp - sp < 3) {
+	if ((bp - sp) < 3) {
 		logmsg_err("Scanfile Error: read attr type/namelen");
 		return (false);
 	}
@@ -105,7 +104,7 @@ scanfile_read_attr(uint8_t *sp, const uint8_t *bp, struct scanfile_attr *attr)
 	}
 	attr->a_name = sp;
 	sp += attr->a_namelen;
-	if (bp - sp < 2) {
+	if ((bp - sp) < 2) {
 		logmsg_err("Scanfile Error: read attr auxlen");
 		return (false);
 	}
@@ -145,8 +144,7 @@ scanfile_write_attr(struct scanfile_args *sa, struct scanfile_attr *attr)
 	iov[2].iov_len = 2;
 	iov[3].iov_base = attr->a_aux;
 	iov[3].iov_len = attr->a_auxlen;
-	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len +
-	      iov[3].iov_len;
+	len = iov[0].iov_len + iov[1].iov_len + iov[2].iov_len + iov[3].iov_len;
 	if ((wn = writev(sa->sa_tmp, iov, 4)) == -1) {
 		logmsg_err("Scanfile Error: write attr");
 		return (false);
@@ -165,8 +163,7 @@ scanfile_create(struct scanfile_create_args *sca)
 	switch (cvsync_release_pton(sca->sca_release)) {
 	case CVSYNC_RELEASE_RCS:
 		if (!scanfile_rcs(sca)) {
-			logmsg_err("Scanfile Error: %s: failed to create",
-				   sca->sca_name);
+			logmsg_err("Scanfile Error: %s: failed to create", sca->sca_name);
 			return (false);
 		}
 		break;
@@ -188,9 +185,7 @@ scanfile_create_tmpfile(struct scanfile_args *sa, mode_t mode)
 		return (true);
 
 	len = strlen(sa->sa_scanfile_name);
-	for (ep = &sa->sa_scanfile_name[len - 1] ;
-	     ep >= sa->sa_scanfile_name ;
-	     ep--) {
+	for (ep = &sa->sa_scanfile_name[len - 1] ; ep >= sa->sa_scanfile_name ; ep--) {
 		if (*ep == '/')
 			break;
 	}
@@ -200,13 +195,11 @@ scanfile_create_tmpfile(struct scanfile_args *sa, mode_t mode)
 		len = 0;
 	if (len > 0)
 		(void)memcpy(sa->sa_tmp_name, sa->sa_scanfile_name, len);
-	(void)memcpy(&sa->sa_tmp_name[len], CVSYNC_TMPFILE,
-		     CVSYNC_TMPFILE_LEN);
+	(void)memcpy(&sa->sa_tmp_name[len], CVSYNC_TMPFILE, CVSYNC_TMPFILE_LEN);
 	sa->sa_tmp_name[len + CVSYNC_TMPFILE_LEN] = '\0';
 
 	if ((sa->sa_tmp = mkstemp(sa->sa_tmp_name)) == -1) {
-		logmsg_err("Scanfile Error: %s: %s",  sa->sa_tmp_name,
-			   strerror(errno));
+		logmsg_err("Scanfile Error: %s: %s",  sa->sa_tmp_name, strerror(errno));
 		return (false);
 	}
 	sa->sa_tmp_mode = mode;
@@ -272,14 +265,12 @@ scanfile_rename(struct scanfile_args *sa)
 			len = (size_t)(sa->sa_end - sa->sa_start);
 			if (len > CVSYNC_BSIZE)
 				len = CVSYNC_BSIZE;
-			if ((wn = write(sa->sa_tmp, sa->sa_start,
-					len)) == -1) {
+			if ((wn = write(sa->sa_tmp, sa->sa_start, len)) == -1) {
 				if (errno == EINTR) {
 					logmsg_intr();
 					continue;
 				}
-				logmsg_err("Scanfile Error: Flush: %s",
-					   strerror(errno));
+				logmsg_err("Scanfile Error: Flush: %s", strerror(errno));
 				return (false);
 			}
 			if (wn == 0)
@@ -318,8 +309,7 @@ scanfile_rename(struct scanfile_args *sa)
 }
 
 bool
-scanfile_add(struct scanfile_args *sa, uint8_t type, void *name,
-	     size_t namelen, void *aux, size_t auxlen)
+scanfile_add(struct scanfile_args *sa, uint8_t type, void *name, size_t namelen, void *aux, size_t auxlen)
 {
 	struct scanfile_attr *attr = &sa->sa_attr;
 	int rv;
@@ -330,10 +320,8 @@ scanfile_add(struct scanfile_args *sa, uint8_t type, void *name,
 		if (!scanfile_read_attr(sa->sa_start, sa->sa_end, attr))
 			return (false);
 
-		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen,
-					      name, namelen)) == 0) {
+		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen, name, namelen)) == 0)
 			return (false);
-		}
 		if (rv > 0)
 			break;
 		/* rv < 0 */
@@ -359,8 +347,7 @@ scanfile_add(struct scanfile_args *sa, uint8_t type, void *name,
 }
 
 bool
-scanfile_remove(struct scanfile_args *sa, uint8_t type, void *name,
-		size_t namelen)
+scanfile_remove(struct scanfile_args *sa, uint8_t type, void *name, size_t namelen)
 {
 	struct scanfile_attr *attr = &sa->sa_attr;
 	int rv;
@@ -371,8 +358,7 @@ scanfile_remove(struct scanfile_args *sa, uint8_t type, void *name,
 		if (!scanfile_read_attr(sa->sa_start, sa->sa_end, attr))
 			return (false);
 
-		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen,
-					      name, namelen)) == 0) {
+		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen, name, namelen)) == 0) {
 			sa->sa_start += attr->a_size;
 			break;
 		}
@@ -404,8 +390,7 @@ scanfile_remove(struct scanfile_args *sa, uint8_t type, void *name,
 }
 
 bool
-scanfile_replace(struct scanfile_args *sa, uint8_t type, void *name,
-		 size_t namelen, void *aux, size_t auxlen)
+scanfile_replace(struct scanfile_args *sa, uint8_t type, void *name, size_t namelen, void *aux, size_t auxlen)
 {
 	struct scanfile_attr *attr = &sa->sa_attr;
 	int rv;
@@ -416,10 +401,8 @@ scanfile_replace(struct scanfile_args *sa, uint8_t type, void *name,
 		if (!scanfile_read_attr(sa->sa_start, sa->sa_end, attr))
 			return (false);
 
-		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen,
-					      name, namelen)) > 0) {
+		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen, name, namelen)) > 0)
 			return (false);
-		}
 		if (rv == 0)
 			break;
 		/* rv < 0 */
@@ -449,8 +432,7 @@ scanfile_replace(struct scanfile_args *sa, uint8_t type, void *name,
 }
 
 bool
-scanfile_update(struct scanfile_args *sa, uint8_t type, void *name,
-		size_t namelen, void *aux, size_t auxlen)
+scanfile_update(struct scanfile_args *sa, uint8_t type, void *name, size_t namelen, void *aux, size_t auxlen)
 {
 	struct scanfile_attr *attr = &sa->sa_attr;
 	int rv;
@@ -461,10 +443,8 @@ scanfile_update(struct scanfile_args *sa, uint8_t type, void *name,
 		if (!scanfile_read_attr(sa->sa_start, sa->sa_end, attr))
 			return (false);
 
-		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen,
-					      name, namelen)) > 0) {
+		if ((rv = cvsync_cmp_pathname(attr->a_name, attr->a_namelen, name, namelen)) > 0)
 			return (false);
-		}
 		if (rv == 0)
 			break;
 		/* rv < 0 */
@@ -526,8 +506,7 @@ scanfile_remove_attr(struct scanfile_args *sa, struct scanfile_attr *attr)
 	for (lep = sa->sa_dirlist->l_head ; lep != NULL ; lep = lep->le_next) {
 		dirattr = lep->le_elm;
 		if ((dirattr->a_namelen == attr->a_namelen) &&
-		    (memcmp(dirattr->a_name, attr->a_name,
-			    attr->a_namelen) == 0)) {
+		    (memcmp(dirattr->a_name, attr->a_name, attr->a_namelen) == 0)) {
 			break;
 		}
 	}
@@ -550,9 +529,7 @@ scanfile_flush_attr(struct scanfile_args *sa, struct scanfile_attr *attr)
 		if ((dirattr = list_remove_head(sa->sa_dirlist)) == NULL)
 			return (false);
 		if (attr != NULL) {
-			if (cvsync_cmp_pathname(dirattr->a_name,
-						dirattr->a_namelen,
-						attr->a_name,
+			if (cvsync_cmp_pathname(dirattr->a_name, dirattr->a_namelen, attr->a_name,
 						attr->a_namelen) > 0) {
 				if (!list_insert_head(sa->sa_dirlist, dirattr))
 					return (false);

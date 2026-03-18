@@ -42,12 +42,9 @@ bool filescan_rcs_setattr_file(struct filescan_args *);
 bool filescan_rcs_update(struct filescan_args *);
 
 bool filescan_rcs_update_rcs(struct filescan_args *, struct cvsync_file *);
-bool filescan_rcs_update_rcs_admin(struct filescan_args *,
-				   struct rcslib_file *);
-bool filescan_rcs_update_rcs_delta(struct filescan_args *,
-				   struct rcslib_file *);
-bool filescan_rcs_update_rcs_deltatext(struct filescan_args *,
-				       struct rcslib_file *);
+bool filescan_rcs_update_rcs_admin(struct filescan_args *, struct rcslib_file *);
+bool filescan_rcs_update_rcs_delta(struct filescan_args *, struct rcslib_file *);
+bool filescan_rcs_update_rcs_deltatext(struct filescan_args *, struct rcslib_file *);
 bool filescan_rcs_update_symlink(struct filescan_args *);
 bool filescan_rcs_replace(struct filescan_args *);
 
@@ -74,36 +71,31 @@ filescan_rcs(struct filescan_args *fsa)
 		switch (cap->ca_tag) {
 		case FILESCAN_ADD:
 			if (!filescan_rcs_add(fsa)) {
-				logmsg_err("FileScan(RCS): ADD %s",
-					   fsa->fsa_path);
+				logmsg_err("FileScan(RCS): ADD %s", fsa->fsa_path);
 				return (false);
 			}
 			break;
 		case FILESCAN_REMOVE:
 			if (!filescan_rcs_remove(fsa)) {
-				logmsg_err("FileScan(RCS): REMOVE %s",
-					   fsa->fsa_path);
+				logmsg_err("FileScan(RCS): REMOVE %s", fsa->fsa_path);
 				return (false);
 			}
 			break;
 		case FILESCAN_RCS_ATTIC:
 			if (!filescan_rcs_attic(fsa)) {
-				logmsg_err("FileScan(RCS): ATTIC %s",
-					   fsa->fsa_path);
+				logmsg_err("FileScan(RCS): ATTIC %s", fsa->fsa_path);
 				return (false);
 			}
 			break;
 		case FILESCAN_SETATTR:
 			if (!filescan_rcs_setattr(fsa)) {
-				logmsg_err("FileScan(RCS): SETATTR %s",
-					   fsa->fsa_path);
+				logmsg_err("FileScan(RCS): SETATTR %s", fsa->fsa_path);
 				return (false);
 			}
 			break;
 		case FILESCAN_UPDATE:
 			if (!filescan_rcs_update(fsa)) {
-				logmsg_err("FileScan(RCS): UPDATE %s",
-					   fsa->fsa_path);
+				logmsg_err("FileScan(RCS): UPDATE %s", fsa->fsa_path);
 				return (false);
 			}
 			break;
@@ -125,7 +117,7 @@ filescan_rcs_fetch(struct filescan_args *fsa)
 	if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > fsa->fsa_cmdmax - 2))
+	if ((len == 0) || (len > (fsa->fsa_cmdmax - 2)))
 		return (false);
 	if ((cap->ca_tag = cmd[2]) == FILESCAN_END)
 		return (len == 1);
@@ -142,30 +134,22 @@ filescan_rcs_fetch(struct filescan_args *fsa)
 	switch (cap->ca_tag) {
 	case FILESCAN_ADD:
 	case FILESCAN_REMOVE:
-		if (cap->ca_namelen != len - 4)
+		if (cap->ca_namelen != (len - 4))
 			return (false);
-		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
 		break;
 	case FILESCAN_RCS_ATTIC:
-		if ((cap->ca_type != FILETYPE_RCS) &&
-		    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+		if ((cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 			return (false);
-		}
-		if (cap->ca_namelen != len - RCS_ATTRLEN_RCS - 4)
+		if (cap->ca_namelen != (len - RCS_ATTRLEN_RCS - 4))
 			return (false);
-		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
 		if (!IS_FILE_RCS(cap->ca_name, cap->ca_namelen))
 			return (false);
-		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd,
-			      RCS_ATTRLEN_RCS)) {
+		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd, RCS_ATTRLEN_RCS))
 			return (false);
-		}
 		if (!attr_rcs_decode_rcs(cmd, RCS_ATTRLEN_RCS, cap))
 			return (false);
 		break;
@@ -173,12 +157,10 @@ filescan_rcs_fetch(struct filescan_args *fsa)
 		if (cap->ca_type == FILETYPE_DIR)
 			return (false);
 		if (cap->ca_type == FILETYPE_SYMLINK) {
-			if (len != cap->ca_namelen + 4)
+			if (len != (cap->ca_namelen + 4))
 				return (false);
-			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
 			break;
 		}
 		FALLTHROUGH;
@@ -186,47 +168,35 @@ filescan_rcs_fetch(struct filescan_args *fsa)
 	case FILESCAN_SETATTR:
 		switch (cap->ca_type) {
 		case FILETYPE_DIR:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_DIR - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_DIR - 4))
 				return (false);
-			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
-			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd,
-				      RCS_ATTRLEN_DIR)) {
+			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd, RCS_ATTRLEN_DIR))
 				return (false);
-			}
 			if (!attr_rcs_decode_dir(cmd, RCS_ATTRLEN_DIR, cap))
 				return (false);
 			break;
 		case FILETYPE_FILE:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_FILE - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_FILE - 4))
 				return (false);
-			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
-			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd,
-				      RCS_ATTRLEN_FILE)) {
+			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd, RCS_ATTRLEN_FILE))
 				return (false);
-			}
 			if (!attr_rcs_decode_file(cmd, RCS_ATTRLEN_FILE, cap))
 				return (false);
 			break;
 		case FILETYPE_RCS:
 		case FILETYPE_RCS_ATTIC:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_RCS - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_RCS - 4))
 				return (false);
-			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
 			if (!IS_FILE_RCS(cap->ca_name, cap->ca_namelen))
 				return (false);
-			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd,
-				      RCS_ATTRLEN_RCS)) {
+			if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd, RCS_ATTRLEN_RCS))
 				return (false);
-			}
 			if (!attr_rcs_decode_rcs(cmd, RCS_ATTRLEN_RCS, cap))
 				return (false);
 			break;
@@ -247,10 +217,8 @@ filescan_rcs_fetch(struct filescan_args *fsa)
 	(void)memcpy(fsa->fsa_rpath, cap->ca_name, cap->ca_namelen);
 	fsa->fsa_rpath[cap->ca_namelen] = '\0';
 	if (cap->ca_type == FILETYPE_RCS_ATTIC) {
-		if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen,
-					     fsa->fsa_pathmax)) {
+		if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen, fsa->fsa_pathmax))
 			return (false);
-		}
 	}
 
 	return (true);
@@ -272,10 +240,8 @@ filescan_rcs_add(struct filescan_args *fsa)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 6))
 		return (false);
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -296,10 +262,8 @@ filescan_rcs_remove(struct filescan_args *fsa)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 6))
 		return (false);
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -316,10 +280,8 @@ filescan_rcs_attic(struct filescan_args *fsa)
 	switch (cap->ca_type) {
 	case FILETYPE_RCS:
 		pathlen = fsa->fsa_pathlen + cap->ca_namelen;
-		if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen,
-					     fsa->fsa_pathmax)) {
+		if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen, fsa->fsa_pathmax))
 			return (false);
-		}
 		break;
 	case FILETYPE_RCS_ATTIC:
 		pathlen = fsa->fsa_pathlen + cap->ca_namelen + 6;
@@ -339,10 +301,8 @@ filescan_rcs_attic(struct filescan_args *fsa)
 			break;
 		case FILETYPE_RCS_ATTIC:
 			pathlen = fsa->fsa_pathlen + cap->ca_namelen;
-			if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen,
-						     fsa->fsa_pathmax)) {
+			if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen, fsa->fsa_pathmax))
 				return (false);
-			}
 			break;
 		default:
 			return (false);
@@ -365,8 +325,7 @@ filescan_rcs_attic(struct filescan_args *fsa)
 	cmd[2] = FILECMP_RCS_ATTIC;
 	cmd[3] = cap->ca_type;
 	SetWord(&cmd[4], cap->ca_namelen);
-	if ((len = attr_rcs_encode_rcs(&cmd[6], fsa->fsa_cmdmax - base,
-				       cfp->cf_mtime, mode)) == 0) {
+	if ((len = attr_rcs_encode_rcs(&cmd[6], fsa->fsa_cmdmax - base, cfp->cf_mtime, mode)) == 0) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
@@ -375,8 +334,7 @@ filescan_rcs_attic(struct filescan_args *fsa)
 		cvsync_fclose(cfp);
 		return (false);
 	}
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name, cap->ca_namelen)) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
@@ -457,10 +415,8 @@ filescan_rcs_setattr_dir(struct filescan_args *fsa)
 	if ((base = cap->ca_namelen + 6) > fsa->fsa_cmdmax)
 		return (false);
 
-	if ((len = attr_rcs_encode_dir(&cmd[6], fsa->fsa_cmdmax - base,
-				       mode)) == 0) {
+	if ((len = attr_rcs_encode_dir(&cmd[6], fsa->fsa_cmdmax - base, mode)) == 0)
 		return (false);
-	}
 
 	SetWord(cmd, len + base - 2);
 	cmd[2] = FILECMP_SETATTR;
@@ -468,10 +424,8 @@ filescan_rcs_setattr_dir(struct filescan_args *fsa)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 6))
 		return (false);
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, &cmd[6], len))
 		return (false);
 
@@ -499,17 +453,13 @@ filescan_rcs_setattr_file(struct filescan_args *fsa)
 
 	switch (cap->ca_type) {
 	case FILETYPE_FILE:
-		if ((len = attr_rcs_encode_file(&cmd[6], len, st.st_mtime,
-						st.st_size, mode)) == 0) {
+		if ((len = attr_rcs_encode_file(&cmd[6], len, st.st_mtime, st.st_size, mode)) == 0)
 			return (false);
-		}
 		break;
 	case FILETYPE_RCS:
 	case FILETYPE_RCS_ATTIC:
-		if ((len = attr_rcs_encode_rcs(&cmd[6], len, st.st_mtime,
-					       mode)) == 0) {
+		if ((len = attr_rcs_encode_rcs(&cmd[6], len, st.st_mtime, mode)) == 0)
 			return (false);
-		}
 		break;
 	default:
 		return (false);
@@ -521,10 +471,8 @@ filescan_rcs_setattr_file(struct filescan_args *fsa)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 6))
 		return (false);
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, &cmd[6], len))
 		return (false);
 
@@ -559,16 +507,14 @@ filescan_rcs_update(struct filescan_args *fsa)
 
 	switch (cap->ca_type) {
 	case FILETYPE_FILE:
-		if ((len = attr_rcs_encode_file(&cmd[6], len, cfp->cf_mtime,
-						cfp->cf_size, mode)) == 0) {
+		if ((len = attr_rcs_encode_file(&cmd[6], len, cfp->cf_mtime, cfp->cf_size, mode)) == 0) {
 			cvsync_fclose(cfp);
 			return (false);
 		}
 		break;
 	case FILETYPE_RCS:
 	case FILETYPE_RCS_ATTIC:
-		if ((len = attr_rcs_encode_rcs(&cmd[6], len, cfp->cf_mtime,
-					       mode)) == 0) {
+		if ((len = attr_rcs_encode_rcs(&cmd[6], len, cfp->cf_mtime, mode)) == 0) {
 			cvsync_fclose(cfp);
 			return (false);
 		}
@@ -586,8 +532,7 @@ filescan_rcs_update(struct filescan_args *fsa)
 		cvsync_fclose(cfp);
 		return (false);
 	}
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name, cap->ca_namelen)) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
@@ -635,10 +580,8 @@ filescan_rcs_update_rcs(struct filescan_args *fsa, struct cvsync_file *cfp)
 	struct rcslib_file *rcs;
 	struct cvsync_attr *cap = &fsa->fsa_attr;
 
-	if ((cap->ca_type != FILETYPE_RCS) &&
-	    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+	if ((cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 		return (false);
-	}
 
 	if ((rcs = rcslib_init(cfp->cf_addr, cfp->cf_size)) == NULL) {
 		if (fsa->fsa_proto < CVSYNC_PROTO(0, 24))
@@ -646,8 +589,7 @@ filescan_rcs_update_rcs(struct filescan_args *fsa, struct cvsync_file *cfp)
 		else
 			return (filescan_rdiff_update(fsa, cfp));
 	}
-	if ((fsa->fsa_proto < CVSYNC_PROTO(0, 24)) &&
-	    (rcs->symbols.rs_count > UINT8_MAX)) {
+	if ((fsa->fsa_proto < CVSYNC_PROTO(0, 24)) && (rcs->symbols.rs_count > UINT8_MAX)) {
 		rcslib_destroy(rcs);
 		return (filescan_generic_update(fsa, cfp));
 	}
@@ -679,8 +621,7 @@ filescan_rcs_update_rcs(struct filescan_args *fsa, struct cvsync_file *cfp)
 }
 
 bool
-filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
-			      struct rcslib_file *rcs)
+filescan_rcs_update_rcs_admin(struct filescan_args *fsa, struct rcslib_file *rcs)
 {
 	struct rcsid *id;
 	struct rcsnum *num;
@@ -697,10 +638,8 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->head.n_len > 0) {
-		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->head.n_str,
-			      rcs->head.n_len)) {
+		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->head.n_str, rcs->head.n_len))
 			return (false);
-		}
 	}
 
 	/* branch */
@@ -712,10 +651,8 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->branch.n_len > 0) {
-		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->branch.n_str,
-			      rcs->branch.n_len)) {
+		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->branch.n_str, rcs->branch.n_len))
 			return (false);
-		}
 	}
 
 	/* access */
@@ -732,10 +669,8 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			cmd[0] = (uint8_t)id->i_len;
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 1))
 				return (false);
-			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, id->i_id,
-				      id->i_len)) {
+			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, id->i_id, id->i_len))
 				return (false);
-			}
 		}
 	}
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
@@ -770,14 +705,10 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			cmd[1] = (uint8_t)num->n_len;
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 2))
 				return (false);
-			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, sym->s_sym,
-				      sym->s_len)) {
+			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, sym->s_sym, sym->s_len))
 				return (false);
-			}
-			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, num->n_str,
-				      num->n_len)) {
+			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, num->n_str, num->n_len))
 				return (false);
-			}
 		}
 	}
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
@@ -802,14 +733,10 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 			cmd[1] = (uint8_t)num->n_len;
 			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 2))
 				return (false);
-			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, id->i_id,
-				      id->i_len)) {
+			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, id->i_id, id->i_len))
 				return (false);
-			}
-			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, num->n_str,
-				      num->n_len)) {
+			if (!mux_send(fsa->fsa_mux, MUX_FILECMP, num->n_str, num->n_len))
 				return (false);
-			}
 		}
 	}
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
@@ -824,10 +751,8 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->comment.s_len > 0) {
-		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->comment.s_str,
-			      rcs->comment.s_len)) {
+		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->comment.s_str, rcs->comment.s_len))
 			return (false);
-		}
 	}
 
 	/* expand */
@@ -839,10 +764,8 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 		return (false);
 	if (rcs->expand.s_len > 0) {
-		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->expand.s_str,
-			      rcs->expand.s_len)) {
+		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rcs->expand.s_str, rcs->expand.s_len))
 			return (false);
-		}
 	}
 
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmde, sizeof(cmde)))
@@ -852,8 +775,7 @@ filescan_rcs_update_rcs_admin(struct filescan_args *fsa,
 }
 
 bool
-filescan_rcs_update_rcs_delta(struct filescan_args *fsa,
-			      struct rcslib_file *rcs)
+filescan_rcs_update_rcs_delta(struct filescan_args *fsa, struct rcslib_file *rcs)
 {
 	const struct hash_args *hashops = fsa->fsa_hash_ops;
 	struct rcslib_revision *rev;
@@ -879,36 +801,27 @@ filescan_rcs_update_rcs_delta(struct filescan_args *fsa,
 		cmd[3] = (uint8_t)rev->num.n_len;
 		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 			return (false);
-		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rev->num.n_str,
-			      rev->num.n_len)) {
+		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rev->num.n_str, rev->num.n_len))
 			return (false);
-		}
 
 		if (!(*hashops->init)(&fsa->fsa_hash_ctx))
 			return (false);
 
 		/* date */
-		(*hashops->update)(fsa->fsa_hash_ctx, rev->date.rd_num.n_str,
-				   rev->date.rd_num.n_len);
+		(*hashops->update)(fsa->fsa_hash_ctx, rev->date.rd_num.n_str, rev->date.rd_num.n_len);
 		/* author */
-		(*hashops->update)(fsa->fsa_hash_ctx, rev->author.i_id,
-				   rev->author.i_len);
+		(*hashops->update)(fsa->fsa_hash_ctx, rev->author.i_id, rev->author.i_len);
 		/* state */
-		if (rev->state.i_len > 0) {
-			(*hashops->update)(fsa->fsa_hash_ctx, rev->state.i_id,
-					   rev->state.i_len);
-		}
+		if (rev->state.i_len > 0)
+			(*hashops->update)(fsa->fsa_hash_ctx, rev->state.i_id, rev->state.i_len);
 		/* branches */
 		for (j = 0 ; j < rev->branches.rb_count ; j++) {
 			num = &rev->branches.rb_num[j];
-			(*hashops->update)(fsa->fsa_hash_ctx, num->n_str,
-					   num->n_len);
+			(*hashops->update)(fsa->fsa_hash_ctx, num->n_str, num->n_len);
 		}
 		/* next */
-		if (rev->next.n_len > 0) {
-			(*hashops->update)(fsa->fsa_hash_ctx, rev->next.n_str,
-					   rev->next.n_len);
-		}
+		if (rev->next.n_len > 0)
+			(*hashops->update)(fsa->fsa_hash_ctx, rev->next.n_str, rev->next.n_len);
 
 		(*hashops->final)(fsa->fsa_hash_ctx, cmd);
 
@@ -923,8 +836,7 @@ filescan_rcs_update_rcs_delta(struct filescan_args *fsa,
 }
 
 bool
-filescan_rcs_update_rcs_deltatext(struct filescan_args *fsa,
-				  struct rcslib_file *rcs)
+filescan_rcs_update_rcs_deltatext(struct filescan_args *fsa, struct rcslib_file *rcs)
 {
 	const struct hash_args *hashops = fsa->fsa_hash_ops;
 	struct rcslib_revision *rev;
@@ -949,24 +861,18 @@ filescan_rcs_update_rcs_deltatext(struct filescan_args *fsa,
 		cmd[3] = (uint8_t)rev->num.n_len;
 		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 4))
 			return (false);
-		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rev->num.n_str,
-			      rev->num.n_len)) {
+		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, rev->num.n_str, rev->num.n_len))
 			return (false);
-		}
 
 		if (!(*hashops->init)(&fsa->fsa_hash_ctx))
 			return (false);
 
 		/* log */
-		if (rev->log.s_len > 0) {
-			(*hashops->update)(fsa->fsa_hash_ctx, rev->log.s_str,
-					   rev->log.s_len);
-		}
+		if (rev->log.s_len > 0)
+			(*hashops->update)(fsa->fsa_hash_ctx, rev->log.s_str, rev->log.s_len);
 		/* text */
-		if (rev->text.s_len > 0) {
-			(*hashops->update)(fsa->fsa_hash_ctx, rev->text.s_str,
-					   rev->text.s_len);
-		}
+		if (rev->text.s_len > 0)
+			(*hashops->update)(fsa->fsa_hash_ctx, rev->text.s_str, rev->text.s_len);
 
 		(*hashops->final)(fsa->fsa_hash_ctx, cmd);
 
@@ -996,10 +902,8 @@ filescan_rcs_update_symlink(struct filescan_args *fsa)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, 6))
 		return (false);
-	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -1023,10 +927,8 @@ filescan_rcs_replace(struct filescan_args *fsa)
 		break;
 	case FILETYPE_RCS:
 		pathlen = fsa->fsa_pathlen + cap->ca_namelen;
-		if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen,
-					     fsa->fsa_pathmax)) {
+		if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen, fsa->fsa_pathmax))
 			return (false);
-		}
 		if (lstat(fsa->fsa_path, &st) == 0) {
 			pathlen += 6;
 			if (!cvsync_rcs_remove_attic(fsa->fsa_path, pathlen))
@@ -1051,10 +953,8 @@ filescan_rcs_replace(struct filescan_args *fsa)
 			return (false);
 		if (lstat(fsa->fsa_path, &st) == 0) {
 			pathlen -= 6;
-			if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen,
-						     fsa->fsa_pathmax)) {
+			if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen, fsa->fsa_pathmax))
 				return (false);
-			}
 			if (!filescan_rcs_attic(fsa))
 				return (false);
 		} else {
@@ -1063,10 +963,8 @@ filescan_rcs_replace(struct filescan_args *fsa)
 			if (!filescan_rcs_remove(fsa))
 				return (false);
 			pathlen -= 6;
-			if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen,
-						     fsa->fsa_pathmax)) {
+			if (!cvsync_rcs_insert_attic(fsa->fsa_path, pathlen, fsa->fsa_pathmax))
 				return (false);
-			}
 			if (!filescan_rcs_add(fsa))
 				return (false);
 		}

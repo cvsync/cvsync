@@ -38,8 +38,7 @@ bool dirscan_rcs_scanfile_down(struct dirscan_args *, struct scanfile_attr *);
 bool dirscan_rcs_scanfile_up(struct dirscan_args *);
 bool dirscan_rcs_scanfile_file(struct dirscan_args *, struct scanfile_attr *);
 
-bool dirscan_rcs_scanfile_read(struct dirscan_scanfile_args *,
-			       struct scanfile_attr *);
+bool dirscan_rcs_scanfile_read(struct dirscan_scanfile_args *, struct scanfile_attr *);
 bool dirscan_isparent(struct scanfile_attr *, struct scanfile_attr *);
 
 bool
@@ -103,8 +102,7 @@ dirscan_rcs_scanfile(struct dirscan_args *dsa)
 					return (false);
 				}
 			}
-			if ((dirattr != NULL) &&
-			    !list_insert_tail(lp, dirattr)) {
+			if ((dirattr != NULL) && !list_insert_tail(lp, dirattr)) {
 				list_destroy(lp);
 				if (dirattr != NULL)
 					free(dirattr);
@@ -129,8 +127,7 @@ dirscan_rcs_scanfile(struct dirscan_args *dsa)
 		case FILETYPE_RCS_ATTIC:
 		case FILETYPE_SYMLINK:
 			while (!dirscan_isparent(dirattr, &attr)) {
-				if ((dirattr != NULL) &&
-				    !dirscan_rcs_scanfile_up(dsa)) {
+				if ((dirattr != NULL) && !dirscan_rcs_scanfile_up(dsa)) {
 					list_destroy(lp);
 					free(dirattr);
 					return (false);
@@ -294,8 +291,7 @@ dirscan_rcs_scanfile_file(struct dirscan_args *dsa, struct scanfile_attr *attr)
 }
 
 bool
-dirscan_rcs_scanfile_read(struct dirscan_scanfile_args *args,
-			  struct scanfile_attr *attr)
+dirscan_rcs_scanfile_read(struct dirscan_scanfile_args *args, struct scanfile_attr *attr)
 {
 	struct collection *cl = args->sa_collection;
 	struct scanfile_attr rpref_attr;
@@ -320,10 +316,8 @@ dirscan_rcs_scanfile_read(struct dirscan_scanfile_args *args,
 		}
 
 		name = attr->a_name;
-		if ((name[cl->cl_rprefixlen] == '/') &&
-		    (memcmp(name, cl->cl_rprefix, cl->cl_rprefixlen) == 0)) {
+		if ((name[cl->cl_rprefixlen] == '/') && (memcmp(name, cl->cl_rprefix, cl->cl_rprefixlen) == 0))
 			break;
-		}
 
 		args->sa_start += attr->a_size;
 		if (args->sa_start == args->sa_end)

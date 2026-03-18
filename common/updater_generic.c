@@ -66,8 +66,7 @@ updater_generic_update(struct updater_args *uda)
 		else
 			len = uda->uda_bufsize;
 
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-			      uda->uda_buffer, len)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_buffer, len)) {
 			logmsg_err("Updater Error: generic: recv");
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			(void)unlink(uda->uda_tmpfile);
@@ -76,8 +75,7 @@ updater_generic_update(struct updater_args *uda)
 		}
 
 		if ((wn = write(fd, uda->uda_buffer, len)) == -1) {
-			logmsg_err("Updater Error: generic: %s",
-				   strerror(errno));
+			logmsg_err("Updater Error: generic: %s", strerror(errno));
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			(void)unlink(uda->uda_tmpfile);
 			(void)close(fd);
@@ -86,8 +84,7 @@ updater_generic_update(struct updater_args *uda)
 		if (wn == 0)
 			break;
 
-		(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer,
-				   (size_t)wn);
+		(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer, (size_t)wn);
 		size -= (uint64_t)wn;
 	}
 	if (size != 0) {
@@ -107,8 +104,7 @@ updater_generic_update(struct updater_args *uda)
 		return (false);
 	}
 	if (memcmp(uda->uda_hash, cmd, hashops->length) != 0) {
-		logmsg_err("Updater Error: generic: %s: hash mismatch",
-			   uda->uda_path);
+		logmsg_err("Updater Error: generic: %s: hash mismatch", uda->uda_path);
 		(void)unlink(uda->uda_tmpfile);
 		(void)close(fd);
 		return (false);

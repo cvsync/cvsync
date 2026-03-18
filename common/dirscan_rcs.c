@@ -97,8 +97,7 @@ dirscan_rcs(struct dirscan_args *dsa)
 					list_destroy(lp);
 					return (false);
 				}
-				(void)memcpy(&dsa->dsa_path[dsa->dsa_pathlen],
-					     mdp->md_name, mdp->md_namelen);
+				(void)memcpy(&dsa->dsa_path[dsa->dsa_pathlen], mdp->md_name, mdp->md_namelen);
 				dsa->dsa_path[len - 1] = '/';
 				dsa->dsa_path[len] = '\0';
 
@@ -173,10 +172,8 @@ dirscan_rcs_down(struct dirscan_args *dsa, struct mdirent_rcs *mdp)
 
 	cmd[2] = DIRCMP_DOWN;
 	cmd[3] = (uint8_t)mdp->md_namelen;
-	if ((len = attr_rcs_encode_dir(&cmd[4], dsa->dsa_cmdmax - base,
-				       mode)) == 0) {
+	if ((len = attr_rcs_encode_dir(&cmd[4], dsa->dsa_cmdmax - base, mode)) == 0)
 		return (false);
-	}
 	SetWord(cmd, len + base - 2);
 	if (!mux_send(dsa->dsa_mux, MUX_DIRCMP, cmd, 4))
 		return (false);
@@ -223,8 +220,7 @@ dirscan_rcs_file(struct dirscan_args *dsa, struct mdirent_rcs *mdp)
 		len = attr_rcs_encode_rcs(&cmd[4], len, st->st_mtime, mode);
 	} else {
 		cmd[2] = DIRCMP_FILE;
-		len = attr_rcs_encode_file(&cmd[4], len, st->st_mtime,
-					   st->st_size, mode);
+		len = attr_rcs_encode_file(&cmd[4], len, st->st_mtime, st->st_size, mode);
 	}
 	if (len == 0)
 		return (false);
@@ -248,16 +244,13 @@ dirscan_rcs_symlink(struct dirscan_args *dsa, struct mdirent_rcs *mdp)
 	size_t len;
 	ssize_t auxlen;
 
-	if (dsa->dsa_pathlen + mdp->md_namelen + 1 > dsa->dsa_pathmax)
+	if ((dsa->dsa_pathlen + mdp->md_namelen + 1) > dsa->dsa_pathmax)
 		return (false);
-	(void)memcpy(&dsa->dsa_path[dsa->dsa_pathlen], mdp->md_name,
-		     mdp->md_namelen);
+	(void)memcpy(&dsa->dsa_path[dsa->dsa_pathlen], mdp->md_name, mdp->md_namelen);
 	dsa->dsa_path[dsa->dsa_pathlen + mdp->md_namelen] = '\0';
 
-	if ((auxlen = readlink(dsa->dsa_path, dsa->dsa_symlink,
-			       dsa->dsa_pathmax)) == -1) {
+	if ((auxlen = readlink(dsa->dsa_path, dsa->dsa_symlink, dsa->dsa_pathmax)) == -1)
 		return (false);
-	}
 
 	if ((len = mdp->md_namelen + (size_t)auxlen + 4) > dsa->dsa_cmdmax)
 		return (false);
@@ -292,10 +285,8 @@ dirscan_rcs_opendir(struct dirscan_args *dsa, size_t pathlen)
 
 	rpathlen = pathlen - (size_t)(dsa->dsa_rpath - dsa->dsa_path);
 	if (rpathlen >= cl->cl_rprefixlen) {
-		if ((mdirp = mopendir_rcs(dsa->dsa_path, pathlen,
-					  dsa->dsa_pathmax, &mda)) == NULL) {
+		if ((mdirp = mopendir_rcs(dsa->dsa_path, pathlen, dsa->dsa_pathmax, &mda)) == NULL)
 			return (NULL);
-		}
 
 		return (mdirp);
 	}
@@ -321,8 +312,7 @@ dirscan_rcs_opendir(struct dirscan_args *dsa, size_t pathlen)
 		free(mdp);
 		return (NULL);
 	}
-	(void)memcpy(&dsa->dsa_path[cl->cl_prefixlen], cl->cl_rprefix,
-		     rpathlen + mdp->md_namelen);
+	(void)memcpy(&dsa->dsa_path[cl->cl_prefixlen], cl->cl_rprefix, rpathlen + mdp->md_namelen);
 	dsa->dsa_path[len] = '\0';
 
 	if (lstat(dsa->dsa_path, &mdp->md_stat) == -1) {

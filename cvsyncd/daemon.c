@@ -115,8 +115,7 @@ daemonize(const char *pidfile, const char *uidname, const char *gidname)
 
 	if (devnull != NULL) {
 		if ((fd = open(devnull, O_RDWR, 0)) == -1) {
-			logmsg_err("daemonize: %s: %s", devnull,
-				   strerror(errno));
+			logmsg_err("daemonize: %s: %s", devnull, strerror(errno));
 			return (false);
 		}
 		if (dup2(fd, STDIN_FILENO) == -1) {

@@ -92,14 +92,12 @@ dircmp_rcs_scanfile(struct dircmp_args *dca)
 
 			if (attr != NULL) {
 				while (dircmp_isparent(dirattr, attr)) {
-					if (!dircmp_rcs_scanfile_add(dca,
-								     attr)) {
+					if (!dircmp_rcs_scanfile_add(dca, attr)) {
 						free(dirattr);
 						list_destroy(lp);
 						return (false);
 					}
-					if (dircmp_rcs_scanfile_read(dca,
-								     attr)) {
+					if (dircmp_rcs_scanfile_read(dca, attr)) {
 						sa->sa_start += attr->a_size;
 						continue;
 					}
@@ -139,9 +137,7 @@ dircmp_rcs_scanfile(struct dircmp_args *dca)
 		}
 
 		sv_name = attr->a_name;
-		for (name = &sv_name[attr->a_namelen - 1] ;
-		     name > sv_name ;
-		     name--) {
+		for (name = &sv_name[attr->a_namelen - 1] ; name > sv_name ; name--) {
 			if (*name == '/') {
 				name++;
 				break;
@@ -152,12 +148,10 @@ dircmp_rcs_scanfile(struct dircmp_args *dca)
 		if (namelen == cap->ca_namelen) {
 			rv = memcmp(name, cap->ca_name, namelen);
 		} else {
-			if (namelen < cap->ca_namelen) {
+			if (namelen < cap->ca_namelen)
 				rv = memcmp(name, cap->ca_name, namelen);
-			} else {
-				rv = memcmp(name, cap->ca_name,
-					    cap->ca_namelen);
-			}
+			else
+				rv = memcmp(name, cap->ca_name, cap->ca_namelen);
 			if (rv == 0) {
 				if (namelen < cap->ca_namelen)
 					rv = -1;
@@ -173,8 +167,7 @@ dircmp_rcs_scanfile(struct dircmp_args *dca)
 				return (false);
 			}
 			if (cap->ca_tag == DIRCMP_DOWN) {
-				if ((dirattr != NULL) &&
-				    !list_insert_tail(lp, dirattr)) {
+				if ((dirattr != NULL) && !list_insert_tail(lp, dirattr)) {
 					free(dirattr);
 					list_destroy(lp);
 					return (false);
@@ -274,7 +267,7 @@ dircmp_rcs_scanfile_fetch(struct dircmp_args *dca)
 	if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > dca->dca_cmdmax - 2))
+	if ((len == 0) || (len > (dca->dca_cmdmax - 2)))
 		return (false);
 	if ((cap->ca_tag = cmd[2]) == DIRCMP_END)
 		return (len == 1);
@@ -293,18 +286,16 @@ dircmp_rcs_scanfile_fetch(struct dircmp_args *dca)
 	case DIRCMP_DOWN:
 		cap->ca_type = FILETYPE_DIR;
 		cap->ca_auxlen = RCS_ATTRLEN_DIR;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name)) ||
-		    (cap->ca_namelen != len - cap->ca_auxlen - 2)) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)) ||
+		    (cap->ca_namelen != (len - cap->ca_auxlen - 2))) {
 			return (false);
 		}
 		break;
 	case DIRCMP_FILE:
 		cap->ca_type = FILETYPE_FILE;
 		cap->ca_auxlen = RCS_ATTRLEN_FILE;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name)) ||
-		    (cap->ca_namelen != len - cap->ca_auxlen - 2)) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)) ||
+		    (cap->ca_namelen != (len - cap->ca_auxlen - 2))) {
 			return (false);
 		}
 		break;
@@ -315,19 +306,16 @@ dircmp_rcs_scanfile_fetch(struct dircmp_args *dca)
 		else
 			cap->ca_type = FILETYPE_RCS_ATTIC;
 		cap->ca_auxlen = RCS_ATTRLEN_RCS;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name)) ||
-		    (cap->ca_namelen != len - cap->ca_auxlen - 2)) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)) ||
+		    (cap->ca_namelen != (len - cap->ca_auxlen - 2))) {
 			return (false);
 		}
 		break;
 	case DIRCMP_SYMLINK:
 		cap->ca_type = FILETYPE_SYMLINK;
-		if ((cap->ca_namelen == 0) ||
-		    (cap->ca_namelen > sizeof(cap->ca_name))) {
+		if ((cap->ca_namelen == 0) || (cap->ca_namelen > sizeof(cap->ca_name)))
 			return (false);
-		}
-		if (len <= cap->ca_namelen + 2)
+		if (len <= (cap->ca_namelen + 2))
 			return (false);
 		cap->ca_auxlen = len - cap->ca_namelen - 2;
 		if (cap->ca_auxlen > sizeof(cap->ca_aux))
@@ -337,16 +325,12 @@ dircmp_rcs_scanfile_fetch(struct dircmp_args *dca)
 		return (false);
 	}
 
-	if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 	if (!cvsync_rcs_filename((char *)cap->ca_name, cap->ca_namelen))
 		return (false);
-	if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_aux,
-		      cap->ca_auxlen)) {
+	if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cap->ca_aux, cap->ca_auxlen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -453,8 +437,7 @@ dircmp_rcs_scanfile_add(struct dircmp_args *dca, struct scanfile_attr *attr)
 }
 
 bool
-dircmp_rcs_scanfile_add_file(struct dircmp_args *dca,
-			     struct scanfile_attr *attr)
+dircmp_rcs_scanfile_add_file(struct dircmp_args *dca, struct scanfile_attr *attr)
 {
 	uint8_t *cmd = dca->dca_cmd;
 	size_t len;
@@ -468,10 +451,8 @@ dircmp_rcs_scanfile_add_file(struct dircmp_args *dca,
 	SetWord(&cmd[4], attr->a_namelen);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cmd, 6))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, attr->a_name,
-		      attr->a_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, attr->a_name, attr->a_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -507,8 +488,7 @@ dircmp_rcs_scanfile_remove(struct dircmp_args *dca, struct scanfile_attr *attr)
 		return (false);
 	}
 
-	(void)memcpy(&dca->dca_path[dca->dca_pathlen], cap->ca_name,
-		     cap->ca_namelen);
+	(void)memcpy(&dca->dca_path[dca->dca_pathlen], cap->ca_name, cap->ca_namelen);
 	dca->dca_path[len - 1] = '/';
 	dca->dca_path[len] = '\0';
 	dca->dca_pathlen = len;
@@ -532,10 +512,8 @@ dircmp_rcs_scanfile_remove(struct dircmp_args *dca, struct scanfile_attr *attr)
 					free(plen_stack);
 					return (false);
 				}
-				(void)memcpy(newp, plen_stack,
-					     old * sizeof(*newp));
-				(void)memset(&newp[old], 0,
-					     (new - old) * sizeof(*newp));
+				(void)memcpy(newp, plen_stack, old * sizeof(*newp));
+				(void)memset(&newp[old], 0, (new - old) * sizeof(*newp));
 
 				free(plen_stack);
 				plen_stack = newp;
@@ -549,8 +527,7 @@ dircmp_rcs_scanfile_remove(struct dircmp_args *dca, struct scanfile_attr *attr)
 				return (false);
 			}
 
-			(void)memcpy(&dca->dca_path[dca->dca_pathlen],
-				     cap->ca_name, cap->ca_namelen);
+			(void)memcpy(&dca->dca_path[dca->dca_pathlen], cap->ca_name, cap->ca_namelen);
 			dca->dca_path[len - 1] = '/';
 			dca->dca_path[len] = '\0';
 			dca->dca_pathlen = len;
@@ -603,10 +580,8 @@ dircmp_rcs_scanfile_remove_dir(struct dircmp_args *dca)
 	SetWord(&cmd[4], dca->dca_pathlen - 1);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cmd, 6))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_path,
-		      dca->dca_pathlen - 1)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_path, dca->dca_pathlen - 1))
 		return (false);
-	}
 
 	return (true);
 }
@@ -627,21 +602,16 @@ dircmp_rcs_scanfile_remove_file(struct dircmp_args *dca)
 	SetWord(&cmd[4], dca->dca_pathlen + cap->ca_namelen);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cmd, 6))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_path,
-		      dca->dca_pathlen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, dca->dca_path, dca->dca_pathlen))
 		return (false);
-	}
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
 	return (true);
 }
 
 bool
-dircmp_rcs_scanfile_replace(struct dircmp_args *dca,
-			    struct scanfile_attr *attr)
+dircmp_rcs_scanfile_replace(struct dircmp_args *dca, struct scanfile_attr *attr)
 {
 	char *sp = attr->a_name, *bp = sp + attr->a_namelen - 1, *p;
 	size_t sv_namelen = attr->a_namelen;
@@ -716,10 +686,8 @@ dircmp_rcs_scanfile_update(struct dircmp_args *dca, struct scanfile_attr *attr)
 		break;
 	case FILETYPE_RCS:
 	case FILETYPE_RCS_ATTIC:
-		if ((cap->ca_type != FILETYPE_RCS) &&
-		    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+		if ((cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 			return (dircmp_rcs_scanfile_replace(dca, attr));
-		}
 		if (attr->a_auxlen != cap->ca_auxlen)
 			return (false);
 		if (memcmp(cap->ca_aux, attr->a_aux, attr->a_auxlen) == 0)
@@ -727,22 +695,18 @@ dircmp_rcs_scanfile_update(struct dircmp_args *dca, struct scanfile_attr *attr)
 		if (cap->ca_type != attr->a_type) {
 			cmd[2] = FILESCAN_RCS_ATTIC;
 		} else {
-			if (memcmp(cap->ca_aux, attr->a_aux,
-				   attr->a_auxlen - 2) == 0) {
+			if (memcmp(cap->ca_aux, attr->a_aux, attr->a_auxlen - 2) == 0)
 				cmd[2] = FILESCAN_SETATTR;
-			} else {
+			else
 				cmd[2] = FILESCAN_UPDATE;
-			}
 		}
 		len = attr->a_auxlen;
 		break;
 	case FILETYPE_SYMLINK:
 		if (cap->ca_type != FILETYPE_SYMLINK)
 			return (dircmp_rcs_scanfile_replace(dca, attr));
-		if ((attr->a_auxlen == cap->ca_auxlen) &&
-		    (memcmp(cap->ca_aux, attr->a_aux, attr->a_auxlen) == 0)) {
+		if ((attr->a_auxlen == cap->ca_auxlen) && (memcmp(cap->ca_aux, attr->a_aux, attr->a_auxlen) == 0))
 			return (true);
-		}
 		cmd[2] = FILESCAN_UPDATE;
 		len = 0;
 		break;
@@ -755,15 +719,11 @@ dircmp_rcs_scanfile_update(struct dircmp_args *dca, struct scanfile_attr *attr)
 	SetWord(&cmd[4], attr->a_namelen);
 	if (!mux_send(dca->dca_mux, MUX_FILESCAN, cmd, 6))
 		return (false);
-	if (!mux_send(dca->dca_mux, MUX_FILESCAN, attr->a_name,
-		      attr->a_namelen)) {
+	if (!mux_send(dca->dca_mux, MUX_FILESCAN, attr->a_name, attr->a_namelen))
 		return (false);
-	}
 	if (len > 0) {
-		if (!mux_send(dca->dca_mux, MUX_FILESCAN, attr->a_aux,
-			      attr->a_auxlen)) {
+		if (!mux_send(dca->dca_mux, MUX_FILESCAN, attr->a_aux, attr->a_auxlen))
 			return (false);
-		}
 	}
 
 	return (true);
@@ -812,8 +772,7 @@ dircmp_rcs_scanfile_read(struct dircmp_args *dca, struct scanfile_attr *attr)
 		}
 
 		name = attr->a_name;
-		if ((name[cl->cl_rprefixlen] == '/') &&
-		    (memcmp(name, cl->cl_rprefix, cl->cl_rprefixlen) == 0)) {
+		if ((name[cl->cl_rprefixlen] == '/') && (memcmp(name, cl->cl_rprefix, cl->cl_rprefixlen) == 0)) {
 			if (dircmp_access_scanfile(dca, attr))
 				break;
 			sa->sa_start += attr->a_size;

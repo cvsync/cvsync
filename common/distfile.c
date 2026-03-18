@@ -134,8 +134,7 @@ distfile_parse(FILE *fp)
 			}
 
 			if (da->da_patterns != NULL) {
-				(void)memcpy(newptr, da->da_patterns,
-					     old * sizeof(*newptr));
+				(void)memcpy(newptr, da->da_patterns, old * sizeof(*newptr));
 				free(da->da_patterns);
 			}
 			da->da_patterns = newptr;

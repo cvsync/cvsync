@@ -235,8 +235,7 @@ config_parse(struct config_args *ca)
 				return (NULL);
 			break;
 		default:
-			logmsg_err("line %u: %s: invalid keyword", lineno,
-				   key->name);
+			logmsg_err("line %u: %s: invalid keyword", lineno, key->name);
 			if (cf != NULL)
 				config_destroy(cf);
 			return (NULL);
@@ -336,8 +335,7 @@ config_parse_config(struct config_args *ca)
 			break;
 		case TOK_MAXCLIENTS:
 			if (cf->cf_maxclients != (size_t)-1) {
-				logmsg_err("line %u: found duplication of the "
-					   "'%s'", lineno, key->name);
+				logmsg_err("line %u: found duplication of the '%s'", lineno, key->name);
 				config_destroy(cf);
 				return (NULL);
 			}
@@ -345,10 +343,8 @@ config_parse_config(struct config_args *ca)
 				config_destroy(cf);
 				return (NULL);
 			}
-			if ((ul < CVSYNCD_MIN_MAXCLIENTS) ||
-			    (ul > CVSYNCD_MAX_MAXCLIENTS)) {
-				logmsg_err("line %u: %s %lu: %s", lineno,
-					   key->name, ul, strerror(ERANGE));
+			if ((ul < CVSYNCD_MIN_MAXCLIENTS) || (ul > CVSYNCD_MAX_MAXCLIENTS)) {
+				logmsg_err("line %u: %s %lu: %s", lineno, key->name, ul, strerror(ERANGE));
 				config_destroy(cf);
 				return (NULL);
 			}
@@ -371,38 +367,31 @@ config_parse_config(struct config_args *ca)
 			}
 			break;
 		default:
-			logmsg_err("line %u: %s: invalid keyword", lineno,
-				   key->name);
+			logmsg_err("line %u: %s: invalid keyword", lineno, key->name);
 			config_destroy(cf);
 			return (NULL);
 		}
 	}
 
-	if (strlen(cf->cf_serv) == 0) {
-		snprintf(cf->cf_serv, sizeof(cf->cf_serv), "%s",
-			 CVSYNC_DEFAULT_PORT);
-	}
+	if (strlen(cf->cf_serv) == 0)
+		snprintf(cf->cf_serv, sizeof(cf->cf_serv), "%s", CVSYNC_DEFAULT_PORT);
 	if (cf->cf_maxclients == (size_t)-1)
 		cf->cf_maxclients = CVSYNCD_DEFAULT_MAXCLIENTS;
 	if (cf->cf_hash == HASH_UNSPEC)
 		cf->cf_hash = HASH_DEFAULT_TYPE;
 
-	if ((strlen(cf->cf_access_name) != 0) &&
-	    (cf->cf_access_name[0] != '/')) {
-		logmsg_err("access %s: must be the absolute path",
-			   cf->cf_access_name);
+	if ((strlen(cf->cf_access_name) != 0) && (cf->cf_access_name[0] != '/')) {
+		logmsg_err("access %s: must be the absolute path", cf->cf_access_name);
 		config_destroy(cf);
 		return (NULL);
 	}
 	if ((strlen(cf->cf_halt_name) != 0) && (cf->cf_halt_name[0] != '/')) {
-		logmsg_err("haltfile %s: must be the absolute path",
-			   cf->cf_halt_name);
+		logmsg_err("haltfile %s: must be the absolute path", cf->cf_halt_name);
 		config_destroy(cf);
 		return (NULL);
 	}
 	if ((strlen(cf->cf_pid_name) != 0) && (cf->cf_pid_name[0] != '/')) {
-		logmsg_err("pidfile %s: must be the absolute path",
-			   cf->cf_pid_name);
+		logmsg_err("pidfile %s: must be the absolute path", cf->cf_pid_name);
 		config_destroy(cf);
 		return (NULL);
 	}
@@ -426,8 +415,7 @@ config_parse_config(struct config_args *ca)
 			config_destroy(cf);
 			return (NULL);
 		}
-		if ((strlen(cl->cl_super_name) != 0) &&
-		    !config_resolv_super(cf, cl)) {
+		if ((strlen(cl->cl_super_name) != 0) && !config_resolv_super(cf, cl)) {
 			config_destroy(cf);
 			return (NULL);
 		}
@@ -457,8 +445,7 @@ config_parse_collection(struct config_args *ca)
 	if ((key = token_get_keyword(fp, config_keywords)) == NULL)
 		return (NULL);
 	if (key->type != TOK_LBRACE) {
-		logmsg_err("line %u: missing '{' for the 'collection'",
-			   lineno);
+		logmsg_err("line %u: missing '{' for the 'collection'", lineno);
 		return (NULL);
 	}
 
@@ -505,11 +492,9 @@ config_parse_collection(struct config_args *ca)
 			}
 			break;
 		case TOK_LOOSE:
-			logmsg_err("line %u: '%s' is obsoleted", lineno,
-				   key->name);
+			logmsg_err("line %u: '%s' is obsoleted", lineno, key->name);
 			if (cl->cl_errormode != CVSYNC_ERRORMODE_UNSPEC) {
-				logmsg_err("line %u: conflicts '%s' with "
-					   "'errormode'", lineno, key->name);
+				logmsg_err("line %u: conflicts '%s' with 'errormode'", lineno, key->name);
 				collection_destroy(cl);
 				return (NULL);
 			}
@@ -525,8 +510,7 @@ config_parse_collection(struct config_args *ca)
 			break;
 		case TOK_NOFOLLOW:
 			if (!cl->cl_symfollow) {
-				logmsg_err("line %u: found duplication of the "
-					   "'%s'", lineno, key->name);
+				logmsg_err("line %u: found duplication of the '%s'", lineno, key->name);
 				collection_destroy(cl);
 				return (NULL);
 			}
@@ -569,8 +553,7 @@ config_parse_collection(struct config_args *ca)
 			}
 			break;
 		default:
-			logmsg_err("line %u: %s: invalid keyword", lineno,
-				   key->name);
+			logmsg_err("line %u: %s: invalid keyword", lineno, key->name);
 			collection_destroy(cl);
 			return (NULL);
 		}
@@ -616,25 +599,22 @@ config_resolv_distfile(struct config *cf, struct collection *cl)
 
 	if (cl->cl_dist_name[0] != '/') {
 		if (strlen(cf->cf_base) == 0) {
-			logmsg_err("collection %s/%s: distfile %s: must be an "
-				   "absolute path", cl->cl_name,
+			logmsg_err("collection %s/%s: distfile %s: must be an absolute path", cl->cl_name,
 				   cl->cl_release, cl->cl_dist_name);
 			return (false);
 		}
-		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base,
-			      cl->cl_dist_name);
+		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base, cl->cl_dist_name);
 	} else {
 		wn = snprintf(path, sizeof(path), "%s", cl->cl_dist_name);
 	}
 	if ((wn <= 0) || ((size_t)wn >= sizeof(path))) {
-		logmsg_err("collection %s/%s: distfile %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_dist_name, strerror(EINVAL));
+		logmsg_err("collection %s/%s: distfile %s: %s", cl->cl_name, cl->cl_release, cl->cl_dist_name,
+			   strerror(EINVAL));
 		return (false);
 	}
 	wn = snprintf(cl->cl_dist_name, sizeof(cl->cl_dist_name), "%s", path);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(cl->cl_dist_name))) {
-		logmsg_err("collection %s/%s: distfile %s: %s", cl->cl_name,
-			   cl->cl_release, path, strerror(EINVAL));
+		logmsg_err("collection %s/%s: distfile %s: %s", cl->cl_name, cl->cl_release, path, strerror(EINVAL));
 		return (false);
 	}
 
@@ -649,9 +629,7 @@ config_resolv_super(struct config *cf, struct collection *cl)
 	int type = cvsync_release_pton(cl->cl_release);
 	bool found = false;
 
-	for (super = cf->cf_collections ;
-	     super != NULL ;
-	     super = super->cl_next) {
+	for (super = cf->cf_collections ; super != NULL ; super = super->cl_next) {
 		if (super == cl)
 			continue;
 		if (strcasecmp(super->cl_name, name) != 0)
@@ -670,8 +648,7 @@ config_resolv_super(struct config *cf, struct collection *cl)
 			break;
 	}
 	if (!found) {
-		logmsg_err("Not found such a super collection: %s/%s", name,
-			   cl->cl_release);
+		logmsg_err("Not found such a super collection: %s/%s", name, cl->cl_release);
 		return (false);
 	}
 
@@ -687,13 +664,11 @@ config_set_collection_default_rcs(struct collection *cl)
 
 	if (strlen(cl->cl_super_name) != 0) {
 		if (cl->cl_umask != CVSYNC_UMASK_UNSPEC) {
-			logmsg_err("collection %s/%s: invalid 'umask'",
-				   cl->cl_name, cl->cl_release);
+			logmsg_err("collection %s/%s: invalid 'umask'", cl->cl_name, cl->cl_release);
 			found_errors = true;
 		}
 		if (!cl->cl_symfollow) {
-			logmsg_err("collection %s/%s: invalid 'nofollow'",
-				   cl->cl_name, cl->cl_release);
+			logmsg_err("collection %s/%s: invalid 'nofollow'", cl->cl_name, cl->cl_release);
 			found_errors = true;
 		}
 		if (found_errors)
@@ -711,42 +686,29 @@ config_set_collection_super(struct collection *cl, struct collection *super)
 {
 	while (super->cl_super != NULL) {
 		if (cl == super) {
-			logmsg_err("Detect cyclic dependency of 'super' from "
-				   "%s/%s", cl->cl_name, cl->cl_release);
+			logmsg_err("Detect cyclic dependency of 'super' from %s/%s", cl->cl_name, cl->cl_release);
 			return (false);
 		}
 		super = super->cl_super;
 	}
 
-	if ((super->cl_prefixlen >= cl->cl_prefixlen) ||
-	    (cl->cl_prefix[super->cl_prefixlen - 1] != '/') ||
-	    (memcmp(super->cl_prefix, cl->cl_prefix,
-		    super->cl_prefixlen) != 0)) {
-		logmsg_err("prefix %s of %s/%s must be sub-directory of "
-			   "prefix %s of %s/%s", cl->cl_prefix, cl->cl_name,
-			   cl->cl_release, super->cl_prefix, super->cl_name,
-			   super->cl_release);
+	if ((super->cl_prefixlen >= cl->cl_prefixlen) || (cl->cl_prefix[super->cl_prefixlen - 1] != '/') ||
+	    (memcmp(super->cl_prefix, cl->cl_prefix, super->cl_prefixlen) != 0)) {
+		logmsg_err("prefix %s of %s/%s must be sub-directory of prefix %s of %s/%s", cl->cl_prefix,
+			   cl->cl_name, cl->cl_release, super->cl_prefix, super->cl_name, super->cl_release);
 		return (false);
 	}
 
-	if ((strlen(cl->cl_dist_name) == 0) &&
-	    (strlen(super->cl_dist_name) != 0)) {
-		snprintf(cl->cl_dist_name, sizeof(cl->cl_dist_name), "%s",
-			 super->cl_dist_name);
-	}
-	if ((strlen(cl->cl_scan_name) == 0) &&
-	    (strlen(super->cl_scan_name) != 0)) {
-		snprintf(cl->cl_scan_name, sizeof(cl->cl_scan_name), "%s",
-			 super->cl_scan_name);
-	}
+	if ((strlen(cl->cl_dist_name) == 0) && (strlen(super->cl_dist_name) != 0))
+		snprintf(cl->cl_dist_name, sizeof(cl->cl_dist_name), "%s", super->cl_dist_name);
+	if ((strlen(cl->cl_scan_name) == 0) && (strlen(super->cl_scan_name) != 0))
+		snprintf(cl->cl_scan_name, sizeof(cl->cl_scan_name), "%s", super->cl_scan_name);
 
 	cl->cl_rprefixlen = cl->cl_prefixlen - super->cl_prefixlen - 1;
 	if (cl->cl_rprefixlen > sizeof(cl->cl_rprefix))
 		return (false);
 	if (cl->cl_rprefixlen > 0) {
-		(void)memcpy(cl->cl_rprefix,
-			     &cl->cl_prefix[super->cl_prefixlen],
-			     cl->cl_rprefixlen);
+		(void)memcpy(cl->cl_rprefix, &cl->cl_prefix[super->cl_prefixlen], cl->cl_rprefixlen);
 		cl->cl_rprefix[cl->cl_rprefixlen] = '/';
 	}
 	cl->cl_prefixlen = super->cl_prefixlen;

@@ -76,36 +76,31 @@ updater_rcs(struct updater_args *uda)
 		switch (cap->ca_tag) {
 		case UPDATER_ADD:
 			if (!updater_rcs_add(uda)) {
-				logmsg_err("Updater(RCS): ADD: %s",
-					   uda->uda_path);
+				logmsg_err("Updater(RCS): ADD: %s", uda->uda_path);
 				return (false);
 			}
 			break;
 		case UPDATER_REMOVE:
 			if (!updater_rcs_remove(uda)) {
-				logmsg_err("Updater(RCS): REMOVE: %s",
-					   uda->uda_path);
+				logmsg_err("Updater(RCS): REMOVE: %s", uda->uda_path);
 				return (false);
 			}
 			break;
 		case UPDATER_RCS_ATTIC:
 			if (!updater_rcs_attic(uda)) {
-				logmsg_err("Updater(RCS): ATTIC: %s",
-					   uda->uda_path);
+				logmsg_err("Updater(RCS): ATTIC: %s", uda->uda_path);
 				return (false);
 			}
 			break;
 		case UPDATER_SETATTR:
 			if (!updater_rcs_setattr(uda)) {
-				logmsg_err("Updater(RCS): SETATTR: %s",
-					   uda->uda_path);
+				logmsg_err("Updater(RCS): SETATTR: %s", uda->uda_path);
 				return (false);
 			}
 			break;
 		case UPDATER_UPDATE:
 			if (!updater_rcs_update(uda)) {
-				logmsg_err("Updater(RCS): UPDATE: %s",
-					   uda->uda_path);
+				logmsg_err("Updater(RCS): UPDATE: %s", uda->uda_path);
 				return (false);
 			}
 			break;
@@ -127,7 +122,7 @@ updater_rcs_fetch(struct updater_args *uda)
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > uda->uda_cmdmax - 2))
+	if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 		return (false);
 	if ((cap->ca_tag = cmd[2]) == UPDATER_END)
 		return (len == 1);
@@ -144,30 +139,22 @@ updater_rcs_fetch(struct updater_args *uda)
 	switch (cap->ca_tag) {
 	case UPDATER_ADD:
 	case UPDATER_REMOVE:
-		if (cap->ca_namelen != len - 4)
+		if (cap->ca_namelen != (len - 4))
 			return (false);
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
 		break;
 	case UPDATER_RCS_ATTIC:
-		if ((cap->ca_type != FILETYPE_RCS) &&
-		    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+		if ((cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 			return (false);
-		}
-		if (cap->ca_namelen != len - RCS_ATTRLEN_RCS - 4)
+		if (cap->ca_namelen != (len - RCS_ATTRLEN_RCS - 4))
 			return (false);
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
 		if (!IS_FILE_RCS(cap->ca_name, cap->ca_namelen))
 			return (false);
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd,
-			      RCS_ATTRLEN_RCS)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, RCS_ATTRLEN_RCS))
 			return (false);
-		}
 		if (!attr_rcs_decode_rcs(cmd, RCS_ATTRLEN_RCS, cap))
 			return (false);
 		break;
@@ -175,19 +162,15 @@ updater_rcs_fetch(struct updater_args *uda)
 		if (cap->ca_type == FILETYPE_DIR)
 			return (false);
 		if (cap->ca_type == FILETYPE_SYMLINK) {
-			if (len <= cap->ca_namelen + 4)
+			if (len <= (cap->ca_namelen + 4))
 				return (false);
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
 			cap->ca_auxlen = len - cap->ca_namelen - 4;
 			if (cap->ca_auxlen > sizeof(cap->ca_aux))
 				return (false);
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-				      cap->ca_aux, cap->ca_auxlen)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_aux, cap->ca_auxlen))
 				return (false);
-			}
 			break;
 		}
 		FALLTHROUGH;
@@ -195,47 +178,35 @@ updater_rcs_fetch(struct updater_args *uda)
 	case UPDATER_SETATTR:
 		switch (cap->ca_type) {
 		case FILETYPE_DIR:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_DIR - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_DIR - 4))
 				return (false);
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd,
-				      RCS_ATTRLEN_DIR)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, RCS_ATTRLEN_DIR))
 				return (false);
-			}
 			if (!attr_rcs_decode_dir(cmd, RCS_ATTRLEN_DIR, cap))
 				return (false);
 			break;
 		case FILETYPE_FILE:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_FILE - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_FILE - 4))
 				return (false);
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd,
-				      RCS_ATTRLEN_FILE)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, RCS_ATTRLEN_FILE))
 				return (false);
-			}
 			if (!attr_rcs_decode_file(cmd, RCS_ATTRLEN_FILE, cap))
 				return (false);
 			break;
 		case FILETYPE_RCS:
 		case FILETYPE_RCS_ATTIC:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_RCS - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_RCS - 4))
 				return (false);
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
 			if (!IS_FILE_RCS(cap->ca_name, cap->ca_namelen))
 				return (false);
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd,
-				      RCS_ATTRLEN_RCS)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, RCS_ATTRLEN_RCS))
 				return (false);
-			}
 			if (!attr_rcs_decode_rcs(cmd, RCS_ATTRLEN_RCS, cap))
 				return (false);
 			break;
@@ -256,10 +227,8 @@ updater_rcs_fetch(struct updater_args *uda)
 	(void)memcpy(uda->uda_rpath, cap->ca_name, cap->ca_namelen);
 	uda->uda_rpath[cap->ca_namelen] = '\0';
 	if (cap->ca_type == FILETYPE_RCS_ATTIC) {
-		if (!cvsync_rcs_insert_attic(uda->uda_path, pathlen,
-					     uda->uda_pathmax)) {
+		if (!cvsync_rcs_insert_attic(uda->uda_path, pathlen, uda->uda_pathmax))
 			return (false);
-		}
 	}
 
 	cap->ca_mode = RCS_MODE(cap->ca_mode, uda->uda_umask);
@@ -352,9 +321,7 @@ updater_rcs_add_file(struct updater_args *uda)
 
 	if (cap->ca_type == FILETYPE_RCS_ATTIC) {
 		len = uda->uda_pathlen + cap->ca_namelen + 6;
-		for (ep = &uda->uda_path[len - 1] ;
-		     ep >= uda->uda_path ;
-		     ep--) {
+		for (ep = &uda->uda_path[len - 1] ; ep >= uda->uda_path ; ep--) {
 			if (*ep == '/')
 				break;
 		}
@@ -363,18 +330,15 @@ updater_rcs_add_file(struct updater_args *uda)
 		*ep = '\0';
 		if (mkdir(uda->uda_path, mode) == -1) {
 			if (errno != EEXIST) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 			if (lstat(uda->uda_path, &st) == -1) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 			if (!S_ISDIR(st.st_mode)) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(ENOTDIR));
+				logmsg_err("%s: %s", uda->uda_path, strerror(ENOTDIR));
 				return (false);
 			}
 		}
@@ -391,14 +355,13 @@ updater_rcs_add_file(struct updater_args *uda)
 	}
 	len = (size_t)(ep - uda->uda_path);
 	(void)memcpy(uda->uda_tmpfile, uda->uda_path, len);
-	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE,
-		     CVSYNC_TMPFILE_LEN);
+	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE, CVSYNC_TMPFILE_LEN);
 	uda->uda_tmpfile[len + CVSYNC_TMPFILE_LEN] = '\0';
 
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len <= 8) || (len > uda->uda_cmdmax - 2))
+	if ((len <= 8) || (len > (uda->uda_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 		return (false);
@@ -426,8 +389,7 @@ updater_rcs_add_file(struct updater_args *uda)
 		else
 			len = uda->uda_bufsize;
 
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-			      uda->uda_buffer, len)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_buffer, len)) {
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			(void)unlink(uda->uda_tmpfile);
 			(void)close(fd);
@@ -469,8 +431,7 @@ updater_rcs_add_file(struct updater_args *uda)
 		return (false);
 	}
 	if (memcmp(uda->uda_hash, cmd, hashops->length) != 0) {
-		logmsg_err("Updater Error: rcs: %s: hash mismatch",
-			   uda->uda_path);
+		logmsg_err("Updater Error: rcs: %s: hash mismatch", uda->uda_path);
 		(void)unlink(uda->uda_tmpfile);
 		(void)close(fd);
 		return (false);
@@ -573,10 +534,8 @@ updater_rcs_remove(struct updater_args *uda)
 		if (errno == ENOENT)
 			break;
 		pathlen = uda->uda_pathlen + cap->ca_namelen;
-		if (!cvsync_rcs_append_attic(uda->uda_path, pathlen,
-					     uda->uda_pathmax)) {
+		if (!cvsync_rcs_append_attic(uda->uda_path, pathlen, uda->uda_pathmax))
 			return (false);
-		}
 		if (rmdir(uda->uda_path) == -1) {
 			logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 			return (false);
@@ -592,16 +551,13 @@ updater_rcs_remove(struct updater_args *uda)
 	case FILETYPE_RCS_ATTIC:
 		if (unlink(uda->uda_path) == -1) {
 			if (errno != ENOENT) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 		}
 		if (cap->ca_type == FILETYPE_RCS_ATTIC) {
 			pathlen = uda->uda_pathlen + cap->ca_namelen + 6;
-			for (ep = &uda->uda_path[pathlen - 1] ;
-			     ep >= uda->uda_path ;
-			     ep--) {
+			for (ep = &uda->uda_path[pathlen - 1] ; ep >= uda->uda_path ; ep--) {
 				if (*ep == '/')
 					break;
 			}
@@ -619,10 +575,8 @@ updater_rcs_remove(struct updater_args *uda)
 				return (false);
 			*ep = '\0';
 			if (rmdir(uda->uda_path) == -1) {
-				if ((errno != EEXIST) &&
-				    (errno != ENOTEMPTY)) {
-					logmsg_err("%s: %s", uda->uda_path,
-						   strerror(errno));
+				if ((errno != EEXIST) && (errno != ENOTEMPTY)) {
+					logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 					return (false);
 				}
 			}
@@ -632,8 +586,7 @@ updater_rcs_remove(struct updater_args *uda)
 	case FILETYPE_SYMLINK:
 		if (unlink(uda->uda_path) == -1) {
 			if (errno != ENOENT) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 		}
@@ -668,23 +621,18 @@ updater_rcs_attic(struct updater_args *uda)
 	}
 	len = (size_t)(ep - uda->uda_path);
 	(void)memcpy(uda->uda_tmpfile, uda->uda_path, len);
-	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE,
-		     CVSYNC_TMPFILE_LEN);
+	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE, CVSYNC_TMPFILE_LEN);
 	uda->uda_tmpfile[len + CVSYNC_TMPFILE_LEN] = '\0';
 
 	switch (cap->ca_type) {
 	case FILETYPE_RCS:
 		pathlen = uda->uda_pathlen + cap->ca_namelen;
-		if (!cvsync_rcs_insert_attic(uda->uda_path, pathlen,
-					     uda->uda_pathmax)) {
+		if (!cvsync_rcs_insert_attic(uda->uda_path, pathlen, uda->uda_pathmax))
 			return (false);
-		}
 		break;
 	case FILETYPE_RCS_ATTIC:
 		pathlen = uda->uda_pathlen + cap->ca_namelen + 6;
-		for (ep = &uda->uda_path[pathlen - 1] ;
-		     ep >= uda->uda_path ;
-		     ep--) {
+		for (ep = &uda->uda_path[pathlen - 1] ; ep >= uda->uda_path ; ep--) {
 			if (*ep == '/')
 				break;
 		}
@@ -693,18 +641,15 @@ updater_rcs_attic(struct updater_args *uda)
 		*ep = '\0';
 		if (mkdir(uda->uda_path, mode) == -1) {
 			if (errno != EEXIST) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 			if (lstat(uda->uda_path, &st) == -1) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 			if (!S_ISDIR(st.st_mode)) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(ENOTDIR));
+				logmsg_err("%s: %s", uda->uda_path, strerror(ENOTDIR));
 				return (false);
 			}
 		}
@@ -751,9 +696,7 @@ updater_rcs_attic(struct updater_args *uda)
 	switch (cap->ca_type) {
 	case FILETYPE_RCS:
 		pathlen = uda->uda_pathlen + cap->ca_namelen + 6;
-		for (ep = &uda->uda_path[pathlen - 1] ;
-		     ep >= uda->uda_path ;
-		     ep--) {
+		for (ep = &uda->uda_path[pathlen - 1] ; ep >= uda->uda_path ; ep--) {
 			if (*ep == '/')
 				break;
 		}
@@ -772,8 +715,7 @@ updater_rcs_attic(struct updater_args *uda)
 		*ep = '\0';
 		if (rmdir(uda->uda_path) == -1) {
 			if ((errno != EEXIST) && (errno != ENOTEMPTY)) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 		}
@@ -783,10 +725,8 @@ updater_rcs_attic(struct updater_args *uda)
 		break;
 	case FILETYPE_RCS_ATTIC:
 		pathlen = uda->uda_pathlen + cap->ca_namelen;
-		if (!cvsync_rcs_insert_attic(uda->uda_path, pathlen,
-					     uda->uda_pathmax)) {
+		if (!cvsync_rcs_insert_attic(uda->uda_path, pathlen, uda->uda_pathmax))
 			return (false);
-		}
 		break;
 	default:
 		return (false);
@@ -821,8 +761,7 @@ updater_rcs_setattr(struct updater_args *uda)
 	case FILETYPE_DIR:
 		if (chmod(uda->uda_path, cap->ca_mode) == -1) {
 			if (errno != ENOENT) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 			if (!updater_rcs_scanfile_remove(uda))
@@ -838,8 +777,7 @@ updater_rcs_setattr(struct updater_args *uda)
 
 		if (utime(uda->uda_path, &times) == -1) {
 			if (errno != ENOENT) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 			if (!updater_rcs_scanfile_remove(uda))
@@ -848,8 +786,7 @@ updater_rcs_setattr(struct updater_args *uda)
 		}
 		if (chmod(uda->uda_path, cap->ca_mode) == -1) {
 			if (errno != ENOENT) {
-				logmsg_err("%s: %s", uda->uda_path,
-					   strerror(errno));
+				logmsg_err("%s: %s", uda->uda_path, strerror(errno));
 				return (false);
 			}
 			if (!updater_rcs_scanfile_remove(uda))
@@ -888,8 +825,7 @@ updater_rcs_update(struct updater_args *uda)
 	}
 	len = (size_t)(ep - uda->uda_path);
 	(void)memcpy(uda->uda_tmpfile, uda->uda_path, len);
-	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE,
-		     CVSYNC_TMPFILE_LEN);
+	(void)memcpy(&uda->uda_tmpfile[len], CVSYNC_TMPFILE, CVSYNC_TMPFILE_LEN);
 	uda->uda_tmpfile[len + CVSYNC_TMPFILE_LEN] = '\0';
 
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 3))
@@ -1085,7 +1021,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > uda->uda_cmdmax - 2))
+	if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 		return (false);
@@ -1093,7 +1029,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 	/* head */
 	iov[0].iov_base = "head\t";
 	if (cmd[0] == UPDATER_UPDATE_RCS_HEAD) {
-		if ((len < 2) || (len != (size_t)cmd[1] + 2))
+		if ((len < 2) || (len != ((size_t)cmd[1] + 2)))
 			return (false);
 		(void)memcpy(uda->uda_buffer, &cmd[2], cmd[1]);
 		iov[1].iov_base = uda->uda_buffer;
@@ -1102,7 +1038,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1129,7 +1065,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 
 	/* branch */
 	if (cmd[0] == UPDATER_UPDATE_RCS_BRANCH) {
-		if ((len < 2) || (len != (size_t)cmd[1] + 2))
+		if ((len < 2) || (len != ((size_t)cmd[1] + 2)))
 			return (false);
 		if (cmd[1] > 0) {
 			(void)memcpy(uda->uda_buffer, &cmd[2], cmd[1]);
@@ -1142,7 +1078,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1180,7 +1116,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 	iov[0].iov_base = "\n\t";
 	iov[0].iov_len = 2;
 	while (cmd[0] == UPDATER_UPDATE_RCS_ACCESS) {
-		if ((len < 3) || (len != (size_t)cmd[2] + 3))
+		if ((len < 3) || (len != ((size_t)cmd[2] + 3)))
 			return (false);
 		if ((i2->i_len = cmd[2]) == 0)
 			return (false);
@@ -1200,8 +1136,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 					iov[1].iov_len = i1->i_len;
 					wn = (ssize_t)(i1->i_len + 2);
 					if (writev(fd, iov, 2) != wn) {
-						logmsg_err("%s",
-							   strerror(errno));
+						logmsg_err("%s", strerror(errno));
 						return (false);
 					}
 				} while (++c < rcs->access.ra_count);
@@ -1218,7 +1153,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 				logmsg_err("%s", strerror(errno));
 				return (false);
 			}
-			if ((size_t)wn != i2->i_len + 2) {
+			if ((size_t)wn != (i2->i_len + 2)) {
 				logmsg_err("writev error");
 				return (false);
 			}
@@ -1240,7 +1175,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 					logmsg_err("%s", strerror(errno));
 					return (false);
 				}
-				if ((size_t)wn != i1->i_len + 2) {
+				if ((size_t)wn != (i1->i_len + 2)) {
 					logmsg_err("writev error");
 					return (false);
 				}
@@ -1253,7 +1188,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1266,7 +1201,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 			logmsg_err("%s", strerror(errno));
 			return (false);
 		}
-		if ((size_t)wn != i1->i_len + 2) {
+		if ((size_t)wn != (i1->i_len + 2)) {
 			logmsg_err("writev error");
 			return (false);
 		}
@@ -1287,7 +1222,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 			return (false);
 		if ((cmd[2] == 0) || (cmd[3] == 0))
 			return (false);
-		if (len != (size_t)cmd[2] + (size_t)cmd[3] + 4)
+		if (len != ((size_t)cmd[2] + ((size_t)cmd[3] + 4)))
 			return (false);
 		s2->s_sym = (char *)&cmd[4];
 		s2->s_len = cmd[2];
@@ -1312,8 +1247,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 					iov[3].iov_len = n1->n_len;
 					wn = (ssize_t)(s1->s_len + n1->n_len + 3);
 					if (writev(fd, iov, 4) != wn) {
-						logmsg_err("%s",
-							   strerror(errno));
+						logmsg_err("%s", strerror(errno));
 						return (false);
 					}
 				} while (++c < rcs->symbols.rs_count);
@@ -1365,7 +1299,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1409,7 +1343,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1425,7 +1359,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 			return (false);
 		if ((cmd[2] == 0) || (cmd[3] == 0))
 			return (false);
-		if (len != (size_t)cmd[2] + (size_t)cmd[3] + 4)
+		if (len != ((size_t)cmd[2] + (size_t)cmd[3] + 4))
 			return (false);
 		i2->i_id = (char *)&cmd[4];
 		i2->i_len = cmd[2];
@@ -1502,7 +1436,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1539,12 +1473,12 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 	iov[2].iov_base = "@;\n";
 	iov[2].iov_len = 3;
 	if (cmd[0] == UPDATER_UPDATE_RCS_COMMENT) {
-		if ((len < 2) || (len != (size_t)cmd[1] + 2))
+		if ((len < 2) || (len != ((size_t)cmd[1] + 2)))
 			return(false);
 		if (cmd[1] > 0) {
 			iov[1].iov_base = (void *)&cmd[2];
 			iov[1].iov_len = cmd[1];
-			if (writev(fd, iov, 3) != cmd[1] + 12) {
+			if (writev(fd, iov, 3) != (cmd[1] + 12)) {
 				logmsg_err("%s", strerror(errno));
 				return (false);
 			}
@@ -1553,7 +1487,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1565,7 +1499,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 				logmsg_err("%s", strerror(errno));
 				return (false);
 			}
-			if ((size_t)wn != rcs->comment.s_len + 12) {
+			if ((size_t)wn != (rcs->comment.s_len + 12)) {
 				logmsg_err("writev error");
 				return (false);
 			}
@@ -1578,12 +1512,12 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 	iov[2].iov_base = "@;\n";
 	iov[2].iov_len = 3;
 	if (cmd[0] == UPDATER_UPDATE_RCS_EXPAND) {
-		if ((len < 2) || (len != (size_t)cmd[1] + 2))
+		if ((len < 2) || (len != ((size_t)cmd[1] + 2)))
 			return(false);
 		if (cmd[1] > 0) {
 			iov[1].iov_base = (void *)&cmd[2];
 			iov[1].iov_len = cmd[1];
-			if (writev(fd, iov, 3) != cmd[1] + 11) {
+			if (writev(fd, iov, 3) != (cmd[1] + 11)) {
 				logmsg_err("%s", strerror(errno));
 				return (false);
 			}
@@ -1592,7 +1526,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1604,7 +1538,7 @@ updater_rcs_admin(struct updater_args *uda, struct rcslib_file *rcs)
 				logmsg_err("%s", strerror(errno));
 				return (false);
 			}
-			if ((size_t)wn != rcs->expand.s_len + 11) {
+			if ((size_t)wn != (rcs->expand.s_len + 11)) {
 				logmsg_err("writev error");
 				return (false);
 			}
@@ -1639,7 +1573,7 @@ updater_rcs_delta(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -1654,7 +1588,7 @@ updater_rcs_delta(struct updater_args *uda, struct rcslib_file *rcs)
 
 		switch (cmd[1]) {
 		case UPDATER_UPDATE_ADD:
-			if ((cmd[2] == 0) || (len < (size_t)cmd[2] + 3))
+			if ((cmd[2] == 0) || (len < ((size_t)cmd[2] + 3)))
 				return (false);
 			if (!rcslib_str2num(&cmd[3], cmd[2], n2))
 				return (false);
@@ -1682,7 +1616,7 @@ updater_rcs_delta(struct updater_args *uda, struct rcslib_file *rcs)
 				return (false);
 			break;
 		case UPDATER_UPDATE_REMOVE:
-			if ((cmd[2] == 0) || (len != (size_t)cmd[2] + 3))
+			if ((cmd[2] == 0) || (len != ((size_t)cmd[2] + 3)))
 				return (false);
 			if (!rcslib_str2num(&cmd[3], cmd[2], n2))
 				return (false);
@@ -1704,7 +1638,7 @@ updater_rcs_delta(struct updater_args *uda, struct rcslib_file *rcs)
 			} while (++c < rcs->delta.rd_count);
 			break;
 		case UPDATER_UPDATE_UPDATE:
-			if ((cmd[2] == 0) || (len < (size_t)cmd[2] + 3))
+			if ((cmd[2] == 0) || (len < ((size_t)cmd[2] + 3)))
 				return (false);
 			if (!rcslib_str2num(&cmd[3], cmd[2], n2))
 				return (false);
@@ -1783,7 +1717,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
-	if (len < slen + 1) {
+	if (len < (slen + 1)) {
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
@@ -1806,7 +1740,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
-	if (len < slen + 1) {
+	if (len < (slen + 1)) {
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
@@ -1826,7 +1760,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 		return (false);
 	}
 	slen = *sp++;
-	if (len < slen + 1) {
+	if (len < (slen + 1)) {
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
@@ -1858,7 +1792,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 	iov[11].iov_base = "branches";
 	iov[11].iov_len = 8;
 
-	if (writev(uda->uda_fileno, iov, 12) != wn + 8) {
+	if (writev(uda->uda_fileno, iov, 12) != (wn + 8)) {
 		logmsg_err("%s", strerror(errno));
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
@@ -1868,7 +1802,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 	iov[0].iov_len = 2;
 	for (i = 0 ; i < n ; i++) {
 		slen = *sp++;
-		if (len < slen + 1) {
+		if (len < (slen + 1)) {
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			return (false);
 		}
@@ -1879,7 +1813,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			return (false);
 		}
-		if ((size_t)wn != slen + 2) {
+		if ((size_t)wn != (slen + 2)) {
 			logmsg_err("writev error");
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			return (false);
@@ -1897,7 +1831,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 
 	/* next */
 	slen = *sp++;
-	if (len < slen + 1) {
+	if (len < (slen + 1)) {
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
@@ -1916,7 +1850,7 @@ updater_rcs_write_delta(struct updater_args *uda, uint8_t *sp, size_t len)
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
-	if ((size_t)wn != slen + 10) {
+	if ((size_t)wn != (slen + 10)) {
 		logmsg_err("writev error");
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
@@ -1949,13 +1883,13 @@ updater_rcs_desc(struct updater_args *uda)
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > uda->uda_cmdmax - 2))
+	if ((len < 2) || (len > (uda->uda_cmdmax - 2)))
 		return (false);
 	if (cmd[2] != UPDATER_UPDATE_RCS_DESC)
 		return (false);
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len - 1))
 		return (false);
-	if ((size_t)cmd[0] != len - 2)
+	if ((size_t)cmd[0] != (len - 2))
 		return (false);
 	iov[1].iov_base = (void *)&cmd[1];
 	iov[1].iov_len = len - 2;
@@ -1990,7 +1924,7 @@ updater_rcs_deltatext(struct updater_args *uda, struct rcslib_file *rcs)
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len == 0) || (len > uda->uda_cmdmax - 2))
+		if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, len))
 			return (false);
@@ -2002,7 +1936,7 @@ updater_rcs_deltatext(struct updater_args *uda, struct rcslib_file *rcs)
 			return (false);
 		if (cmd[0] != UPDATER_UPDATE_RCS_DELTATEXT)
 			return (false);
-		if ((cmd[2] == 0) || (len != (size_t)cmd[2] + 3))
+		if ((cmd[2] == 0) || (len != ((size_t)cmd[2] + 3)))
 			return (false);
 		if (!rcslib_str2num(&cmd[3], cmd[2], n2))
 			return (false);
@@ -2109,7 +2043,7 @@ updater_rcs_write_deltatext(struct updater_args *uda, struct rcsnum *num)
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
 	}
-	if ((size_t)wn != num->n_len + 8) {
+	if ((size_t)wn != (num->n_len + 8)) {
 		logmsg_err("writev error");
 		(*hashops->destroy)(uda->uda_hash_ctx);
 		return (false);
@@ -2125,8 +2059,7 @@ updater_rcs_write_deltatext(struct updater_args *uda, struct rcsnum *num)
 				len = uda->uda_bufsize;
 			else
 				len = (size_t)loglen;
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-				      uda->uda_buffer, len)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_buffer, len)) {
 				(*hashops->destroy)(uda->uda_hash_ctx);
 				return (false);
 			}
@@ -2140,8 +2073,7 @@ updater_rcs_write_deltatext(struct updater_args *uda, struct rcsnum *num)
 				(*hashops->destroy)(uda->uda_hash_ctx);
 				return (false);
 			}
-			(*hashops->update)(uda->uda_hash_ctx,
-					   uda->uda_buffer, len);
+			(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer, len);
 			loglen -= (uint32_t)len;
 		}
 	}
@@ -2162,8 +2094,7 @@ updater_rcs_write_deltatext(struct updater_args *uda, struct rcsnum *num)
 				len = uda->uda_bufsize;
 			else
 				len = (size_t)textlen;
-			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN,
-				      uda->uda_buffer, len)) {
+			if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_buffer, len)) {
 				(*hashops->destroy)(uda->uda_hash_ctx);
 				return (false);
 			}
@@ -2177,8 +2108,7 @@ updater_rcs_write_deltatext(struct updater_args *uda, struct rcsnum *num)
 				(*hashops->destroy)(uda->uda_hash_ctx);
 				return (false);
 			}
-			(*hashops->update)(uda->uda_hash_ctx,
-					   uda->uda_buffer, len);
+			(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer, len);
 			textlen -= (uint64_t)len;
 		}
 	}

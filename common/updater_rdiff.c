@@ -31,8 +31,7 @@
 
 #include "updater.h"
 
-bool updater_rdiff_update_copy(struct updater_args *, struct cvsync_file *,
-			       uint64_t, uint32_t);
+bool updater_rdiff_update_copy(struct updater_args *, struct cvsync_file *, uint64_t, uint32_t);
 bool updater_rdiff_update_data(struct updater_args *, uint32_t);
 
 bool
@@ -94,8 +93,7 @@ updater_rdiff_update(struct updater_args *uda)
 			}
 			offset = GetDDWord(cmd);
 			length = GetDWord(&cmd[8]);
-			if (!updater_rdiff_update_copy(uda, cfp, offset,
-						       length)) {
+			if (!updater_rdiff_update_copy(uda, cfp, offset, length)) {
 				(*hashops->destroy)(uda->uda_hash_ctx);
 				cvsync_fclose(cfp);
 				(void)unlink(uda->uda_tmpfile);
@@ -122,8 +120,7 @@ updater_rdiff_update(struct updater_args *uda)
 			}
 			break;
 		default:
-			logmsg_err("Updater Error: rdiff: unsupported "
-				   "command: %02x", cmd[0]);
+			logmsg_err("Updater Error: rdiff: unsupported command: %02x", cmd[0]);
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			cvsync_fclose(cfp);
 			(void)unlink(uda->uda_tmpfile);
@@ -133,34 +130,28 @@ updater_rdiff_update(struct updater_args *uda)
 	}
 
 	if (identical) {
-		(*hashops->update)(uda->uda_hash_ctx, cfp->cf_addr,
-				   (size_t)cfp->cf_size);
+		(*hashops->update)(uda->uda_hash_ctx, cfp->cf_addr, (size_t)cfp->cf_size);
 		if (unlink(uda->uda_tmpfile) == -1) {
-			logmsg_err("Updater Error: rdiff: identical: %s",
-				   strerror(errno));
+			logmsg_err("Updater Error: rdiff: identical: %s", strerror(errno));
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			cvsync_fclose(cfp);
 			(void)close(uda->uda_fileno);
 			return (false);
 		}
 		if (close(uda->uda_fileno) == -1) {
-			logmsg_err("Updater Error: rdiff: identical: %s",
-				   strerror(errno));
+			logmsg_err("Updater Error: rdiff: identical: %s", strerror(errno));
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			cvsync_fclose(cfp);
 			return (false);
 		}
 		if (link(uda->uda_path, uda->uda_tmpfile) == -1) {
-			logmsg_err("Updater Error: rdiff: identical: %s",
-				   strerror(errno));
+			logmsg_err("Updater Error: rdiff: identical: %s", strerror(errno));
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			cvsync_fclose(cfp);
 			return (false);
 		}
-		if ((uda->uda_fileno = open(uda->uda_tmpfile, O_RDONLY,
-					    0)) == -1) {
-			logmsg_err("Updater Error: rdiff: identical: %s",
-				   strerror(errno));
+		if ((uda->uda_fileno = open(uda->uda_tmpfile, O_RDONLY, 0)) == -1) {
+			logmsg_err("Updater Error: rdiff: identical: %s", strerror(errno));
 			(*hashops->destroy)(uda->uda_hash_ctx);
 			cvsync_fclose(cfp);
 			(void)unlink(uda->uda_tmpfile);
@@ -179,8 +170,7 @@ updater_rdiff_update(struct updater_args *uda)
 	}
 
 	if (memcmp(cmd, uda->uda_hash, hashops->length) != 0) {
-		logmsg_err("Updater Error: rdiff: %s: hash mismatch",
-			   uda->uda_path);
+		logmsg_err("Updater Error: rdiff: %s: hash mismatch", uda->uda_path);
 		cvsync_fclose(cfp);
 		(void)unlink(uda->uda_tmpfile);
 		(void)close(uda->uda_fileno);
@@ -219,20 +209,17 @@ updater_rdiff_update(struct updater_args *uda)
 }
 
 bool
-updater_rdiff_update_copy(struct updater_args *uda, struct cvsync_file *cfp,
-			  uint64_t offset, uint32_t length)
+updater_rdiff_update_copy(struct updater_args *uda, struct cvsync_file *cfp, uint64_t offset, uint32_t length)
 {
 	const struct hash_args *hashops = uda->uda_hash_ops;
 	uint8_t *sp, *bp;
 	ssize_t wn;
 	size_t len;
 
-	logmsg_debug(DEBUG_RDIFF, "rdiff(COPY): %" PRIu64 ", %u",
-		     offset, length);
+	logmsg_debug(DEBUG_RDIFF, "rdiff(COPY): %" PRIu64 ", %u", offset, length);
 
-	if ((length == 0) || (offset + length > (uint64_t)cfp->cf_size)) {
-		logmsg_err("Updater: rdiff(COPY) error: offset=%" PRIu64
-			   ", length=%lu", offset, length);
+	if ((length == 0) || ((offset + length) > (uint64_t)cfp->cf_size)) {
+		logmsg_err("Updater: rdiff(COPY) error: offset=%" PRIu64 ", length=%lu", offset, length);
 		return (false);
 	}
 
@@ -248,8 +235,7 @@ updater_rdiff_update_copy(struct updater_args *uda, struct cvsync_file *cfp,
 				logmsg_intr();
 				return (false);
 			}
-			logmsg_err("Updater Error: rdiff: %s",
-				   strerror(errno));
+			logmsg_err("Updater Error: rdiff: %s", strerror(errno));
 			return (false);
 		}
 		if (wn == 0)
@@ -280,23 +266,19 @@ updater_rdiff_update_data(struct updater_args *uda, uint32_t length)
 		else
 			len = length;
 
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_buffer,
-			      len)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_buffer, len)) {
 			logmsg_err("Updater Error: rdiff: recv");
 			return (false);
 		}
 
-		if ((wn = write(uda->uda_fileno, uda->uda_buffer,
-				len)) == -1) {
-			logmsg_err("Updater Error: rdiff: %s",
-				   strerror(errno));
+		if ((wn = write(uda->uda_fileno, uda->uda_buffer, len)) == -1) {
+			logmsg_err("Updater Error: rdiff: %s", strerror(errno));
 			return (false);
 		}
 		if (wn == 0)
 			continue;
 
-		(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer,
-				   (size_t)wn);
+		(*hashops->update)(uda->uda_hash_ctx, uda->uda_buffer, (size_t)wn);
 
 		length -= wn;
 	}

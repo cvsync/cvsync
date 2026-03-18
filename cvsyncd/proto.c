@@ -36,8 +36,7 @@ void protocol_compat_0_19(uint8_t *, uint8_t *);
 void protocol_compat_0_20(int, uint8_t *, uint8_t *);
 void protocol_compat_0_21(int, uint8_t, uint8_t *, uint8_t *);
 
-bool collection_fetch(int, uint8_t *, size_t *, uint8_t *, size_t *, uint8_t *,
-		      size_t *);
+bool collection_fetch(int, uint8_t *, size_t *, uint8_t *, size_t *, uint8_t *, size_t *);
 
 bool compress_exchange(int, struct config *, uint32_t, int *);
 
@@ -195,17 +194,13 @@ collectionlist_exchange(int sock, struct config *cf)
 		namelen = sizeof(name);
 		relnamelen = sizeof(relname);
 		auxlen = sizeof(aux);
-		if (!collection_fetch(sock, name, &namelen, relname,
-				      &relnamelen, aux, &auxlen)) {
+		if (!collection_fetch(sock, name, &namelen, relname, &relnamelen, aux, &auxlen)) {
 			collection_destroy_all(cls);
 			return (NULL);
 		}
 
-		if ((namelen == 1) && (name[0] == '.') &&
-		    (relnamelen == 1) && (relname[0] == '.') &&
-		    (auxlen == 0)) {
+		if ((namelen == 1) && (name[0] == '.') && (relnamelen == 1) && (relname[0] == '.') && (auxlen == 0))
 			break;
-		}
 
 		if (recv_list) {
 			collection_destroy_all(cls);
@@ -254,9 +249,7 @@ collectionlist_exchange(int sock, struct config *cf)
 				collection_destroy_all(cls);
 				return (NULL);
 			}
-			cl = collection_lookup(cf->cf_collections,
-					       (const char *)name,
-					       (const char *)relname);
+			cl = collection_lookup(cf->cf_collections, (const char *)name, (const char *)relname);
 			if (cl == NULL) {
 				SetWord(cmd, 0);
 				if (!sock_send(sock, cmd, 2)) {
@@ -268,10 +261,8 @@ collectionlist_exchange(int sock, struct config *cf)
 			mode_umask &= cl->cl_umask;
 
 			SetWord(aux, mode_umask);
-			if (cl->cl_rprefixlen > 0) {
-				(void)memcpy(&aux[2], cl->cl_rprefix,
-					     cl->cl_rprefixlen);
-			}
+			if (cl->cl_rprefixlen > 0)
+				(void)memcpy(&aux[2], cl->cl_rprefix, cl->cl_rprefixlen);
 			auxlen = cl->cl_rprefixlen + 2;
 			break;
 		default:
@@ -313,9 +304,7 @@ collectionlist_exchange(int sock, struct config *cf)
 		} else {
 			struct collection *prev;
 
-			for (prev = cls ;
-			     prev->cl_next != NULL ;
-			     prev = prev->cl_next) {
+			for (prev = cls ; prev->cl_next != NULL ; prev = prev->cl_next) {
 				/* Nothing to do */
 			}
 			prev->cl_next = cl;
@@ -339,8 +328,8 @@ collectionlist_exchange(int sock, struct config *cf)
 }
 
 bool
-collection_fetch(int sock, uint8_t *name, size_t *namelen, uint8_t *relname,
-		 size_t *relnamelen, uint8_t *aux, size_t *auxlen)
+collection_fetch(int sock, uint8_t *name, size_t *namelen, uint8_t *relname, size_t *relnamelen, uint8_t *aux,
+		 size_t *auxlen)
 {
 	uint8_t cmd[CVSYNC_MAXCMDLEN];
 	size_t namemax = *namelen, relnamemax = *relnamelen, len;
@@ -353,9 +342,8 @@ collection_fetch(int sock, uint8_t *name, size_t *namelen, uint8_t *relname,
 
 	if (!sock_recv(sock, cmd, 2))
 		return (false);
-	if ((cmd[0] == 0) || (cmd[0] >= namemax) ||
-	    (cmd[1] == 0) || (cmd[1] >= relnamemax) ||
-	    ((size_t)cmd[0] + (size_t)cmd[1] + 2 > len)) {
+	if ((cmd[0] == 0) || (cmd[0] >= namemax) || (cmd[1] == 0) || (cmd[1] >= relnamemax) ||
+	    (((size_t)cmd[0] + (size_t)cmd[1] + 2) > len)) {
 		return (false);
 	}
 	if (!sock_recv(sock, name, (size_t)cmd[0]))
@@ -387,17 +375,13 @@ channel_establish(int sock, struct config *cf, uint32_t proto)
 	if (!compress_exchange(sock, cf, proto, &compression))
 		return (NULL);
 
-	if ((proto > CVSYNC_PROTO(0, 22)) &&
-	    (compression != CVSYNC_COMPRESS_NO)) {
+	if ((proto > CVSYNC_PROTO(0, 22)) && (compression != CVSYNC_COMPRESS_NO))
 		mss = MUX_MAX_MSS_ZLIB;
-	} else {
+	else
 		mss = MUX_DEFAULT_MSS;
-	}
 
-	if ((mx = mux_init(sock, mss, compression,
-			   cf->cf_compress_level)) == NULL) {
+	if ((mx = mux_init(sock, mss, compression, cf->cf_compress_level)) == NULL)
 		return (NULL);
-	}
 
 	for (i = 0 ; i < MUX_MAXCHANNELS ; i++) {
 		mxb = &mx->mx_buffer[MUX_OUT][i];
@@ -419,8 +403,7 @@ channel_establish(int sock, struct config *cf, uint32_t proto)
 			return (NULL);
 		}
 
-		if (!muxbuf_init(mxb, GetWord(&cmd[1]), GetDWord(&cmd[3]),
-				 compression)) {
+		if (!muxbuf_init(mxb, GetWord(&cmd[1]), GetDWord(&cmd[3]), compression)) {
 			mux_destroy(mx);
 			return (NULL);
 		}
@@ -441,8 +424,7 @@ channel_establish(int sock, struct config *cf, uint32_t proto)
 }
 
 bool
-compress_exchange(int sock, struct config *cf, uint32_t proto,
-		  int *compression)
+compress_exchange(int sock, struct config *cf, uint32_t proto, int *compression)
 {
 	const char *name;
 	uint8_t cmd[CVSYNC_MAXCMDLEN];

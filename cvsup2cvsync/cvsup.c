@@ -64,7 +64,7 @@ cvsup_examine(uint8_t *sp, uint8_t *bp)
 		logmsg_err("premature EOF");
 		return (NULL);
 	}
-	if (ep - sp < 4) {
+	if ((ep - sp) < 4) {
 		logmsg_err("premature EOF");
 		return (NULL);
 	}
@@ -91,16 +91,13 @@ cvsup_decode_dir(struct cvsync_attr *attr, uint8_t *sp, uint8_t *bp)
 		return (false);
 
 	attr->ca_tag = FILETYPE_DIR;
-	attr->ca_auxlen = attr_rcs_encode_dir(attr->ca_aux,
-					      sizeof(attr->ca_aux),
-					      attr->ca_mode);
+	attr->ca_auxlen = attr_rcs_encode_dir(attr->ca_aux, sizeof(attr->ca_aux), attr->ca_mode);
 	if (attr->ca_auxlen == 0) {
 		logmsg_err("%s", strerror(ENOBUFS));
 		return (false);
 	}
 
-	logmsg_verbose("%.*s %o", attr->ca_namelen, attr->ca_name,
-		       attr->ca_mode);
+	logmsg_verbose("%.*s %o", attr->ca_namelen, attr->ca_name, attr->ca_mode);
 
 	return (true);
 }
@@ -112,7 +109,7 @@ cvsup_search_dir(struct cvsync_attr *attr, uint8_t *sp, uint8_t *bp)
 	int n = 1;
 
 	while (sp < bp) {
-		if (bp - sp < 3) {
+		if ((bp - sp) < 3) {
 			logmsg_err("premature EOF");
 			return (false);
 		}
@@ -142,14 +139,11 @@ cvsup_search_dir(struct cvsync_attr *attr, uint8_t *sp, uint8_t *bp)
 				break;
 			}
 			if ((size_t)(ep - sp) <= attr->ca_namelen) {
-				logmsg_err("Not found 'U' for %.*s",
-					   attr->ca_namelen, attr->ca_name);
+				logmsg_err("Not found 'U' for %.*s", attr->ca_namelen, attr->ca_name);
 				return (false);
 			}
-			if (memcmp(sp, attr->ca_name,
-				   attr->ca_namelen) != 0) {
-				logmsg_err("Not found 'U' for %.*s",
-					   attr->ca_namelen, attr->ca_name);
+			if (memcmp(sp, attr->ca_name, attr->ca_namelen) != 0) {
+				logmsg_err("Not found 'U' for %.*s", attr->ca_namelen, attr->ca_name);
 				return (false);
 			}
 			if (sp[attr->ca_namelen] != ' ') {
@@ -174,8 +168,7 @@ cvsup_search_dir(struct cvsync_attr *attr, uint8_t *sp, uint8_t *bp)
 		sp = ep + 1;
 	}
 
-	logmsg_err("Not found 'U' for %.*s", attr->ca_namelen,
-		   attr->ca_name);
+	logmsg_err("Not found 'U' for %.*s", attr->ca_namelen, attr->ca_name);
 
 	return (false);
 }
@@ -262,19 +255,15 @@ cvsup_decode_file(struct cvsync_attr *attr, uint8_t *sp, uint8_t *ep)
 		return (false);
 
 	attr->ca_tag = FILETYPE_FILE;
-	attr->ca_auxlen = attr_rcs_encode_file(attr->ca_aux,
-					       sizeof(attr->ca_aux),
-					       (time_t)attr->ca_mtime,
-					       (off_t)attr->ca_size,
-					       attr->ca_mode);
+	attr->ca_auxlen = attr_rcs_encode_file(attr->ca_aux, sizeof(attr->ca_aux), (time_t)attr->ca_mtime,
+					       (off_t)attr->ca_size, attr->ca_mode);
 	if (attr->ca_auxlen == 0) {
 		logmsg_err("%s", strerror(ENOBUFS));
 		return (false);
 	}
 
-	logmsg_verbose("%.*s %" PRId64 " %" PRIu64 " %o", attr->ca_namelen,
-		       attr->ca_name, attr->ca_mtime, attr->ca_size,
-		       attr->ca_mode);
+	logmsg_verbose("%.*s %" PRId64 " %" PRIu64 " %o", attr->ca_namelen, attr->ca_name, attr->ca_mtime,
+		       attr->ca_size, attr->ca_mode);
 
 	return (true);
 }
@@ -316,17 +305,14 @@ cvsup_decode_rcs(struct cvsync_attr *attr, uint8_t *sp, uint8_t *ep)
 		return (false);
 
 	attr->ca_tag = FILETYPE_RCS;
-	attr->ca_auxlen = attr_rcs_encode_rcs(attr->ca_aux,
-					      sizeof(attr->ca_aux),
-					      (time_t)attr->ca_mtime,
+	attr->ca_auxlen = attr_rcs_encode_rcs(attr->ca_aux, sizeof(attr->ca_aux), (time_t)attr->ca_mtime,
 					      attr->ca_mode);
 	if (attr->ca_auxlen == 0) {
 		logmsg_err("%s", strerror(ENOBUFS));
 		return (false);
 	}
 
-	logmsg_verbose("%.*s %" PRId64 " %o", attr->ca_namelen, attr->ca_name,
-		       attr->ca_mtime, attr->ca_mode);
+	logmsg_verbose("%.*s %" PRId64 " %o", attr->ca_namelen, attr->ca_name, attr->ca_mtime, attr->ca_mode);
 
 	return (true);
 }
@@ -354,15 +340,13 @@ cvsup_decode_symlink(struct cvsync_attr *attr, uint8_t *sp, uint8_t *ep)
 		return (false);
 	}
 	attrs >>= 1;
-	attr->ca_auxlen = cvsup_decode_linktarget(sp, ep, &sp, attr->ca_aux,
-						  sizeof(attr->ca_aux));
+	attr->ca_auxlen = cvsup_decode_linktarget(sp, ep, &sp, attr->ca_aux, sizeof(attr->ca_aux));
 	if (attr->ca_auxlen == 0)
 		return (false);
 
 	attr->ca_tag = FILETYPE_SYMLINK;
 
-	logmsg_verbose("%.*s -> %.*s", attr->ca_namelen, attr->ca_name,
-		       attr->ca_auxlen, attr->ca_aux);
+	logmsg_verbose("%.*s -> %.*s", attr->ca_namelen, attr->ca_name, attr->ca_auxlen, attr->ca_aux);
 
 	return (true);
 }
@@ -431,12 +415,12 @@ cvsup_decode_filetype(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 			return ((uint8_t)-1);
 		}
 		c = (int)(*sp++ - '0');
-		if (INT_MAX / 10 < type) {
+		if ((INT_MAX / 10) < type) {
 			logmsg_err("%.*s: %s", n, sep + 1, strerror(ERANGE));
 			return ((uint8_t)-1);
 		}
 		type *= 10;
-		if (INT_MAX - type < c) {
+		if ((INT_MAX - type) < c) {
 			logmsg_err("%.*s: %s", n, sep + 1, strerror(ERANGE));
 			return ((uint8_t)-1);
 		}
@@ -496,12 +480,12 @@ cvsup_decode_mtime(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 			return (-1);
 		}
 		c = (int64_t)(*sp++ - '0');
-		if (INT64_MAX / 10 < mtime) {
+		if ((INT64_MAX / 10) < mtime) {
 			logmsg_err("%.*s: %s", n, sep + 1, strerror(ERANGE));
 			return (-1);
 		}
 		mtime *= 10;
-		if (INT64_MAX - mtime < c) {
+		if ((INT64_MAX - mtime) < c) {
 			logmsg_err("%.*s: %s", n, sep + 1, strerror(ERANGE));
 			return (-1);
 		}
@@ -537,12 +521,12 @@ cvsup_decode_size(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 			return ((uint64_t)-1);
 		}
 		c = (uint64_t)(*sp++ - '0');
-		if (UINT64_MAX / 10 < size) {
+		if ((UINT64_MAX / 10) < size) {
 			logmsg_err("%.*s: %s", n, sep + 1, strerror(ERANGE));
 			return ((uint64_t)-1);
 		}
 		size *= 10;
-		if (UINT64_MAX - size < c) {
+		if ((UINT64_MAX - size) < c) {
 			logmsg_err("%.*s: %s", n, sep + 1, strerror(ERANGE));
 			return ((uint64_t)-1);
 		}
@@ -555,8 +539,7 @@ cvsup_decode_size(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 }
 
 size_t
-cvsup_decode_linktarget(uint8_t *sp, uint8_t *ep, uint8_t **new_sp,
-			void *buffer, size_t bufsize)
+cvsup_decode_linktarget(uint8_t *sp, uint8_t *ep, uint8_t **new_sp, void *buffer, size_t bufsize)
 {
 	uint8_t *linksp = buffer, *linkbp = linksp + bufsize, *sep;
 	size_t n;
@@ -585,7 +568,7 @@ cvsup_decode_linktarget(uint8_t *sp, uint8_t *ep, uint8_t **new_sp,
 		}
 		sp++;
 		n--;
-		if (ep - sp < 1) {
+		if ((ep - sp) < 1) {
 			logmsg_err("premature EOF");
 			return (0);
 		}
@@ -651,15 +634,13 @@ cvsup_decode_length(uint8_t *sp, uint8_t *ep)
 			return ((size_t)-1);
 		}
 		c = (size_t)(*sp++ - '0');
-		if (SIZE_MAX / 10 < n) {
-			logmsg_err("%.*s: %s", ep - sv_sp, sv_sp,
-				   strerror(ERANGE));
+		if ((SIZE_MAX / 10) < n) {
+			logmsg_err("%.*s: %s", ep - sv_sp, sv_sp, strerror(ERANGE));
 			return ((size_t)-1);
 		}
 		n *= 10;
-		if (SIZE_MAX - n < c) {
-			logmsg_err("%.*s: %s", ep - sv_sp, sv_sp,
-				   strerror(ERANGE));
+		if ((SIZE_MAX - n) < c) {
+			logmsg_err("%.*s: %s", ep - sv_sp, sv_sp, strerror(ERANGE));
 			return ((size_t)-1);
 		}
 		n += c;

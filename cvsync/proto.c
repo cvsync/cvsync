@@ -70,8 +70,7 @@ protocol_exchange(int sock, struct config *cf)
 			break;
 		case CVSYNC_ERROR_UNSPEC:
 		default:
-			logmsg_err("Your software seems to be old.\n"
-				   "Please upgrade to the newer version.\n"
+			logmsg_err("Your software seems to be old.\nPlease upgrade to the newer version.\n"
 				   "URL: %s", CVSYNC_URL);
 			break;
 		}
@@ -83,8 +82,7 @@ protocol_exchange(int sock, struct config *cf)
 	}
 
 	if (cmd[0] != CVSYNC_PROTO_MAJOR) {
-		logmsg_err("The server(%u.%u) seems to be too old.", cmd[0],
-			   cmd[1]);
+		logmsg_err("The server(%u.%u) seems to be too old.", cmd[0], cmd[1]);
 		SetWord(cmd, 2);
 		cmd[2] = CVSYNC_PROTO_ERROR;
 		cmd[3] = CVSYNC_ERROR_UNSPEC;
@@ -93,8 +91,7 @@ protocol_exchange(int sock, struct config *cf)
 	}
 
 	if ((cmd[0] == 0) && (cmd[1] < 20)) {
-		logmsg_err("The server (%u.%u) seems to be old.", cmd[0],
-			   cmd[1]);
+		logmsg_err("The server (%u.%u) seems to be old.", cmd[0], cmd[1]);
 		SetWord(cmd, 2);
 		cmd[2] = CVSYNC_PROTO_ERROR;
 		cmd[3] = CVSYNC_ERROR_UNSPEC;
@@ -111,8 +108,7 @@ protocol_exchange(int sock, struct config *cf)
 	cmd[2] = CVSYNC_PROTO_MAJOR;
 	cmd[3] = mn;
 	if (!sock_send(sock, cmd, 4)) {
-		logmsg_err("Send: protocol version: %u.%u", CVSYNC_PROTO_MAJOR,
-			   mn);
+		logmsg_err("Send: protocol version: %u.%u", CVSYNC_PROTO_MAJOR, mn);
 		return (false);
 	}
 
@@ -210,10 +206,8 @@ collectionlist_exchange(int sock, struct config *cf)
 		return (false);
 	if (!sock_recv(sock, cmd, len))
 		return (false);
-	if ((cmd[0] != 1) || (cmd[1] != 1) ||
-	    (cmd[2] != '.') || (cmd[3] != '.')) {
+	if ((cmd[0] != 1) || (cmd[1] != 1) || (cmd[2] != '.') || (cmd[3] != '.'))
 		return (false);
-	}
 
 	if (!collection_resolv_prefix(cf->cf_collections))
 		return (false);
@@ -251,15 +245,14 @@ collection_exchange_list(int sock, struct collection *cl)
 
 	if (!sock_recv(sock, cmd, 2))
 		return (false);
-	if ((len = GetWord(cmd)) > sizeof(cmd) - 2)
+	if ((len = GetWord(cmd)) > (sizeof(cmd) - 2))
 		return (false);
 	if (len == 0) {
-		logmsg("Not found such a collection %s/%s", cl->cl_name,
-		       cl->cl_release);
+		logmsg("Not found such a collection %s/%s", cl->cl_name, cl->cl_release);
 		cl->cl_flags |= CLFLAGS_DISABLE;
 		return (true);
 	}
-	if (len != namelen + relnamelen + 2)
+	if (len != (namelen + relnamelen + 2))
 		return (false);
 
 	if (!sock_recv(sock, cmd, len))
@@ -275,8 +268,7 @@ collection_exchange_list(int sock, struct collection *cl)
 		return (false);
 	}
 
-	logmsg_verbose(" collection name \"%s\" release \"%s\"",
-		       cl->cl_name, cl->cl_release);
+	logmsg_verbose(" collection name \"%s\" release \"%s\"", cl->cl_name, cl->cl_release);
 
 	return (true);
 }
@@ -310,16 +302,15 @@ collection_exchange_rcs(int sock, struct collection *cl)
 
 	if (!sock_recv(sock, cmd, 2))
 		return (false);
-	if ((len = GetWord(cmd)) > sizeof(cmd) - 2)
+	if ((len = GetWord(cmd)) > (sizeof(cmd) - 2))
 		return (false);
 	if (len == 0) {
-		logmsg("Not found such a collection %s/%s", cl->cl_name,
-		       cl->cl_release);
+		logmsg("Not found such a collection %s/%s", cl->cl_name, cl->cl_release);
 		cl->cl_flags |= CLFLAGS_DISABLE;
 		return (true);
 	}
 
-	if (len < namelen + relnamelen + 4)
+	if (len < (namelen + relnamelen + 4))
 		return (false);
 
 	if (!sock_recv(sock, cmd, len))
@@ -342,12 +333,10 @@ collection_exchange_rcs(int sock, struct collection *cl)
 	cl->cl_rprefixlen = len - namelen - relnamelen - 4;
 	if (cl->cl_rprefixlen > sizeof(cl->cl_rprefix))
 		return (false);
-	(void)memcpy(cl->cl_rprefix, &cmd[namelen + relnamelen + 4],
-		     cl->cl_rprefixlen);
+	(void)memcpy(cl->cl_rprefix, &cmd[namelen + relnamelen + 4], cl->cl_rprefixlen);
 	cl->cl_rprefix[cl->cl_rprefixlen] = '/';
 
-	logmsg_verbose(" collection name \"%s\" release \"%s\" umask %03o",
-		       cl->cl_name, cl->cl_release, cl->cl_umask);
+	logmsg_verbose(" collection name \"%s\" release \"%s\" umask %03o", cl->cl_name, cl->cl_release, cl->cl_umask);
 
 	return (true);
 }
@@ -400,12 +389,10 @@ compress_exchange(int sock, struct config *cf)
 	if (!sock_send(sock, name, len))
 		return (false);
 
-	if ((cf->cf_proto > CVSYNC_PROTO(0, 22)) &&
-	    (cf->cf_compress != CVSYNC_COMPRESS_NO)) {
+	if ((cf->cf_proto > CVSYNC_PROTO(0, 22)) && (cf->cf_compress != CVSYNC_COMPRESS_NO))
 		cf->cf_mss = MUX_MAX_MSS_ZLIB;
-	} else {
+	else
 		cf->cf_mss = MUX_DEFAULT_MSS;
-	}
 
 	logmsg_verbose("Compression: %s", name);
 
@@ -423,10 +410,8 @@ channel_establish(int sock, struct config *cf)
 
 	logmsg_verbose("Trying to establish the multiplexed channel...");
 
-	if ((mx = mux_init(sock, cf->cf_mss, cf->cf_compress,
-			   CVSYNC_COMPRESS_LEVEL_BEST)) == NULL) {
+	if ((mx = mux_init(sock, cf->cf_mss, cf->cf_compress, CVSYNC_COMPRESS_LEVEL_BEST)) == NULL)
 		return (NULL);
-	}
 
 	for (i = 0 ; i < MUX_MAXCHANNELS ; i++) {
 		mxb = &mx->mx_buffer[MUX_IN][i];
@@ -459,8 +444,7 @@ channel_establish(int sock, struct config *cf)
 
 		mxb = &mx->mx_buffer[MUX_OUT][i];
 
-		if (!muxbuf_init(mxb, GetWord(&cmd[1]), GetDWord(&cmd[3]),
-				 cf->cf_compress)) {
+		if (!muxbuf_init(mxb, GetWord(&cmd[1]), GetDWord(&cmd[3]), cf->cf_compress)) {
 			mux_destroy(mx);
 			return (NULL);
 		}

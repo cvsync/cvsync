@@ -50,13 +50,10 @@ bool scanfile_create_tmpfile(struct scanfile_args *, mode_t);
 void scanfile_remove_tmpfile(struct scanfile_args *);
 bool scanfile_rename(struct scanfile_args *);
 
-bool scanfile_add(struct scanfile_args *, uint8_t, void *, size_t, void *,
-		  size_t);
+bool scanfile_add(struct scanfile_args *, uint8_t, void *, size_t, void *, size_t);
 bool scanfile_remove(struct scanfile_args *, uint8_t, void *, size_t);
-bool scanfile_replace(struct scanfile_args *, uint8_t, void *, size_t, void *,
-		      size_t);
-bool scanfile_update(struct scanfile_args *, uint8_t, void *, size_t, void *,
-		     size_t);
+bool scanfile_replace(struct scanfile_args *, uint8_t, void *, size_t, void *, size_t);
+bool scanfile_update(struct scanfile_args *, uint8_t, void *, size_t, void *, size_t);
 
 bool scanfile_create(struct scanfile_create_args *);
 bool scanfile_rcs(struct scanfile_create_args *);

@@ -38,8 +38,7 @@ bool dircmp_fetch(struct dircmp_args *);
 bool dircmp_close(struct dircmp_args *);
 
 struct dircmp_args *
-dircmp_init(struct mux *mx, const char *hostinfo, struct collection *cls,
-	    uint32_t proto)
+dircmp_init(struct mux *mx, const char *hostinfo, struct collection *cls, uint32_t proto)
 {
 	struct dircmp_args *dca;
 
@@ -73,15 +72,13 @@ dircmp(void *arg)
 
 	for (cl = dca->dca_collections ; cl != NULL ; cl = cl->cl_next) {
 		if (!dircmp_fetch(dca)) {
-			logmsg_err("%s DirCmp: Fetch Error",
-				   dca->dca_hostinfo);
+			logmsg_err("%s DirCmp: Fetch Error", dca->dca_hostinfo);
 			mux_abort(dca->dca_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
 
 		if (dca->dca_tag != DIRCMP_START) {
-			logmsg_err("%s DirCmp: %02x: Invalid Tag",
-				   dca->dca_hostinfo, dca->dca_tag);
+			logmsg_err("%s DirCmp: %02x: Invalid Tag", dca->dca_hostinfo, dca->dca_tag);
 			mux_abort(dca->dca_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -96,8 +93,7 @@ dircmp(void *arg)
 
 		type = cvsync_release_pton(cl->cl_release);
 		if (type == CVSYNC_RELEASE_UNKNOWN) {
-			logmsg_err("%s DirCmp: %s: Release Error",
-				   dca->dca_hostinfo, cl->cl_release);
+			logmsg_err("%s DirCmp: %s: Release Error", dca->dca_hostinfo, cl->cl_release);
 			mux_abort(dca->dca_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -105,9 +101,7 @@ dircmp(void *arg)
 		if (strlen(cl->cl_dist_name) != 0) {
 			cl->cl_distfile = distfile_open(cl->cl_dist_name);
 			if (cl->cl_distfile == NULL) {
-				logmsg_err("%s DirCmp: %s: Distfile Error",
-					   dca->dca_hostinfo,
-					   cl->cl_dist_name);
+				logmsg_err("%s DirCmp: %s: Distfile Error", dca->dca_hostinfo, cl->cl_dist_name);
 				mux_abort(dca->dca_mux);
 				return (CVSYNC_THREAD_FAILURE);
 			}
@@ -115,23 +109,20 @@ dircmp(void *arg)
 		if (strlen(cl->cl_scan_name) != 0) {
 			cl->cl_scanfile = scanfile_open(cl->cl_scan_name);
 			if (cl->cl_scanfile == NULL) {
-				logmsg_err("%s DirCmp: %s: Scanfile Error "
-					   "(ignored)", dca->dca_hostinfo,
+				logmsg_err("%s DirCmp: %s: Scanfile Error (ignored)", dca->dca_hostinfo,
 					   cl->cl_scan_name);
 			}
 		}
 
 		if (!dircmp_start(dca, cl->cl_name, cl->cl_release)) {
-			logmsg_err("%s DirCmp: Initializer Error",
-				   dca->dca_hostinfo);
+			logmsg_err("%s DirCmp: Initializer Error", dca->dca_hostinfo);
 			mux_abort(dca->dca_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
 
 		dca->dca_pathlen = cl->cl_prefixlen;
 		if (dca->dca_pathlen >= dca->dca_pathmax) {
-			logmsg_err("%s DirCmp: Initializer Error",
-				   dca->dca_hostinfo);
+			logmsg_err("%s DirCmp: Initializer Error", dca->dca_hostinfo);
 			mux_abort(dca->dca_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -144,36 +135,31 @@ dircmp(void *arg)
 		switch (type) {
 		case CVSYNC_RELEASE_LIST:
 			if (!dircmp_fetch(dca)) {
-				logmsg_err("%s DirCmp: Fetch Error",
-					   dca->dca_hostinfo);
+				logmsg_err("%s DirCmp: Fetch Error", dca->dca_hostinfo);
 				mux_abort(dca->dca_mux);
 				return (CVSYNC_THREAD_FAILURE);
 			}
 			if (dca->dca_tag != DIRCMP_END) {
-				logmsg_err("%s DirCmp: LIST Error",
-					   dca->dca_hostinfo);
+				logmsg_err("%s DirCmp: LIST Error", dca->dca_hostinfo);
 				mux_abort(dca->dca_mux);
 				return (CVSYNC_THREAD_FAILURE);
 			}
 			break;
 		case CVSYNC_RELEASE_RCS:
 			if (!dircmp_rcs(dca)) {
-				logmsg_err("%s DirCmp: RCS Error",
-					   dca->dca_hostinfo);
+				logmsg_err("%s DirCmp: RCS Error", dca->dca_hostinfo);
 				mux_abort(dca->dca_mux);
 				return (CVSYNC_THREAD_FAILURE);
 			}
 			break;
 		default:
-			logmsg_err("%s DirCmp: Release Error",
-				   dca->dca_hostinfo);
+			logmsg_err("%s DirCmp: Release Error", dca->dca_hostinfo);
 			mux_abort(dca->dca_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
 
 		if (!dircmp_end(dca)) {
-			logmsg_err("%s DirCmp: Collection Finalizer Error",
-				   dca->dca_hostinfo);
+			logmsg_err("%s DirCmp: Collection Finalizer Error", dca->dca_hostinfo);
 			mux_abort(dca->dca_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -191,8 +177,7 @@ dircmp(void *arg)
 	}
 
 	if (dca->dca_tag != DIRCMP_END) {
-		logmsg_err("%s DirCmp: %02x: Invalid Tag", dca->dca_hostinfo,
-			   dca->dca_tag);
+		logmsg_err("%s DirCmp: %02x: Invalid Tag", dca->dca_hostinfo, dca->dca_tag);
 		mux_abort(dca->dca_mux);
 		return (CVSYNC_THREAD_FAILURE);
 	}
@@ -221,7 +206,7 @@ dircmp_fetch(struct dircmp_args *dca)
 	if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > dca->dca_cmdmax - 2))
+	if ((len == 0) || (len > (dca->dca_cmdmax - 2)))
 		return (false);
 	dca->dca_tag = cmd[2];
 
@@ -239,18 +224,14 @@ dircmp_fetch(struct dircmp_args *dca)
 		relnamelen = cmd[1];
 		if ((namelen == 0) || (relnamelen > dca->dca_namemax))
 			return (false);
-		if (len != namelen + relnamelen + 3)
+		if (len != (namelen + relnamelen + 3))
 			return (false);
 
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, dca->dca_name,
-			      namelen)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, dca->dca_name, namelen))
 			return (false);
-		}
 		dca->dca_name[namelen] = '\0';
-		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, dca->dca_release,
-			      relnamelen)) {
+		if (!mux_recv(dca->dca_mux, MUX_DIRCMP_IN, dca->dca_release, relnamelen))
 			return (false);
-		}
 		dca->dca_release[relnamelen] = '\0';
 
 		break;
@@ -331,8 +312,7 @@ dircmp_access(struct dircmp_args *dca, void *aux)
 
 	if ((len = dca->dca_pathlen + mdp->md_namelen) >= dca->dca_pathmax)
 		return (false);
-	(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name,
-		     mdp->md_namelen);
+	(void)memcpy(&dca->dca_path[dca->dca_pathlen], mdp->md_name, mdp->md_namelen);
 	if (S_ISDIR(mdp->md_stat.st_mode)) {
 		dca->dca_path[len] = '\0';
 		if (distfile_access(da, dca->dca_rpath) == DISTFILE_DENY)
@@ -357,8 +337,7 @@ dircmp_access_scanfile(struct dircmp_args *dca, struct scanfile_attr *attr)
 
 	if ((len = dca->dca_pathlen + attr->a_namelen) >= dca->dca_pathmax)
 		return (false);
-	(void)memcpy(&dca->dca_path[dca->dca_pathlen], attr->a_name,
-		     attr->a_namelen);
+	(void)memcpy(&dca->dca_path[dca->dca_pathlen], attr->a_name, attr->a_namelen);
 	if (attr->a_type == FILETYPE_DIR) {
 		dca->dca_path[len] = '\0';
 		if (distfile_access(da, dca->dca_rpath) == DISTFILE_DENY)

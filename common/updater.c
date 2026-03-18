@@ -121,8 +121,7 @@ updater(void *arg)
 
 		cl->cl_scanfile = NULL;
 
-		if (!scanfile_create_tmpfile(uda->uda_scanfile,
-					     cl->cl_scan_mode)) {
+		if (!scanfile_create_tmpfile(uda->uda_scanfile, cl->cl_scan_mode)) {
 			logmsg_err("Updater: Scanfile Error");
 			scanfile_close(uda->uda_scanfile);
 			mux_abort(uda->uda_mux);
@@ -140,8 +139,7 @@ updater(void *arg)
 			}
 			break;
 		case CVSYNC_RELEASE_RCS:
-			logmsg("Updating (collection %s/%s)", cl->cl_name,
-			       cl->cl_release);
+			logmsg("Updating (collection %s/%s)", cl->cl_name, cl->cl_release);
 			if (!updater_rcs(uda)) {
 				logmsg_err("Updater: RCS Error");
 				scanfile_remove_tmpfile(uda->uda_scanfile);
@@ -149,8 +147,7 @@ updater(void *arg)
 				mux_abort(uda->uda_mux);
 				return (CVSYNC_THREAD_FAILURE);
 			}
-			logmsg("Done (collection %s/%s)", cl->cl_name,
-			       cl->cl_release);
+			logmsg("Done (collection %s/%s)", cl->cl_name, cl->cl_release);
 			break;
 		default:
 			logmsg_err("Updater: Release Error");
@@ -199,7 +196,7 @@ updater_fetch(struct updater_args *uda)
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > uda->uda_cmdmax - 2))
+	if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 		return (false);
 	uda->uda_tag = cmd[2];
 
@@ -213,18 +210,14 @@ updater_fetch(struct updater_args *uda)
 			return (false);
 		if ((relnamelen = cmd[1]) > uda->uda_namemax)
 			return (false);
-		if (len != namelen + relnamelen + 3)
+		if (len != (namelen + relnamelen + 3))
 			return (false);
 
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_name,
-			      namelen)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_name, namelen))
 			return (false);
-		}
 		uda->uda_name[namelen] = '\0';
-		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_release,
-			      relnamelen)) {
+		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_release, relnamelen))
 			return (false);
-		}
 		uda->uda_release[relnamelen] = '\0';
 
 		break;

@@ -32,11 +32,8 @@ filecmp_generic_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 	struct cvsync_attr *cap = &fca->fca_attr;
 	uint8_t *cmd = fca->fca_cmd;
 
-	if ((cap->ca_type != FILETYPE_FILE) &&
-	    (cap->ca_type != FILETYPE_RCS) &&
-	    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+	if ((cap->ca_type != FILETYPE_FILE) && (cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 		return (false);
-	}
 
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmds, sizeof(cmds)))
 		return (false);
@@ -44,14 +41,10 @@ filecmp_generic_update(struct filecmp_args *fca, struct cvsync_file *cfp)
 	SetDDWord(cmd, cfp->cf_size);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 8))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cfp->cf_addr,
-		      (size_t)cfp->cf_size)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cfp->cf_addr, (size_t)cfp->cf_size))
 		return (false);
-	}
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, fca->fca_hash,
-		      hashops->length)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, fca->fca_hash, hashops->length))
 		return (false);
-	}
 
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmde, sizeof(cmde)))
 		return (false);

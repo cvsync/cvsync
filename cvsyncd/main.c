@@ -168,16 +168,12 @@ main(int argc, char *argv[])
 	}
 
 	if (base_cname == NULL) {
-		wn = snprintf(tmpname, sizeof(tmpname), "%s",
-			      CVSYNCD_DEFAULT_CONFIG);
+		wn = snprintf(tmpname, sizeof(tmpname), "%s", CVSYNCD_DEFAULT_CONFIG);
 	} else {
-		if ((base_cname[0] == '/') || (workdir == NULL)) {
-			wn = snprintf(tmpname, sizeof(tmpname), "%s",
-				      base_cname);
-		} else {
-			wn = snprintf(tmpname, sizeof(tmpname), "%s/%s",
-				      workdir, base_cname);
-		}
+		if ((base_cname[0] == '/') || (workdir == NULL))
+			wn = snprintf(tmpname, sizeof(tmpname), "%s", base_cname);
+		else
+			wn = snprintf(tmpname, sizeof(tmpname), "%s/%s", workdir, base_cname);
 	}
 	if ((wn <= 0) || ((size_t)wn >= sizeof(tmpname))) {
 		logmsg_err("-c <file>: %s", strerror(EINVAL));
@@ -193,34 +189,23 @@ main(int argc, char *argv[])
 
 	if (strlen(cf->cf_halt_name) == 0) {
 		if (workdir == NULL) {
-			wn = snprintf(cf->cf_halt_name,
-				      sizeof(cf->cf_halt_name), "%s",
-				      CVSYNCD_DEFAULT_HALTFILE);
+			wn = snprintf(cf->cf_halt_name, sizeof(cf->cf_halt_name), "%s", CVSYNCD_DEFAULT_HALTFILE);
 		} else {
-			wn = snprintf(cf->cf_halt_name,
-				      sizeof(cf->cf_halt_name),
-				      "%s/cvsyncd.HALT", workdir);
+			wn = snprintf(cf->cf_halt_name, sizeof(cf->cf_halt_name), "%s/cvsyncd.HALT", workdir);
 		}
 		if ((wn <= 0) || ((size_t)wn >= sizeof(cf->cf_halt_name))) {
-			logmsg_err("%s/cvsyncd.HALT: %s", workdir,
-				   strerror(EINVAL));
+			logmsg_err("%s/cvsyncd.HALT: %s", workdir, strerror(EINVAL));
 			exit(EXIT_FAILURE);
 		}
 	}
 	if (strlen(cf->cf_pid_name) == 0) {
 		if (base_pname == NULL) {
-			wn = snprintf(cf->cf_pid_name, sizeof(cf->cf_pid_name),
-				      "%s", CVSYNCD_DEFAULT_PIDFILE);
+			wn = snprintf(cf->cf_pid_name, sizeof(cf->cf_pid_name), "%s", CVSYNCD_DEFAULT_PIDFILE);
 		} else {
-			if ((base_pname[0] == '/') || (workdir == NULL)) {
-				wn = snprintf(cf->cf_pid_name,
-					      sizeof(cf->cf_pid_name), "%s",
-					      base_pname);
-			} else {
-				wn = snprintf(cf->cf_pid_name,
-					      sizeof(cf->cf_pid_name), "%s/%s",
-					      workdir, base_pname);
-			}
+			if ((base_pname[0] == '/') || (workdir == NULL))
+				wn = snprintf(cf->cf_pid_name, sizeof(cf->cf_pid_name), "%s", base_pname);
+			else
+				wn = snprintf(cf->cf_pid_name, sizeof(cf->cf_pid_name), "%s/%s", workdir, base_pname);
 		}
 		if ((wn <= 0) || ((size_t)wn >= sizeof(cf->cf_pid_name))) {
 			logmsg_err("-p <file>: %s", strerror(EINVAL));
@@ -244,21 +229,16 @@ main(int argc, char *argv[])
 			if (!logmsg_open(NULL, true))
 				exit(EXIT_FAILURE);
 		} else {
-			if ((base_lname[0] == '/') || (workdir == NULL)) {
-				wn = snprintf(tmpname, sizeof(tmpname), "%s",
-					      base_lname);
-			} else {
-				wn = snprintf(tmpname, sizeof(tmpname),
-					      "%s/%s", workdir, base_lname);
-			}
+			if ((base_lname[0] == '/') || (workdir == NULL))
+				wn = snprintf(tmpname, sizeof(tmpname), "%s", base_lname);
+			else
+				wn = snprintf(tmpname, sizeof(tmpname), "%s/%s", workdir, base_lname);
 			if ((wn <= 0) || ((size_t)wn >= sizeof(tmpname))) {
 				logmsg_err("-l <file>: %s", strerror(EINVAL));
 				exit(EXIT_FAILURE);
 			}
-			wn = snprintf(cvsync_logname, sizeof(cvsync_logname),
-				      "%s", tmpname);
-			if ((wn <= 0) ||
-			    ((size_t)wn >= sizeof(cvsync_logname))) {
+			wn = snprintf(cvsync_logname, sizeof(cvsync_logname), "%s", tmpname);
+			if ((wn <= 0) || ((size_t)wn >= sizeof(cvsync_logname))) {
 				logmsg_err("-l <file>: %s", strerror(EINVAL));
 				exit(EXIT_FAILURE);
 			}
@@ -311,8 +291,7 @@ main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	socks = sock_listen((strlen(cf->cf_addr) == 0 ? NULL : cf->cf_addr),
-			    cf->cf_serv);
+	socks = sock_listen((strlen(cf->cf_addr) == 0 ? NULL : cf->cf_addr), cf->cf_serv);
 	if (socks == NULL) {
 		pthread_attr_destroy(&attr);
 		access_destroy();
@@ -336,10 +315,8 @@ main(int argc, char *argv[])
 		if (cvsync_is_interrupted())
 			break;
 
-		if ((stat(cf->cf_halt_name, &st) == 0) &&
-		    (init_tic < st.st_mtime)) {
+		if ((stat(cf->cf_halt_name, &st) == 0) && (init_tic < st.st_mtime))
 			break;
-		}
 
 		if (!sock_select())
 			continue;
@@ -446,8 +423,7 @@ server(void *arg)
 		access_done(sa);
 		return (CVSYNC_THREAD_FAILURE);
 	}
-	if ((fca = filecmp_init(mx, sa->sa_config->cf_collections, cls,
-				sa->sa_hostinfo, proto, hash)) == NULL) {
+	if ((fca = filecmp_init(mx, sa->sa_config->cf_collections, cls, sa->sa_hostinfo, proto, hash)) == NULL) {
 		dircmp_destroy(dca);
 		mux_destroy(mx);
 		collection_destroy_all(cls);
@@ -468,8 +444,7 @@ server(void *arg)
 		mux_abort(mx);
 	if (pthread_join(mx->mx_receiver, &status) != 0)
 		mux_abort(mx);
-	if ((dca->dca_status == CVSYNC_THREAD_FAILURE) ||
-	    (fca->fca_status == CVSYNC_THREAD_FAILURE) ||
+	if ((dca->dca_status == CVSYNC_THREAD_FAILURE) || (fca->fca_status == CVSYNC_THREAD_FAILURE) ||
 	    (status == CVSYNC_THREAD_FAILURE)) {
 		logmsg_verbose("%s Failed", sa->sa_hostinfo);
 	} else {
@@ -481,8 +456,8 @@ server(void *arg)
 
 	collection_destroy_all(cls);
 
-	logmsg("%s in=%" PRIu64 ", out=%" PRIu64 ", time=%ds", sa->sa_hostinfo,
-	       mx->mx_xfer_in, mx->mx_xfer_out, time(NULL) - sa->sa_tick);
+	logmsg("%s in=%" PRIu64 ", out=%" PRIu64 ", time=%ds", sa->sa_hostinfo, mx->mx_xfer_in, mx->mx_xfer_out,
+	       time(NULL) - sa->sa_tick);
 
 	mux_destroy(mx);
 	access_done(sa);
@@ -493,15 +468,11 @@ server(void *arg)
 NORETURN void
 usage(void)
 {
-	logmsg_err("Usage: cvsyncd [-Vfhqv] [-c <file>] [-g <group>] "
-		   "[-l <file>] [-p <file>] [-u <user>] [-w <directory>] "
-		   "[-z <level>]");
-	logmsg_err("\tThe version: %u.%u.%u", CVSYNC_MAJOR, CVSYNC_MINOR,
-		   CVSYNC_PATCHLEVEL);
-	logmsg_err("\tThe protocol version: %u.%u", CVSYNC_PROTO_MAJOR,
-		   CVSYNC_PROTO_MINOR);
-	logmsg_err("\tThe default configuration file: %s",
-		   CVSYNCD_DEFAULT_CONFIG);
+	logmsg_err("Usage: cvsyncd [-Vfhqv] [-c <file>] [-g <group>] [-l <file>] [-p <file>] [-u <user>] "
+		   "[-w <directory>] [-z <level>]");
+	logmsg_err("\tThe version: %u.%u.%u", CVSYNC_MAJOR, CVSYNC_MINOR, CVSYNC_PATCHLEVEL);
+	logmsg_err("\tThe protocol version: %u.%u", CVSYNC_PROTO_MAJOR, CVSYNC_PROTO_MINOR);
+	logmsg_err("\tThe default configuration file: %s", CVSYNCD_DEFAULT_CONFIG);
 	logmsg_err("\tURL: %s", CVSYNC_URL);
 	exit(EXIT_FAILURE);
 }
@@ -509,8 +480,7 @@ usage(void)
 NORETURN void
 version(void)
 {
-	logmsg_err("cvsyncd version %u.%u.%u (protocol %u.%u)",
-		   CVSYNC_MAJOR, CVSYNC_MINOR, CVSYNC_PATCHLEVEL,
+	logmsg_err("cvsyncd version %u.%u.%u (protocol %u.%u)", CVSYNC_MAJOR, CVSYNC_MINOR, CVSYNC_PATCHLEVEL,
 		   CVSYNC_PROTO_MAJOR, CVSYNC_PROTO_MINOR);
 	exit(EXIT_FAILURE);
 }

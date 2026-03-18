@@ -74,8 +74,7 @@ struct updater_args {
 	size_t			uda_bufsize;
 };
 
-struct updater_args *updater_init(struct mux *, struct collection *, uint32_t,
-				  int);
+struct updater_args *updater_init(struct mux *, struct collection *, uint32_t, int);
 void updater_destroy(struct updater_args *);
 void *updater(void *);
 

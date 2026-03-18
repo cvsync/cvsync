@@ -103,10 +103,8 @@ cvsync_rcs_filename(const char *name, size_t namelen)
 		if (name[i] == '/')
 			return (false);
 	}
-	if (IS_DIR_CURRENT(name, namelen) || IS_DIR_PARENT(name, namelen) ||
-	    IS_FILE_TMPFILE(name, namelen)) {
+	if (IS_DIR_CURRENT(name, namelen) || IS_DIR_PARENT(name, namelen) || IS_FILE_TMPFILE(name, namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -127,10 +125,8 @@ cvsync_rcs_pathname(const char *path, size_t pathlen)
 		if (len == 0)
 			return (false);
 
-		if (IS_DIR_CURRENT(path, len) || IS_DIR_PARENT(path, len) ||
-		    IS_FILE_TMPFILE(path, len)) {
+		if (IS_DIR_CURRENT(path, len) || IS_DIR_PARENT(path, len) || IS_FILE_TMPFILE(path, len))
 			return (false);
-		}
 
 		if (len == pathlen)
 			break;

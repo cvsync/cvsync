@@ -159,11 +159,9 @@ main(int argc, char *argv[])
 			cls = cf->cf_collections;
 			break;
 		case 1:
-			cls = collection_lookup(cf->cf_collections, argv[0],
-					       base_cl.cl_release);
+			cls = collection_lookup(cf->cf_collections, argv[0], base_cl.cl_release);
 			if (cls == NULL) {
-				logmsg_err("Not such a collection: %s/%s",
-					   argv[0], base_cl.cl_release);
+				logmsg_err("Not such a collection: %s/%s", argv[0], base_cl.cl_release);
 				config_destroy(cf);
 				exit(EXIT_FAILURE);
 			}
@@ -201,13 +199,10 @@ cvscan(struct collection *cl)
 
 	if (strlen(cl->cl_scan_name) == 0)
 		return (true);
-	if ((cl->cl_super != NULL) &&
-	    (strcmp(cl->cl_super->cl_scan_name, cl->cl_scan_name) == 0)) {
+	if ((cl->cl_super != NULL) && (strcmp(cl->cl_super->cl_scan_name, cl->cl_scan_name) == 0))
 		return (true);
-	}
 
-	logmsg("Scanfile: name %s, release %s, prefix %s", cl->cl_name,
-	       cl->cl_release, cl->cl_prefix);
+	logmsg("Scanfile: name %s, release %s, prefix %s", cl->cl_name, cl->cl_release, cl->cl_prefix);
 
 	mda.mda_errormode = cl->cl_errormode;
 	mda.mda_symfollow = cl->cl_symfollow;
@@ -234,7 +229,6 @@ NORETURN void
 usage(void)
 {
 	logmsg_err("Usage: cvscan [-hqv] [-r <release>] -c <file> [<name>]\n"
-		   "       cvscan [-FLhlqv] [-r <release>] -f <file> "
-		   "<directory>");
+		   "       cvscan [-FLhlqv] [-r <release>] -f <file> <directory>");
 	exit(EXIT_FAILURE);
 }

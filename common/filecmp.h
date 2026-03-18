@@ -66,9 +66,7 @@ struct filecmp_args {
 	uint8_t			fca_hash[HASH_MAXLEN];
 };
 
-struct filecmp_args *filecmp_init(struct mux *, struct collection *,
-				  struct collection *, const char *, uint32_t,
-				  int);
+struct filecmp_args *filecmp_init(struct mux *, struct collection *, struct collection *, const char *, uint32_t, int);
 void filecmp_destroy(struct filecmp_args *);
 void *filecmp(void *);
 bool filecmp_start(struct filecmp_args *, const char *, const char *);

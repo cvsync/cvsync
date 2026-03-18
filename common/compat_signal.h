@@ -10,6 +10,6 @@
 #undef SIG_IGN
 #define	SIG_IGN		((void (*)(int))1)
 #endif /* SIG_IGN */
-#endif /* defined(__bsdi__) */
+#endif /* __bsdi__ */
 
 #endif /* CVSYNC_COMPAT_SIGNAL_H */

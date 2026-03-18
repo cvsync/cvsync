@@ -12,8 +12,7 @@
 #if defined(__DragonFly__) || defined(__FreeBSD__) || defined(__INTERIX) || \
     defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
 #include <md5.h>
-#endif /* __DragonFly__ || __FreeBSD__ || __INTERIX || __NetBSD__ ||
-	  __OpenBSD__ || __sun */
+#endif /* __DragonFly__ || __FreeBSD__ || __INTERIX || __NetBSD__ || __OpenBSD__ || __sun */
 
 /*
  * Secure Hash Algorithm 1 - FIPS 180-1, RFC 3174
@@ -80,6 +79,6 @@ typedef CC_SHA256_CTX	SHA256_CTX;
 #define	SHA256Update	CC_SHA256_Update
 #define	SHA256Final	CC_SHA256_Final
 
-#endif /* defined(__APPLE__) */
+#endif /* __APPLE__ */
 
 #endif /* CVSYNC_HASH_NATIVE_H */

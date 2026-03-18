@@ -31,8 +31,7 @@ receiver(void *arg)
 
 	for (;;) {
 		if ((err = pthread_mutex_lock(&mx->mx_lock)) != 0) {
-			logmsg_err("Receiver Error: mutex lock: %s",
-				   strerror(err));
+			logmsg_err("Receiver Error: mutex lock: %s", strerror(err));
 			mux_abort(mx);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -47,8 +46,7 @@ receiver(void *arg)
 			break;
 
 		if ((err = pthread_mutex_unlock(&mx->mx_lock)) != 0) {
-			logmsg_err("Receiver Error: mutex unlock: %s",
-				   strerror(err));
+			logmsg_err("Receiver Error: mutex unlock: %s", strerror(err));
 			mux_abort(mx);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -60,8 +58,7 @@ receiver(void *arg)
 		}
 		chnum = cmd[1];
 		if ((chnum != 0) && (chnum != 1)) {
-			logmsg_err("Receiver Error: invalid channel: %u",
-				   chnum);
+			logmsg_err("Receiver Error: invalid channel: %u", chnum);
 			mux_abort(mx);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -88,9 +85,7 @@ receiver(void *arg)
 				}
 				break;
 			default:
-				logmsg_err("Receiver Error: unknown "
-					   "compression type: %d",
-					   mx->mx_compress);
+				logmsg_err("Receiver Error: unknown compression type: %d", mx->mx_compress);
 				mux_abort(mx);
 				return (CVSYNC_THREAD_FAILURE);
 			}
@@ -102,27 +97,21 @@ receiver(void *arg)
 			}
 			break;
 		default:
-			logmsg_err("Receiver Error: unknown command: %02x",
-				   cmd[0]);
+			logmsg_err("Receiver Error: unknown command: %02x", cmd[0]);
 			mux_abort(mx);
 			return (CVSYNC_THREAD_FAILURE);
 		}
 	}
 
 	while (!mx->mx_state[MUX_OUT][0] || !mx->mx_state[MUX_OUT][1]) {
-		logmsg_debug(DEBUG_BASE, "Receiver: Sleep: %u %u",
-			     mx->mx_state[MUX_OUT][0],
-			     mx->mx_state[MUX_OUT][1]);
-		if ((err = pthread_cond_wait(&mx->mx_wait,
-					     &mx->mx_lock)) != 0) {
-			logmsg_err("Receiver Error: cond wait: %s",
-				   strerror(err));
+		logmsg_debug(DEBUG_BASE, "Receiver: Sleep: %u %u", mx->mx_state[MUX_OUT][0], mx->mx_state[MUX_OUT][1]);
+		if ((err = pthread_cond_wait(&mx->mx_wait, &mx->mx_lock)) != 0) {
+			logmsg_err("Receiver Error: cond wait: %s", strerror(err));
 			pthread_mutex_unlock(&mx->mx_lock);
 			mux_abort(mx);
 			return (CVSYNC_THREAD_FAILURE);
 		}
-		logmsg_debug(DEBUG_BASE, "Receiver: Wakeup: %u %u",
-			     mx->mx_state[MUX_OUT][0],
+		logmsg_debug(DEBUG_BASE, "Receiver: Wakeup: %u %u", mx->mx_state[MUX_OUT][0],
 			     mx->mx_state[MUX_OUT][1]);
 		if (!mx->mx_isconnected) {
 			logmsg_err("Receiver Error: socket");
@@ -148,8 +137,7 @@ receiver_close(struct mux *mx, uint8_t chnum)
 	int err;
 
 	if ((err = pthread_mutex_lock(&mxb->mxb_lock)) != 0) {
-		logmsg_err("Receiver(CLOSE) Error: mutex lock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(CLOSE) Error: mutex lock: %s", strerror(err));
 		return (false);
 	}
 	if (mxb->mxb_state != MUX_STATE_RUNNING) {
@@ -168,22 +156,19 @@ receiver_close(struct mux *mx, uint8_t chnum)
 	mxb->mxb_state = MUX_STATE_CLOSED;
 
 	if ((err = pthread_cond_signal(&mxb->mxb_wait_in)) != 0) {
-		logmsg_err("Receiver(CLOSE) Error: cond signal: %s",
-			   strerror(err));
+		logmsg_err("Receiver(CLOSE) Error: cond signal: %s", strerror(err));
 		mxb->mxb_state = MUX_STATE_ERROR;
 		pthread_mutex_unlock(&mxb->mxb_lock);
 		return (false);
 	}
 
 	if ((err = pthread_mutex_unlock(&mxb->mxb_lock)) != 0) {
-		logmsg_err("Receiver(CLOSE) Error: mutex unlock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(CLOSE) Error: mutex unlock: %s", strerror(err));
 		return (false);
 	}
 
 	if ((err = pthread_mutex_lock(&mx->mx_lock)) != 0) {
-		logmsg_err("Receiver(CLOSE) Error: mutex lock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(CLOSE) Error: mutex lock: %s", strerror(err));
 		return (false);
 	}
 	if (mx->mx_state[MUX_IN][chnum]) {
@@ -193,8 +178,7 @@ receiver_close(struct mux *mx, uint8_t chnum)
 	}
 	mx->mx_state[MUX_IN][chnum] = true;
 	if ((err = pthread_mutex_unlock(&mx->mx_lock)) != 0) {
-		logmsg_err("Receiver(CLOSE) Error: mutex unlock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(CLOSE) Error: mutex unlock: %s", strerror(err));
 		return (false);
 	}
 
@@ -219,8 +203,7 @@ receiver_reset(struct mux *mx, uint8_t chnum)
 	}
 
 	if ((err = pthread_mutex_lock(&mxb->mxb_lock)) != 0) {
-		logmsg_err("Receiver(RESET) Error: mutex lock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(RESET) Error: mutex lock: %s", strerror(err));
 		return (false);
 	}
 	if (mxb->mxb_state != MUX_STATE_RUNNING) {
@@ -231,29 +214,25 @@ receiver_reset(struct mux *mx, uint8_t chnum)
 	}
 
 	if (len > mxb->mxb_rlength) {
-		logmsg_err("Receiver(RESET) Error: invalid length: %u > "
-			   "%u(rlength)", len, mxb->mxb_rlength);
+		logmsg_err("Receiver(RESET) Error: invalid length: %u > %u(rlength)", len, mxb->mxb_rlength);
 		mxb->mxb_state = MUX_STATE_ERROR;
 		pthread_mutex_unlock(&mxb->mxb_lock);
 		return (false);
 	}
 
-	logmsg_debug(DEBUG_BASE, "Receiver(RESET) %u: %u -> %u", chnum,
-		     mxb->mxb_rlength, mxb->mxb_rlength - len);
+	logmsg_debug(DEBUG_BASE, "Receiver(RESET) %u: %u -> %u", chnum, mxb->mxb_rlength, mxb->mxb_rlength - len);
 
 	mxb->mxb_rlength -= len;
 
 	if ((err = pthread_cond_signal(&mxb->mxb_wait_in)) != 0) {
-		logmsg_err("Receiver(RESET) Error: cond signal: %s",
-			   strerror(err));
+		logmsg_err("Receiver(RESET) Error: cond signal: %s", strerror(err));
 		mxb->mxb_state = MUX_STATE_ERROR;
 		pthread_mutex_unlock(&mxb->mxb_lock);
 		return (false);
 	}
 
 	if ((err = pthread_mutex_unlock(&mxb->mxb_lock)) != 0) {
-		logmsg_err("Receiver(RESET) Error: mutex unlock: %s",
-			   strerror(err));
+		logmsg_err("Receiver(RESET) Error: mutex unlock: %s", strerror(err));
 		return (false);
 	}
 

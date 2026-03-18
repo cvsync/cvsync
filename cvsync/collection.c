@@ -52,13 +52,11 @@ collection_resolv_prefix(struct collection *cls)
 	for (cl1 = cls ; cl1 != NULL ; cl1 = cl1->cl_next) {
 		len1 = cl1->cl_prefixlen + cl1->cl_rprefixlen;
 		if (len1 >= sizeof(cl1->cl_prefix)) {
-			logmsg_err("collection %s/%s: prefix: %s",
-				   cl1->cl_name, cl1->cl_release,
+			logmsg_err("collection %s/%s: prefix: %s", cl1->cl_name, cl1->cl_release,
 				   strerror(ENAMETOOLONG));
 			return (false);
 		}
-		(void)memcpy(&cl1->cl_prefix[cl1->cl_prefixlen],
-			     cl1->cl_rprefix, cl1->cl_rprefixlen);
+		(void)memcpy(&cl1->cl_prefix[cl1->cl_prefixlen], cl1->cl_rprefix, cl1->cl_rprefixlen);
 		cl1->cl_prefix[len1] = '\0';
 	}
 
@@ -71,20 +69,16 @@ collection_resolv_prefix(struct collection *cls)
 			len2 = strlen(cl2->cl_prefix);
 
 			if (len1 == len2) {
-				if (memcmp(cl1->cl_prefix, cl2->cl_prefix,
-					   len1) == 0) {
+				if (memcmp(cl1->cl_prefix, cl2->cl_prefix, len1) == 0)
 					conflict = true;
-				}
 			} else if (len1 > len2) {
 				if ((cl1->cl_prefix[len2 - 1] == '/') &&
-				    (memcmp(cl1->cl_prefix, cl2->cl_prefix,
-					    len2) == 0)) {
+				    (memcmp(cl1->cl_prefix, cl2->cl_prefix, len2) == 0)) {
 					conflict = true;
 				}
 			} else { /* len1 < len2 */
 				if ((cl2->cl_prefix[len1 - 1] == '/') &&
-				    (memcmp(cl1->cl_prefix, cl2->cl_prefix,
-					    len1) == 0)) {
+				    (memcmp(cl1->cl_prefix, cl2->cl_prefix, len1) == 0)) {
 					conflict = true;
 				}
 			}

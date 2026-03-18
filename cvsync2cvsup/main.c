@@ -241,8 +241,7 @@ cvsync2cvsup(struct scanfile_args *sa, const char *ofile)
 }
 
 bool
-cvsync2cvsup_chdir(struct scanfile_args *sa, struct scanfile_attr *dirattr,
-		   struct scanfile_attr *attr)
+cvsync2cvsup_chdir(struct scanfile_args *sa, struct scanfile_attr *dirattr, struct scanfile_attr *attr)
 {
 	if (dirattr->a_type != FILETYPE_DIR) {
 		if (attr->a_type == FILETYPE_DIR) {
@@ -294,10 +293,8 @@ cvsync2cvsup_chdir(struct scanfile_args *sa, struct scanfile_attr *dirattr,
 			return (false);
 		cvsync2cvsup_remove_attr(sa, dirattr);
 
-		if ((dirattr->a_type != FILETYPE_DIR) ||
-		    cvsync2cvsup_isparent(dirattr, attr)) {
+		if ((dirattr->a_type != FILETYPE_DIR) || cvsync2cvsup_isparent(dirattr, attr))
 			break;
-		}
 	}
 
 	return (true);

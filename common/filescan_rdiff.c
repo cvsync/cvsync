@@ -43,11 +43,8 @@ filescan_rdiff_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 		bsize *= 2;
 	}
 
-	if ((cap->ca_type != FILETYPE_FILE) &&
-	    (cap->ca_type != FILETYPE_RCS) &&
-	    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+	if ((cap->ca_type != FILETYPE_FILE) && (cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 		return (false);
-	}
 
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmds, sizeof(cmds)))
 		return (false);
@@ -72,10 +69,8 @@ filescan_rdiff_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 		(*hashops->update)(fsa->fsa_hash_ctx, sp, len);
 		(*hashops->final)(fsa->fsa_hash_ctx, &cmd[4]);
 
-		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd,
-			      hashops->length + 4)) {
+		if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, hashops->length + 4))
 			return (false);
-		}
 
 		sp += len;
 	}

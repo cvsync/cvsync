@@ -89,8 +89,7 @@ main(int argc, char *argv[])
 				v = ULONG_MAX;
 				errno = ERANGE;
 			}
-			if (((v == 0) && (errno == EINVAL)) ||
-			    ((v == ULONG_MAX) && (errno == ERANGE))) {
+			if (((v == 0) && (errno == EINVAL)) || ((v == ULONG_MAX) && (errno == ERANGE))) {
 				logmsg_err("%s: %s", optarg, strerror(errno));
 				usage();
 				/* NOTREACHED */
@@ -189,7 +188,7 @@ cvsup2cvsync(struct cvsync_file *ifile, struct scanfile_args *ofile)
 			return (false);
 		}
 
-		if (bp - sp < 3) {
+		if ((bp - sp) < 3) {
 			logmsg_err("premature EOF");
 			return (false);
 		}
@@ -231,8 +230,7 @@ cvsup2cvsync(struct cvsync_file *ifile, struct scanfile_args *ofile)
 			break;
 		case 'V':
 		case 'v':
-			if ((sep = memchr(sp, ' ',
-					  (size_t)(ep - sp))) == NULL) {
+			if ((sep = memchr(sp, ' ', (size_t)(ep - sp))) == NULL) {
 				logmsg_err("no separators");
 				return (false);
 			}
@@ -282,7 +280,7 @@ cvsup2cvsync_write_attr(struct scanfile_args *sa, struct cvsync_attr *attr)
 			sp++;
 			continue;
 		}
-		if (bp - sp < 2) {
+		if ((bp - sp) < 2) {
 			logmsg_err("premature EOF");
 			return (false);
 		}
@@ -344,7 +342,6 @@ cvsup2cvsync_create_tmpfile(const char *ofile, char *resolved_ofile,
 NORETURN void
 usage(void)
 {
-	logmsg_err("Usage: cvsup2cvsync [-hqv] [-u <umask>] "
-		   "-i <cvsup-scanfile> -o <cvsync-scanfile>");
+	logmsg_err("Usage: cvsup2cvsync [-hqv] [-u <umask>] -i <cvsup-scanfile> -o <cvsync-scanfile>");
 	exit(EXIT_FAILURE);
 }

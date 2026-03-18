@@ -22,8 +22,7 @@ struct mux;
 #define	RDIFF_WEAK_HIGH(x)	((uint16_t)((x) >> 16))
 
 uint32_t rdiff_weak(const uint8_t *, size_t);
-uint8_t *rdiff_search(uint8_t *, uint8_t *, uint32_t, size_t, uint32_t,
-			    uint8_t *, const struct hash_args *);
+uint8_t *rdiff_search(uint8_t *, uint8_t *, uint32_t, size_t, uint32_t, uint8_t *, const struct hash_args *);
 
 bool rdiff_copy(struct mux *, uint8_t, off_t, size_t);
 bool rdiff_data(struct mux *, uint8_t, const void *, size_t);

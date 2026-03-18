@@ -89,8 +89,7 @@ filescan(void *arg)
 		}
 
 		if (fsa->fsa_tag != FILESCAN_START) {
-			logmsg_err("FileScan: invalid tag: %02x",
-				   fsa->fsa_tag);
+			logmsg_err("FileScan: invalid tag: %02x", fsa->fsa_tag);
 			mux_abort(fsa->fsa_mux);
 			return (CVSYNC_THREAD_FAILURE);
 		}
@@ -189,7 +188,7 @@ filescan_fetch(struct filescan_args *fsa)
 	if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > fsa->fsa_cmdmax - 2))
+	if ((len == 0) || (len > (fsa->fsa_cmdmax - 2)))
 		return (false);
 	fsa->fsa_tag = cmd[2];
 
@@ -203,18 +202,14 @@ filescan_fetch(struct filescan_args *fsa)
 			return (false);
 		if ((relnamelen = cmd[1]) > fsa->fsa_namemax)
 			return (false);
-		if (len != namelen + relnamelen + 3)
+		if (len != (namelen + relnamelen + 3))
 			return (false);
 
-		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, fsa->fsa_name,
-			      namelen)) {
+		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, fsa->fsa_name, namelen))
 			return (false);
-		}
 		fsa->fsa_name[namelen] = '\0';
-		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, fsa->fsa_release,
-			      relnamelen)) {
+		if (!mux_recv(fsa->fsa_mux, MUX_FILESCAN_IN, fsa->fsa_release, relnamelen))
 			return (false);
-		}
 		fsa->fsa_release[relnamelen] = '\0';
 
 		break;
@@ -235,10 +230,8 @@ filescan_start(struct filescan_args *fsa, const char *name, const char *relname)
 	uint8_t *cmd = fsa->fsa_cmd;
 	size_t len, namelen, relnamelen;
 
-	if (((namelen = strlen(name)) > fsa->fsa_namemax) ||
-	    ((relnamelen = strlen(relname)) > fsa->fsa_namemax)) {
+	if (((namelen = strlen(name)) > fsa->fsa_namemax) || ((relnamelen = strlen(relname)) > fsa->fsa_namemax))
 		return (false);
-	}
 	if ((len = namelen + relnamelen + 5) > fsa->fsa_cmdmax)
 		return (false);
 

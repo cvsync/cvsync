@@ -201,11 +201,8 @@ main(int argc, char *argv[])
 		if (compression != CVSYNC_COMPRESS_UNSPEC)
 			cf->cf_compress = compression;
 		if (loose) {
-			for (cl = cf->cf_collections ;
-			     cl != NULL ;
-			     cl = cl->cl_next) {
+			for (cl = cf->cf_collections ; cl != NULL ; cl = cl->cl_next)
 				cl->cl_errormode = CVSYNC_ERRORMODE_FIXUP;
-			}
 		}
 		if (!client(cf)) {
 			status = EXIT_FAILURE;
@@ -222,8 +219,7 @@ main(int argc, char *argv[])
 		}
 		toc.tv_usec /= 1000;
 
-		logmsg_verbose("Total time: %ld.%03d sec", toc.tv_sec,
-			       toc.tv_usec);
+		logmsg_verbose("Total time: %ld.%03d sec", toc.tv_sec, toc.tv_usec);
 	}
 
 	config_destroy(cfs);
@@ -251,10 +247,8 @@ client(struct config *cf)
 	int sock;
 	bool rv;
 
-	if ((sock = sock_connect(cf->cf_family, cf->cf_host,
-				 cf->cf_serv)) < 0) {
-		logmsg_err("service is not available at %s port %s",
-			   cf->cf_host, cf->cf_serv);
+	if ((sock = sock_connect(cf->cf_family, cf->cf_host, cf->cf_serv)) < 0) {
+		logmsg_err("service is not available at %s port %s", cf->cf_host, cf->cf_serv);
 		return (false);
 	}
 
@@ -291,21 +285,18 @@ client(struct config *cf)
 
 	logmsg("Running...");
 
-	if ((dsa = dirscan_init(mx, cf->cf_collections,
-				cf->cf_proto)) == NULL) {
+	if ((dsa = dirscan_init(mx, cf->cf_collections, cf->cf_proto)) == NULL) {
 		mux_destroy(mx);
 		sock_close(sock);
 		return (false);
 	}
-	if ((fsa = filescan_init(mx, cf->cf_collections, cf->cf_proto,
-				 cf->cf_hash)) == NULL) {
+	if ((fsa = filescan_init(mx, cf->cf_collections, cf->cf_proto, cf->cf_hash)) == NULL) {
 		dirscan_destroy(dsa);
 		mux_destroy(mx);
 		sock_close(sock);
 		return (false);
 	}
-	if ((uda = updater_init(mx, cf->cf_collections, cf->cf_proto,
-				cf->cf_hash)) == NULL) {
+	if ((uda = updater_init(mx, cf->cf_collections, cf->cf_proto, cf->cf_hash)) == NULL) {
 		dirscan_destroy(dsa);
 		filescan_destroy(fsa);
 		mux_destroy(mx);
@@ -330,10 +321,8 @@ client(struct config *cf)
 		mux_abort(mx);
 	if (pthread_join(mx->mx_receiver, &status) != 0)
 		mux_abort(mx);
-	if ((dsa->dsa_status == CVSYNC_THREAD_FAILURE) ||
-	    (fsa->fsa_status == CVSYNC_THREAD_FAILURE) ||
-	    (uda->uda_status == CVSYNC_THREAD_FAILURE) ||
-	    (status == CVSYNC_THREAD_FAILURE)) {
+	if ((dsa->dsa_status == CVSYNC_THREAD_FAILURE) || (fsa->fsa_status == CVSYNC_THREAD_FAILURE) ||
+	    (uda->uda_status == CVSYNC_THREAD_FAILURE) || (status == CVSYNC_THREAD_FAILURE)) {
 		logmsg("Failed");
 		rv = false;
 	} else {
@@ -356,12 +345,9 @@ NORETURN void
 usage(void)
 {
 	logmsg_err("Usage: cvsync [-46LVZhqvz] [-c <file>] [-p <file>]");
-	logmsg_err("\tThe version: %u.%u.%u", CVSYNC_MAJOR, CVSYNC_MINOR,
-		   CVSYNC_PATCHLEVEL);
-	logmsg_err("\tThe protocol version: %u.%u", CVSYNC_PROTO_MAJOR,
-		   CVSYNC_PROTO_MINOR);
-	logmsg_err("\tThe default configuration file: %s",
-		   CVSYNC_DEFAULT_CONFIG);
+	logmsg_err("\tThe version: %u.%u.%u", CVSYNC_MAJOR, CVSYNC_MINOR, CVSYNC_PATCHLEVEL);
+	logmsg_err("\tThe protocol version: %u.%u", CVSYNC_PROTO_MAJOR, CVSYNC_PROTO_MINOR);
+	logmsg_err("\tThe default configuration file: %s", CVSYNC_DEFAULT_CONFIG);
 	logmsg_err("\tURL: %s", CVSYNC_URL);
 	exit(EXIT_FAILURE);
 }
@@ -369,8 +355,7 @@ usage(void)
 NORETURN void
 version(void)
 {
-	logmsg_err("cvsync version %u.%u.%u (protocol %u.%u)", CVSYNC_MAJOR,
-		   CVSYNC_MINOR, CVSYNC_PATCHLEVEL, CVSYNC_PROTO_MAJOR,
-		   CVSYNC_PROTO_MINOR);
+	logmsg_err("cvsync version %u.%u.%u (protocol %u.%u)", CVSYNC_MAJOR, CVSYNC_MINOR, CVSYNC_PATCHLEVEL,
+		   CVSYNC_PROTO_MAJOR, CVSYNC_PROTO_MINOR);
 	exit(EXIT_FAILURE);
 }

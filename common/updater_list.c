@@ -41,12 +41,10 @@ updater_list(struct updater_args *uda)
 			return (false);
 
 		if (strlen(uda->uda_buffer) > 0) {
-			logmsg(" Name: %s, Release: %s\n  Comment: %s",
-			       uda->uda_name, uda->uda_release,
+			logmsg(" Name: %s, Release: %s\n  Comment: %s", uda->uda_name, uda->uda_release,
 			       uda->uda_buffer);
 		} else {
-			logmsg(" Name: %s, Release: %s", uda->uda_name,
-			       uda->uda_release);
+			logmsg(" Name: %s, Release: %s", uda->uda_name, uda->uda_release);
 		}
 	}
 
@@ -68,7 +66,7 @@ updater_list_fetch(struct updater_args *uda)
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > uda->uda_cmdmax - 2))
+	if ((len == 0) || (len > (uda->uda_cmdmax - 2)))
 		return (false);
 	if ((uda->uda_tag = cmd[2]) == UPDATER_END)
 		return (len == 1);
@@ -85,7 +83,7 @@ updater_list_fetch(struct updater_args *uda)
 	relnamelen = cmd[1];
 	if ((relnamelen == 0) || (relnamelen >= sizeof(uda->uda_release)))
 		return (false);
-	if (len < namelen + relnamelen + 3)
+	if (len < (namelen + relnamelen + 3))
 		return (false);
 	if ((commentlen = len - namelen - relnamelen - 3) >= uda->uda_bufsize)
 		return (false);
@@ -93,10 +91,8 @@ updater_list_fetch(struct updater_args *uda)
 	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_name, namelen))
 		return (false);
 	uda->uda_name[namelen] = '\0';
-	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_release,
-		      relnamelen)) {
+	if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, uda->uda_release, relnamelen))
 		return (false);
-	}
 	uda->uda_release[relnamelen] = '\0';
 	if (commentlen > 0) {
 		if (!mux_recv(uda->uda_mux, MUX_UPDATER_IN, cmd, commentlen))

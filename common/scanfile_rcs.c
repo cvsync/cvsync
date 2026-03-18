@@ -95,8 +95,7 @@ scanfile_rcs_init(struct scanfile_create_args *sca)
 		return (NULL);
 	}
 	if ((sra->sra_rprefixlen = sca->sca_rprefixlen) >= sra->sra_pathmax) {
-		logmsg_err("%.*s: %s", sca->sca_rprefixlen, sca->sca_rprefix,
-			   strerror(ENAMETOOLONG));
+		logmsg_err("%.*s: %s", sca->sca_rprefixlen, sca->sca_rprefix, strerror(ENAMETOOLONG));
 		scanfile_remove_tmpfile(&sra->sra_scanfile);
 		free(sra);
 		return (NULL);
@@ -104,10 +103,8 @@ scanfile_rcs_init(struct scanfile_create_args *sca)
 	sra->sra_path[sra->sra_pathlen - 1] = '/';
 	sra->sra_path[sra->sra_pathlen] = '\0';
 	sra->sra_rpath = &sra->sra_path[sra->sra_pathlen];
-	if (sra->sra_rprefixlen > 0) {
-		(void)memcpy(sra->sra_rprefix, sca->sca_rprefix,
-			     sca->sca_rprefixlen);
-	}
+	if (sra->sra_rprefixlen > 0)
+		(void)memcpy(sra->sra_rprefix, sca->sca_rprefix, sca->sca_rprefixlen);
 	sra->sra_mdirent_args = sca->sca_mdirent_args;
 	sra->sra_umask = sca->sca_umask;
 
@@ -193,8 +190,7 @@ scanfile_rcs(struct scanfile_create_args *sca)
 					scanfile_rcs_destroy(sra);
 					return (false);
 				}
-				(void)memcpy(&sra->sra_path[sra->sra_pathlen],
-					     mdp->md_name, mdp->md_namelen);
+				(void)memcpy(&sra->sra_path[sra->sra_pathlen], mdp->md_name, mdp->md_namelen);
 				sra->sra_path[len - 1] = '/';
 				sra->sra_path[len] = '\0';
 
@@ -272,10 +268,8 @@ scanfile_rcs_dir(struct scanfile_rcs_args *sra, struct mdirent_rcs *mdp)
 		return (false);
 	(void)memcpy(&sra->sra_rpath[rpathlen], mdp->md_name, mdp->md_namelen);
 
-	if ((auxlen = attr_rcs_encode_dir(sra->sra_aux, sra->sra_auxmax,
-					  mode)) == 0) {
+	if ((auxlen = attr_rcs_encode_dir(sra->sra_aux, sra->sra_auxmax, mode)) == 0)
 		return (false);
-	}
 
 	attr->a_type = FILETYPE_DIR;
 	attr->a_name = sra->sra_rpath;
@@ -307,16 +301,11 @@ scanfile_rcs_file(struct scanfile_rcs_args *sra, struct mdirent_rcs *mdp)
 			attr->a_type = FILETYPE_RCS_ATTIC;
 		else
 			attr->a_type = FILETYPE_RCS;
-		if ((auxlen = attr_rcs_encode_rcs(sra->sra_aux,
-						  sra->sra_auxmax,
-						  st->st_mtime, mode)) == 0) {
+		if ((auxlen = attr_rcs_encode_rcs(sra->sra_aux, sra->sra_auxmax, st->st_mtime, mode)) == 0)
 			return (false);
-		}
 	} else {
 		attr->a_type = FILETYPE_FILE;
-		if ((auxlen = attr_rcs_encode_file(sra->sra_aux,
-						   sra->sra_auxmax,
-						   st->st_mtime, st->st_size,
+		if ((auxlen = attr_rcs_encode_file(sra->sra_aux, sra->sra_auxmax, st->st_mtime, st->st_size,
 						   mode)) == 0) {
 			return (false);
 		}
@@ -345,8 +334,7 @@ scanfile_rcs_symlink(struct scanfile_rcs_args *sra, struct mdirent_rcs *mdp)
 		return (false);
 	(void)memcpy(&sra->sra_rpath[rpathlen], mdp->md_name, mdp->md_namelen);
 	sra->sra_rpath[rpathlen + mdp->md_namelen] = '\0';
-	if ((auxlen = readlink(sra->sra_path, (char *)sra->sra_aux,
-			       sra->sra_auxmax)) == -1) {
+	if ((auxlen = readlink(sra->sra_path, (char *)sra->sra_aux, sra->sra_auxmax)) == -1) {
 		logmsg_err("%s: %s", sra->sra_path, strerror(errno));
 		return (false);
 	}
@@ -372,11 +360,8 @@ scanfile_rcs_opendir(struct scanfile_rcs_args *sra, size_t pathlen)
 
 	rpathlen = pathlen - (size_t)(sra->sra_rpath - sra->sra_path);
 	if (rpathlen >= sra->sra_rprefixlen) {
-		if ((mdirp = mopendir_rcs(sra->sra_path, pathlen,
-					  sra->sra_pathmax,
-					  sra->sra_mdirent_args)) == NULL) {
+		if ((mdirp = mopendir_rcs(sra->sra_path, pathlen, sra->sra_pathmax, sra->sra_mdirent_args)) == NULL)
 			return (NULL);
-		}
 
 		return (mdirp);
 	}
@@ -403,8 +388,7 @@ scanfile_rcs_opendir(struct scanfile_rcs_args *sra, size_t pathlen)
 		free(mdp);
 		return (NULL);
 	}
-	(void)memcpy(&sra->sra_path[pathlen], &sra->sra_rprefix[rpathlen],
-		     mdp->md_namelen);
+	(void)memcpy(&sra->sra_path[pathlen], &sra->sra_rprefix[rpathlen], mdp->md_namelen);
 	sra->sra_path[len] = '\0';
 
 	if (sra->sra_mdirent_args->mda_symfollow)

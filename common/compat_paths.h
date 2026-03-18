@@ -11,7 +11,7 @@
 #endif /* __CYGWIN__ */
 #if defined(__sun)
 #define	CVSYNC_PATH_DEV_NULL	"/dev/null"
-#endif /* defined(__sun) */
+#endif /* __sun */
 #endif /* CVSYNC_PATH_DEV_NULL */
 #ifndef CVSYNC_PATH_DEV_NULL
 #include <paths.h>

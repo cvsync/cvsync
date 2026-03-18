@@ -131,8 +131,7 @@ refuse_parse(FILE *fp)
 			}
 
 			if (ra->ra_patterns != NULL) {
-				(void)memcpy(newptr, ra->ra_patterns,
-					     old * sizeof(*newptr));
+				(void)memcpy(newptr, ra->ra_patterns, old * sizeof(*newptr));
 				free(ra->ra_patterns);
 			}
 			ra->ra_patterns = newptr;

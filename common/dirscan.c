@@ -143,10 +143,8 @@ dirscan_start(struct dirscan_args *dsa, const char *name, const char *relname)
 	uint8_t *cmd = dsa->dsa_cmd;
 	size_t len, namelen, relnamelen;
 
-	if (((namelen = strlen(name)) > dsa->dsa_namemax) ||
-	    ((relnamelen = strlen(relname)) > dsa->dsa_namemax)) {
+	if (((namelen = strlen(name)) > dsa->dsa_namemax) || ((relnamelen = strlen(relname)) > dsa->dsa_namemax))
 		return (false);
-	}
 	if ((len = namelen + relnamelen + 5) > dsa->dsa_cmdmax)
 		return (false);
 

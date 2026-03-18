@@ -52,8 +52,7 @@ collection_destroy_all(struct collection *cls)
 }
 
 struct collection *
-collection_lookup(struct collection *cls, const char *name,
-		  const char *relname)
+collection_lookup(struct collection *cls, const char *name, const char *relname)
 {
 	struct collection *cl, *new_cl;
 
@@ -81,17 +80,15 @@ collection_lookup(struct collection *cls, const char *name,
 bool
 collection_set_default(struct collection *cl, const char *prefix)
 {
-	if (strlen(cl->cl_name) == 0) {
-		snprintf(cl->cl_name, sizeof(cl->cl_name), "%s",
-			 "<unspecified>");
-	}
+	if (strlen(cl->cl_name) == 0)
+		snprintf(cl->cl_name, sizeof(cl->cl_name), "%s", "<unspecified>");
 	if (strlen(cl->cl_release) == 0)
 		snprintf(cl->cl_release, sizeof(cl->cl_release), "%s", "rcs");
 	if (prefix != NULL) {
 		cl->cl_prefixlen = strlen(prefix);
 		if (cl->cl_prefixlen >= sizeof(cl->cl_prefix)) {
-			logmsg_err("collection %s/%s: prefix: %s", cl->cl_name,
-				   cl->cl_release, strerror(ENAMETOOLONG));
+			logmsg_err("collection %s/%s: prefix: %s", cl->cl_name, cl->cl_release,
+				   strerror(ENAMETOOLONG));
 			return (false);
 		}
 		(void)memcpy(cl->cl_prefix, prefix, cl->cl_prefixlen);

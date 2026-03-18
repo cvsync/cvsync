@@ -40,12 +40,11 @@ struct addrinfo {
 #define	_SS_ALIGNSIZE	(sizeof(int64_t))
 #if defined(NO_SOCKADDR_LEN)
 #define	_SS_PAD1SIZE	(_SS_ALIGNSIZE - sizeof(sa_family_t))
-#define	_SS_PAD2SIZE	(_SS_MAXSIZE - (sizeof(sa_family_t) + \
-			 _SS_PAD1SIZE + _SS_ALIGNSIZE))
+#define	_SS_PAD2SIZE	(_SS_MAXSIZE - (sizeof(sa_family_t) + _SS_PAD1SIZE + _SS_ALIGNSIZE))
 #else /* defined(NO_SOCKADDR_LEN) */
 #define	_SS_PAD1SIZE	(_SS_ALIGNSIZE - sizeof(uint8_t) - sizeof(sa_family_t))
-#define	_SS_PAD2SIZE	(_SS_MAXSIZE - (sizeof(uint8_t) + \
-			 sizeof(sa_family_t) + _SS_PAD1SIZE + _SS_ALIGNSIZE))
+#define	_SS_PAD2SIZE	(_SS_MAXSIZE - (sizeof(uint8_t) + sizeof(sa_family_t) + \
+			 _SS_PAD1SIZE + _SS_ALIGNSIZE))
 #endif /* defined(NO_SOCKADDR_LEN) */
 
 struct sockaddr_storage {
@@ -68,13 +67,11 @@ const char *gai_strerror(int);
 #endif /* defined(NO_PROTOTYPE_GAI_STRERROR) */
 
 #if defined(NO_PROTOTYPE_GETADDRINFO)
-int getaddrinfo(const char *, const char *, const struct addrinfo *,
-		struct addrinfo **);
+int getaddrinfo(const char *, const char *, const struct addrinfo *, struct addrinfo **);
 #endif /* defined(NO_PROTOTYPE_GETADDRINFO) */
 
 #if defined(NO_PROTOTYPE_GETNAMEINFO)
-int getnameinfo(const struct sockaddr *, socklen_t, char *, socklen_t, char *,
-		socklen_t, unsigned);
+int getnameinfo(const struct sockaddr *, socklen_t, char *, socklen_t, char *, socklen_t, unsigned);
 #endif /* defined(NO_PROTOTYPE_GETNAMEINFO) */
 
 #endif /* CVSYNC_COMPAT_NETDB_H */

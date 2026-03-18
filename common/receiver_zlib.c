@@ -56,34 +56,28 @@ receiver_data_zlib(struct mux *mx, uint8_t chnum)
 
 	do {
 		if ((err = pthread_mutex_lock(&mxb->mxb_lock)) != 0) {
-			logmsg_err("Receiver(DATA) Error: mutex lock: %s",
-				   strerror(err));
+			logmsg_err("Receiver(DATA) Error: mutex lock: %s", strerror(err));
 			return (false);
 		}
 		if (mxb->mxb_state != MUX_STATE_RUNNING) {
-			logmsg_err("Receiver(DATA) Error: not running: %u",
-				   chnum);
+			logmsg_err("Receiver(DATA) Error: not running: %u", chnum);
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
 		}
 
 		while ((len = mxb->mxb_bufsize - mxb->mxb_length) == 0) {
-			logmsg_debug(DEBUG_BASE, "Receriver: Sleep(%u): %u %u",
-				     chnum, mxb->mxb_length, mxb->mxb_bufsize);
-			if ((err = pthread_cond_wait(&mxb->mxb_wait_in,
-						     &mxb->mxb_lock)) != 0) {
-				logmsg_err("Receiver(DATA) Error: cond_wait: "
-					   "%s", strerror(err));
+			logmsg_debug(DEBUG_BASE, "Receriver: Sleep(%u): %u %u", chnum, mxb->mxb_length,
+				     mxb->mxb_bufsize);
+			if ((err = pthread_cond_wait(&mxb->mxb_wait_in, &mxb->mxb_lock)) != 0) {
+				logmsg_err("Receiver(DATA) Error: cond_wait: %s", strerror(err));
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
 				return (false);
 			}
-			logmsg_debug(DEBUG_BASE, "Receriver: Wakeup(%u): %u",
-				     chnum, mxb->mxb_length);
+			logmsg_debug(DEBUG_BASE, "Receriver: Wakeup(%u): %u", chnum, mxb->mxb_length);
 			if (mxb->mxb_state != MUX_STATE_RUNNING) {
-				logmsg_err("Receiver(DATA) Error: "
-					   "not running: %u", chnum);
+				logmsg_err("Receiver(DATA) Error: not running: %u", chnum);
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
 				return (false);
@@ -106,8 +100,7 @@ receiver_data_zlib(struct mux *mx, uint8_t chnum)
 		z->avail_out = (unsigned int)len1;
 		err = inflate(z, zflag);
 		if ((err != Z_STREAM_END) && (err != Z_OK)) {
-			logmsg_err("Receiver(DATA) Error: INFLATE: %s",
-				   z->msg);
+			logmsg_err("Receiver(DATA) Error: INFLATE: %s", z->msg);
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
@@ -118,8 +111,7 @@ receiver_data_zlib(struct mux *mx, uint8_t chnum)
 			z->avail_out = (unsigned int)len2;
 			err = inflate(z, Z_FINISH);
 			if ((err != Z_STREAM_END) && (err != Z_OK)) {
-				logmsg_err("Receiver(DATA) Error: INFLATE: %s",
-					   z->msg);
+				logmsg_err("Receiver(DATA) Error: INFLATE: %s", z->msg);
 				mxb->mxb_state = MUX_STATE_ERROR;
 				pthread_mutex_unlock(&mxb->mxb_lock);
 				return (false);
@@ -131,16 +123,14 @@ receiver_data_zlib(struct mux *mx, uint8_t chnum)
 		z->total_out = 0;
 
 		if ((err = pthread_cond_signal(&mxb->mxb_wait_out)) != 0) {
-			logmsg_err("Receiver(DATA) Error: cond signal: %s",
-				   strerror(err));
+			logmsg_err("Receiver(DATA) Error: cond signal: %s", strerror(err));
 			mxb->mxb_state = MUX_STATE_ERROR;
 			pthread_mutex_unlock(&mxb->mxb_lock);
 			return (false);
 		}
 
 		if ((err = pthread_mutex_unlock(&mxb->mxb_lock)) != 0) {
-			logmsg_err("Receiver(DATA) Error: mutex unlock: %s",
-				   strerror(err));
+			logmsg_err("Receiver(DATA) Error: mutex unlock: %s", strerror(err));
 			return(false);
 		}
 	} while (z->avail_in > 0);

@@ -106,8 +106,7 @@ config_insert_collection(struct config *cf, struct collection *cl)
 	for (;;) {
 		if ((strcasecmp(prev->cl_name, cl->cl_name) == 0) &&
 		    (strcasecmp(prev->cl_release, cl->cl_release) == 0)) {
-			logmsg_err("collection %s/%s: duplicate", cl->cl_name,
-				   cl->cl_release);
+			logmsg_err("collection %s/%s: duplicate", cl->cl_name, cl->cl_release);
 			return (false);
 		}
 		if (prev->cl_next == NULL) {
@@ -132,19 +131,16 @@ config_parse_base(struct config_args *ca, struct config *cf)
 		return (false);
 
 	if (cf->cf_base[0] != '/') {
-		logmsg_err("line %u: base %s: must be the absolute path",
-			   lineno, cf->cf_base);
+		logmsg_err("line %u: base %s: must be the absolute path", lineno, cf->cf_base);
 		return (false);
 	}
 
 	if (stat(cf->cf_base, &st) == -1) {
-		logmsg_err("line %u: base %s: %s", lineno, cf->cf_base,
-			   strerror(errno));
+		logmsg_err("line %u: base %s: %s", lineno, cf->cf_base, strerror(errno));
 		return (false);
 	}
 	if (!S_ISDIR(st.st_mode)) {
-		logmsg_err("line %u: base %s: %s", lineno, cf->cf_base,
-			   strerror(ENOTDIR));
+		logmsg_err("line %u: base %s: %s", lineno, cf->cf_base, strerror(ENOTDIR));
 		return (false);
 	}
 
@@ -163,19 +159,16 @@ config_parse_base_prefix(struct config_args *ca, struct config *cf)
 		return (false);
 
 	if (cf->cf_base_prefix[0] != '/') {
-		logmsg_err("line %u: base-prefix %s: must be the absolute "
-			   "path", lineno, cf->cf_base_prefix);
+		logmsg_err("line %u: base-prefix %s: must be the absolute path", lineno, cf->cf_base_prefix);
 		return (false);
 	}
 
 	if (stat(cf->cf_base_prefix, &st) == -1) {
-		logmsg_err("line %u: base-prefix %s: %s", lineno,
-			   cf->cf_base_prefix, strerror(errno));
+		logmsg_err("line %u: base-prefix %s: %s", lineno, cf->cf_base_prefix, strerror(errno));
 		return (false);
 	}
 	if (!S_ISDIR(st.st_mode)) {
-		logmsg_err("line %u: base-prefix %s: %s", lineno,
-			   cf->cf_base_prefix, strerror(ENOTDIR));
+		logmsg_err("line %u: base-prefix %s: %s", lineno, cf->cf_base_prefix, strerror(ENOTDIR));
 		return (false);
 	}
 
@@ -188,8 +181,7 @@ config_parse_errormode(struct config_args *ca, struct collection *cl)
 	const struct token_keyword *key;
 
 	if (cl->cl_errormode != CVSYNC_ERRORMODE_UNSPEC) {
-		logmsg_err("line %u: found duplication of the 'errormode'",
-			   lineno);
+		logmsg_err("line %u: found duplication of the 'errormode'", lineno);
 		return (false);
 	}
 
@@ -215,8 +207,7 @@ config_parse_hash(struct config_args *ca, struct config *cf)
 		return (false);
 
 	if ((cf->cf_hash = hash_pton(tk->token, tk->length)) == HASH_UNSPEC) {
-		logmsg_err("line %u: %s: unsupported hash type", lineno,
-			   tk->token);
+		logmsg_err("line %u: %s: unsupported hash type", lineno, tk->token);
 		return (false);
 	}
 
@@ -233,8 +224,7 @@ config_parse_release(struct config_args *ca, struct collection *cl)
 		return (false);
 
 	if (cvsync_release_pton(cl->cl_release) == CVSYNC_RELEASE_UNKNOWN) {
-		logmsg_err("line %u: %s: unsupported release type", lineno,
-			   cl->cl_release);
+		logmsg_err("line %u: %s: unsupported release type", lineno, cl->cl_release);
 		return (false);
 	}
 
@@ -247,8 +237,7 @@ config_parse_umask(struct config_args *ca, struct collection *cl)
 	unsigned long ul;
 
 	if (cl->cl_umask != CVSYNC_UMASK_UNSPEC) {
-		logmsg_err("line %u: found duplication of the 'umask'",
-			   lineno);
+		logmsg_err("line %u: found duplication of the 'umask'", lineno);
 		return (false);
 	}
 
@@ -256,8 +245,7 @@ config_parse_umask(struct config_args *ca, struct collection *cl)
 		return (false);
 
 	if (ul & (unsigned long)(~CVSYNC_ALLPERMS)) {
-		logmsg_err("line %u: umask %lu: %s", lineno, ul,
-			   strerror(ERANGE));
+		logmsg_err("line %u: umask %lu: %s", lineno, ul, strerror(ERANGE));
 		return (false);
 	}
 
@@ -276,46 +264,41 @@ config_resolv_prefix(struct config *cf, struct collection *cl, bool rdonly)
 	if (cl->cl_prefix[0] != '/') {
 		if (strlen(cf->cf_base_prefix) == 0) {
 			if (strlen(cl->cl_prefix) == 0) {
-				logmsg_err("collection %s/%s: no prefix",
-					   cl->cl_name, cl->cl_release);
+				logmsg_err("collection %s/%s: no prefix", cl->cl_name, cl->cl_release);
 			} else {
-				logmsg_err("collection %s/%s: prefix %s: "
-					   "must be the absolute path",
-					   cl->cl_name, cl->cl_release,
-					   cl->cl_prefix);
+				logmsg_err("collection %s/%s: prefix %s: must be the absolute path", cl->cl_name,
+					   cl->cl_release, cl->cl_prefix);
 			}
 			return (false);
 		}
-		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base_prefix,
-			      cl->cl_prefix);
+		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base_prefix, cl->cl_prefix);
 	} else {
 		wn = snprintf(path, sizeof(path), "%s", cl->cl_prefix);
 	}
 	if ((wn <= 0) || ((size_t)wn >= sizeof(path))) {
-		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_prefix, strerror(EINVAL));
+		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
+			   strerror(EINVAL));
 		return (false);
 	}
 
 	if (stat(path, &st) == -1) {
-		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_prefix, strerror(errno));
+		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
+			   strerror(errno));
 		return (false);
 	}
 	if (!S_ISDIR(st.st_mode)) {
-		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_prefix, strerror(ENOTDIR));
+		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
+			   strerror(ENOTDIR));
 		return (false);
 	}
 	if (realpath(path, cl->cl_prefix) == NULL) {
-		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_prefix, strerror(errno));
+		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
+			   strerror(errno));
 		return (false);
 	}
 	cl->cl_prefixlen = strlen(cl->cl_prefix);
-	if (cl->cl_prefixlen + 1 >= sizeof(cl->cl_prefix)) {
-		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_prefix,
+	if ((cl->cl_prefixlen + 1) >= sizeof(cl->cl_prefix)) {
+		logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
 			   strerror(ENAMETOOLONG));
 		return (false);
 	}
@@ -323,29 +306,25 @@ config_resolv_prefix(struct config *cf, struct collection *cl, bool rdonly)
 	cl->cl_prefix[cl->cl_prefixlen] = '\0';
 
 	if (!rdonly) {
-		(void)memcpy(&cl->cl_prefix[cl->cl_prefixlen], CVSYNC_TMPFILE,
-			     CVSYNC_TMPFILE_LEN);
+		(void)memcpy(&cl->cl_prefix[cl->cl_prefixlen], CVSYNC_TMPFILE, CVSYNC_TMPFILE_LEN);
 		cl->cl_prefix[cl->cl_prefixlen + CVSYNC_TMPFILE_LEN] = '\0';
 
 		if ((fd = mkstemp(cl->cl_prefix)) == -1) {
 			cl->cl_prefix[cl->cl_prefixlen] = '\0';
-			logmsg_err("collection %s/%s: prefix %s: %s",
-				   cl->cl_name, cl->cl_release, cl->cl_prefix,
+			logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
 				   strerror(errno));
 			return (false);
 		}
 		if (unlink(cl->cl_prefix) == -1) {
 			cl->cl_prefix[cl->cl_prefixlen] = '\0';
-			logmsg_err("collection %s/%s: prefix %s: %s",
-				   cl->cl_name, cl->cl_release, cl->cl_prefix,
+			logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
 				   strerror(errno));
 			(void)close(fd);
 			return (false);
 		}
 		if (close(fd) == -1) {
 			cl->cl_prefix[cl->cl_prefixlen] = '\0';
-			logmsg_err("collection %s/%s: prefix %s: %s",
-				   cl->cl_name, cl->cl_release, cl->cl_prefix,
+			logmsg_err("collection %s/%s: prefix %s: %s", cl->cl_name, cl->cl_release, cl->cl_prefix,
 				   strerror(errno));
 			return (false);
 		}
@@ -367,25 +346,22 @@ config_resolv_scanfile(struct config *cf, struct collection *cl)
 
 	if (cl->cl_scan_name[0] != '/') {
 		if (strlen(cf->cf_base) == 0) {
-			logmsg_err("collection %s/%s: scanfile %s: must be an "
-				   "absolute path", cl->cl_name,
+			logmsg_err("collection %s/%s: scanfile %s: must be an absolute path", cl->cl_name,
 				   cl->cl_release, cl->cl_scan_name);
 			return (false);
 		}
-		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base,
-			      cl->cl_scan_name);
+		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base, cl->cl_scan_name);
 	} else {
 		wn = snprintf(path, sizeof(path), "%s", cl->cl_scan_name);
 	}
 	if ((wn <= 0) || ((size_t)wn >= sizeof(path))) {
-		logmsg_err("collection %s/%s: scanfile %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_scan_name, strerror(EINVAL));
+		logmsg_err("collection %s/%s: scanfile %s: %s", cl->cl_name, cl->cl_release, cl->cl_scan_name,
+			   strerror(EINVAL));
 		return (false);
 	}
 	wn = snprintf(cl->cl_scan_name, sizeof(cl->cl_scan_name), "%s", path);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(cl->cl_scan_name))) {
-		logmsg_err("collection %s/%s: scanfile %s: %s", cl->cl_name,
-			   cl->cl_release, path, strerror(EINVAL));
+		logmsg_err("collection %s/%s: scanfile %s: %s", cl->cl_name, cl->cl_release, path, strerror(EINVAL));
 		return (false);
 	}
 
@@ -401,13 +377,11 @@ config_set_string(struct config_args *ca)
 		return (false);
 
 	if (strlen(ca->ca_buffer) != 0) {
-		logmsg_err("line %u: found duplication of the '%s'",
-			   lineno, ca->ca_key->name);
+		logmsg_err("line %u: found duplication of the '%s'", lineno, ca->ca_key->name);
 		return (false);
 	}
 	if (tk->length >= ca->ca_bufsize) {
-		logmsg_err("line %u: %s: %s", lineno, ca->ca_key->name,
-			   strerror(ENAMETOOLONG));
+		logmsg_err("line %u: %s: %s", lineno, ca->ca_key->name, strerror(ENAMETOOLONG));
 		return (false);
 	}
 	(void)memcpy(ca->ca_buffer, tk->token, tk->length);

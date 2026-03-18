@@ -106,8 +106,7 @@ struct config *config_parse_file_config(struct config_args *);
 struct collection *config_parse_file_collection(struct config_args *);
 struct config *config_parse_uri(const char *, const char *);
 bool config_parse_uri_host(const char *, const char *, struct config *);
-bool config_parse_uri_collection(const char *, const char *,
-				 struct collection *);
+bool config_parse_uri_collection(const char *, const char *, struct collection *);
 bool config_parse_uri_aux(const char *, const char *, struct collection *);
 
 struct config *config_init_config(void);
@@ -221,8 +220,7 @@ config_parse_file(struct config_args *ca)
 			}
 			break;
 		default:
-			logmsg_err("line %u: %s: invalid keyword", lineno,
-				   key->name);
+			logmsg_err("line %u: %s: invalid keyword", lineno, key->name);
 			config_destroy(cfs);
 			return (NULL);
 		}
@@ -290,8 +288,7 @@ config_parse_file_config(struct config_args *ca)
 			break;
 		case TOK_COMPRESS:
 			if (cf->cf_compress != CVSYNC_COMPRESS_UNSPEC) {
-				logmsg_err("line %u: found duplication of the "
-					   "'%s'", lineno, key->name);
+				logmsg_err("line %u: found duplication of the '%s'", lineno, key->name);
 				config_destroy(cf);
 				return (NULL);
 			}
@@ -321,8 +318,7 @@ config_parse_file_config(struct config_args *ca)
 			break;
 		case TOK_PROTOCOL:
 			if (cf->cf_family != AF_UNSPEC) {
-				logmsg_err("line %u: found duplication of the "
-					   "'%s'", lineno, key->name);
+				logmsg_err("line %u: found duplication of the '%s'", lineno, key->name);
 				config_destroy(cf);
 				return (NULL);
 			}
@@ -334,8 +330,7 @@ config_parse_file_config(struct config_args *ca)
 			cf->cf_family = key->type;
 			break;
 		default:
-			logmsg_err("line %u: %s: invalid keyword", lineno,
-				   key->name);
+			logmsg_err("line %u: %s: invalid keyword", lineno, key->name);
 			config_destroy(cf);
 			return (NULL);
 		}
@@ -377,8 +372,7 @@ config_parse_file_collection(struct config_args *ca)
 	if ((key = token_get_keyword(fp, config_keywords)) == NULL)
 		return (NULL);
 	if (key->type != TOK_LBRACE) {
-		logmsg_err("line %u: missing '{' for the 'collection'",
-			   lineno);
+		logmsg_err("line %u: missing '{' for the 'collection'", lineno);
 		return (NULL);
 	}
 
@@ -403,11 +397,9 @@ config_parse_file_collection(struct config_args *ca)
 			}
 			break;
 		case TOK_LOOSE:
-			logmsg_err("line %u: '%s' is obsoleted", lineno,
-				   key->name);
+			logmsg_err("line %u: '%s' is obsoleted", lineno, key->name);
 			if (cl->cl_errormode != CVSYNC_ERRORMODE_UNSPEC) {
-				logmsg_err("line %u: conflicts '%s' with "
-					   "'errormode'", lineno, key->name);
+				logmsg_err("line %u: conflicts '%s' with 'errormode'", lineno, key->name);
 				collection_destroy(cl);
 				return (NULL);
 			}
@@ -458,8 +450,7 @@ config_parse_file_collection(struct config_args *ca)
 			}
 			break;
 		default:
-			logmsg_err("line %u: %s: invalid keyword", lineno,
-				   key->name);
+			logmsg_err("line %u: %s: invalid keyword", lineno, key->name);
 			collection_destroy(cl);
 			return (NULL);
 		}
@@ -577,8 +568,7 @@ config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 			return (false);
 		}
 		if ((len = (size_t)(ep - sp)) >= sizeof(cf->cf_host)) {
-			logmsg_err("%.*s: host %.*s: %s", sv_len, sv_sp, len,
-				   sp, strerror(ENAMETOOLONG));
+			logmsg_err("%.*s: host %.*s: %s", sv_len, sv_sp, len, sp, strerror(ENAMETOOLONG));
 			return (false);
 		}
 		if (len == 0) {
@@ -593,8 +583,7 @@ config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 		if ((ep = memchr(sp, ':', (size_t)(bp - sp))) == NULL)
 			ep = bp;
 		if ((len = (size_t)(ep - sp)) >= sizeof(cf->cf_host)) {
-			logmsg_err("%.*s: host %.*s: %s", sv_len, sv_sp, len,
-				   sp, strerror(ENAMETOOLONG));
+			logmsg_err("%.*s: host %.*s: %s", sv_len, sv_sp, len, sp, strerror(ENAMETOOLONG));
 			return (false);
 		}
 		if (len == 0) {
@@ -617,8 +606,7 @@ config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 		return (true);
 
 	if ((len = (size_t)(bp - sp)) >= sizeof(cf->cf_serv)) {
-		logmsg_err("%.*s: port %.*s: %s", sv_len, sv_sp, len, sp,
-			   strerror(ENAMETOOLONG));
+		logmsg_err("%.*s: port %.*s: %s", sv_len, sv_sp, len, sp, strerror(ENAMETOOLONG));
 		return (false);
 	}
 	(void)memcpy(cf->cf_serv, sp, len);
@@ -628,8 +616,7 @@ config_parse_uri_host(const char *sp, const char *bp, struct config *cf)
 }
 
 bool
-config_parse_uri_collection(const char *sp, const char *bp,
-			    struct collection *cl)
+config_parse_uri_collection(const char *sp, const char *bp, struct collection *cl)
 {
 	const char *ep;
 	size_t len;
@@ -658,8 +645,7 @@ config_parse_uri_collection(const char *sp, const char *bp,
 		return (false);
 	}
 	if ((len = (size_t)(ep - sp)) >= sizeof(cl->cl_release)) {
-		logmsg_err("release %.*s: %s", len, sp,
-			   strerror(ENAMETOOLONG));
+		logmsg_err("release %.*s: %s", len, sp, strerror(ENAMETOOLONG));
 		return (false);
 	}
 	if (len == 0) {
@@ -700,48 +686,39 @@ config_parse_uri_aux(const char *sp, const char *bp, struct collection *cl)
 		else
 			len = (size_t)(sep - sp);
 		if (len == 0) {
-			logmsg_err("collection %s/%s: empty keyword",
-				   cl->cl_name, cl->cl_release);
+			logmsg_err("collection %s/%s: empty keyword", cl->cl_name, cl->cl_release);
 			return (false);
 		}
 
 		for (key = config_keywords ; key->name != NULL ; key++) {
-			if ((len == key->namelen) &&
-			    (memcmp(sp, key->name, len) == 0)) {
+			if ((len == key->namelen) && (memcmp(sp, key->name, len) == 0))
 				break;
-			}
 		}
 		if (key->name == NULL) {
-			logmsg_err("collection %s/%s: %.*s: unknown keyword",
-				   cl->cl_name, cl->cl_release, len, sp);
+			logmsg_err("collection %s/%s: %.*s: unknown keyword", cl->cl_name, cl->cl_release, len, sp);
 			return (false);
 		}
 
 		switch (key->type) {
 		case TOK_PREFIX:
 			if (sep == NULL) {
-				logmsg_err("collection %s/%s: %s: missing a "
-					   "separator '='", cl->cl_name,
+				logmsg_err("collection %s/%s: %s: missing a separator '='", cl->cl_name,
 					   cl->cl_release, key->name);
 				return (false);
 			}
 			if ((sp = sep + 1) >= ep) {
-				logmsg_err("collection %s/%s: %s: empty",
-					   cl->cl_name, cl->cl_release,
-					   key->name);
+				logmsg_err("collection %s/%s: %s: empty", cl->cl_name, cl->cl_release, key->name);
 				return (false);
 			}
 			cl->cl_prefixlen = (size_t)(ep - sp);
 			if (cl->cl_prefixlen >= sizeof(cl->cl_prefix)) {
-				logmsg_err("collection %s/%s: %s: %s",
-					   cl->cl_name, cl->cl_release,
-					   key->name, strerror(ENAMETOOLONG));
+				logmsg_err("collection %s/%s: %s: %s", cl->cl_name, cl->cl_release, key->name,
+					   strerror(ENAMETOOLONG));
 				return (false);
 			}
 			if (cl->cl_prefixlen == 0) {
-				logmsg_err("collection %s/%s: %s: empty "
-					   "string", cl->cl_name,
-					   cl->cl_release, key->name);
+				logmsg_err("collection %s/%s: %s: empty string", cl->cl_name, cl->cl_release,
+					   key->name);
 				return (false);
 			}
 			(void)memcpy(cl->cl_prefix, sp, cl->cl_prefixlen);
@@ -750,28 +727,23 @@ config_parse_uri_aux(const char *sp, const char *bp, struct collection *cl)
 			break;
 		case TOK_SCANFILE:
 			if (sep == NULL) {
-				logmsg_err("collection %s/%s: %s: missing a "
-					   "separator '='", cl->cl_name,
+				logmsg_err("collection %s/%s: %s: missing a separator '='", cl->cl_name,
 					   cl->cl_release, key->name);
 				return (false);
 			}
 			if ((sp = sep + 1) >= ep) {
-				logmsg_err("collection %s/%s: %s: empty",
-					   cl->cl_name, cl->cl_release,
-					   key->name);
+				logmsg_err("collection %s/%s: %s: empty", cl->cl_name, cl->cl_release, key->name);
 				return (false);
 			}
 			len = (size_t)(ep - sp);
 			if (len >= sizeof(cl->cl_scan_name)) {
-				logmsg_err("collection %s/%s: %s: %s",
-					   cl->cl_name, cl->cl_release,
-					   key->name, strerror(ENAMETOOLONG));
+				logmsg_err("collection %s/%s: %s: %s", cl->cl_name, cl->cl_release, key->name,
+					   strerror(ENAMETOOLONG));
 				return (false);
 			}
 			if (len == 0) {
-				logmsg_err("collection %s/%s: %s: empty "
-					   "string", cl->cl_name,
-					   cl->cl_release, key->name);
+				logmsg_err("collection %s/%s: %s: empty string", cl->cl_name, cl->cl_release,
+					   key->name);
 				return (false);
 			}
 			(void)memcpy(cl->cl_scan_name, sp, len);
@@ -779,8 +751,7 @@ config_parse_uri_aux(const char *sp, const char *bp, struct collection *cl)
 
 			break;
 		default:
-			logmsg_err("collection %s/%s: %.*s: invalid keyword",
-				   cl->cl_name, cl->cl_release, len, sp);
+			logmsg_err("collection %s/%s: %.*s: invalid keyword", cl->cl_name, cl->cl_release, len, sp);
 			return (false);
 		}
 
@@ -836,19 +807,16 @@ config_resolv_refuse(struct config *cf, struct collection *cl)
 
 	if (cl->cl_refuse_name[0] != '/') {
 		if (strlen(cf->cf_base) == 0) {
-			logmsg_err("collection %s/%s: refuse %s: must be an "
-				   "absolute path", cl->cl_name,
+			logmsg_err("collection %s/%s: refuse %s: must be an absolute path", cl->cl_name,
 				   cl->cl_release, cl->cl_refuse_name);
 			return (false);
 		}
-		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base,
-			      cl->cl_refuse_name);
+		wn = snprintf(path, sizeof(path), "%s/%s", cf->cf_base, cl->cl_refuse_name);
 	} else {
 		wn = snprintf(path, sizeof(path), "%s", cl->cl_refuse_name);
 	}
 	if ((wn <= 0) || ((size_t)wn >= sizeof(path))) {
-		logmsg_err("collection %s/%s: refuse %s: %s", cl->cl_name,
-			   cl->cl_release, cl->cl_refuse_name,
+		logmsg_err("collection %s/%s: refuse %s: %s", cl->cl_name, cl->cl_release, cl->cl_refuse_name,
 			   strerror(EINVAL));
 		return (false);
 	}
@@ -862,10 +830,8 @@ config_resolv_refuse(struct config *cf, struct collection *cl)
 bool
 config_set_config_default(struct config *cf)
 {
-	if (strlen(cf->cf_serv) == 0) {
-		snprintf(cf->cf_serv, sizeof(cf->cf_serv), "%s",
-			 CVSYNC_DEFAULT_PORT);
-	}
+	if (strlen(cf->cf_serv) == 0)
+		snprintf(cf->cf_serv, sizeof(cf->cf_serv), "%s", CVSYNC_DEFAULT_PORT);
 	if (cf->cf_compress == CVSYNC_COMPRESS_UNSPEC)
 		cf->cf_compress = CVSYNC_COMPRESS_NO;
 	if (cf->cf_hash == HASH_UNSPEC)
@@ -876,8 +842,7 @@ config_set_config_default(struct config *cf)
 		return (false);
 	}
 	if (cf->cf_collections == NULL) {
-		logmsg_err("host %s port %s: no collections",
-			   cf->cf_host, cf->cf_serv);
+		logmsg_err("host %s port %s: no collections", cf->cf_host, cf->cf_serv);
 		return (false);
 	}
 
@@ -897,8 +862,7 @@ config_set_collection_default(struct config *cf, struct collection *cl)
 			return (false);
 		}
 		if (cvsync_list_pton(cl->cl_name) == CVSYNC_LIST_UNKNOWN) {
-			logmsg_err("release 'list': %s: unknown name",
-				   cl->cl_name);
+			logmsg_err("release 'list': %s: unknown name", cl->cl_name);
 			return (false);
 		}
 		break;

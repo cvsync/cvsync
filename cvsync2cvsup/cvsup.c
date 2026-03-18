@@ -147,8 +147,8 @@ cvsup_write_dirup(int fd, struct scanfile_attr *attr)
 
 	mlen = snprintf(attrstr, sizeof(attrstr), "%o", cattr.ca_mode);
 
-	wn = snprintf(attrstr, sizeof(attrstr), "U %.*s 3#1e11#2%.*s%d#%o1#0\n",
-		      (int)namelen, name, cvsup_userinfo_length, cvsup_userinfo, mlen, cattr.ca_mode);
+	wn = snprintf(attrstr, sizeof(attrstr), "U %.*s 3#1e11#2%.*s%d#%o1#0\n", (int)namelen, name,
+		      cvsup_userinfo_length, cvsup_userinfo, mlen, cattr.ca_mode);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long DirDown attribute");
 		return (false);
@@ -186,9 +186,9 @@ cvsup_write_file(int fd, struct scanfile_attr *attr)
 	slen = snprintf(attrstr, sizeof(attrstr), "%llu", (unsigned long long)cattr.ca_size);
 	mlen = snprintf(attrstr, sizeof(attrstr), "%o", cattr.ca_mode);
 
-	wn = snprintf(attrstr, sizeof(attrstr), "V %.*s 3#1e71#1%d#%lld%d#%llu%.*s%d#%o1#0\n",
-		      (int)namelen, name, tlen, (long long)cattr.ca_mtime, slen, (unsigned long long)cattr.ca_size,
-		      cvsup_userinfo_length, cvsup_userinfo, mlen, cattr.ca_mode);
+	wn = snprintf(attrstr, sizeof(attrstr), "V %.*s 3#1e71#1%d#%lld%d#%llu%.*s%d#%o1#0\n", (int)namelen, name,
+		      tlen, (long long)cattr.ca_mtime, slen, (unsigned long long)cattr.ca_size, cvsup_userinfo_length,
+		      cvsup_userinfo, mlen, cattr.ca_mode);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long File attribute");
 		return (false);
@@ -230,9 +230,8 @@ cvsup_write_rcs(int fd, struct scanfile_attr *attr)
 	tlen = snprintf(attrstr, sizeof(attrstr), "%lld", (long long)cattr.ca_mtime);
 	mlen = snprintf(attrstr, sizeof(attrstr), "%o", cattr.ca_mode);
 
-	wn = snprintf(attrstr, sizeof(attrstr), "%c %.*s 3#1e31#1%d#%lld%.*s%d#%o1#0\n",
-		      c, (int)namelen, name, tlen, (long long)cattr.ca_mtime, cvsup_userinfo_length, cvsup_userinfo,
-		      mlen, cattr.ca_mode);
+	wn = snprintf(attrstr, sizeof(attrstr), "%c %.*s 3#1e31#1%d#%lld%.*s%d#%o1#0\n", c, (int)namelen, name, tlen,
+		      (long long)cattr.ca_mtime, cvsup_userinfo_length, cvsup_userinfo, mlen, cattr.ca_mode);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long RCS attribute");
 		return (false);
@@ -262,8 +261,8 @@ cvsup_write_symlink(int fd, struct scanfile_attr *attr)
 	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
 		return (false);
 
-	wn = snprintf(attrstr, sizeof(attrstr), "V %.*s 1#91#5%lu#%.*s\n",
-		      (int)namelen, name, (unsigned long)attr->a_auxlen, (int)attr->a_auxlen, (char *)attr->a_aux);
+	wn = snprintf(attrstr, sizeof(attrstr), "V %.*s 1#91#5%lu#%.*s\n", (int)namelen, name,
+		      (unsigned long)attr->a_auxlen, (int)attr->a_auxlen, (char *)attr->a_aux);
 	if ((wn <= 0) || ((size_t)wn >= sizeof(attrstr))) {
 		logmsg_err("Too long Symlink attribute");
 		return (false);
@@ -291,7 +290,7 @@ cvsup_escape_name(struct scanfile_attr *attr, void *buffer, size_t length)
 	while (sp < bp) {
 		switch (*sp) {
 		case '\\':
-			if (namelen + 2 > length) {
+			if ((namelen + 2) > length) {
 				logmsg_err("No space to escape '\\'");
 				return ((size_t)-1);
 			}
@@ -300,7 +299,7 @@ cvsup_escape_name(struct scanfile_attr *attr, void *buffer, size_t length)
 			namelen += 2;
 			break;
 		case ' ':
-			if (namelen + 2 > length) {
+			if ((namelen + 2) > length) {
 				logmsg_err("No space to escape ' '");
 				return ((size_t)-1);
 			}

@@ -42,8 +42,7 @@ mux_init_zlib(struct mux *mx, int level)
 	stream->ms_zstream_in.zfree = Z_NULL;
 	stream->ms_zstream_in.opaque = Z_NULL;
 	if (inflateInit(&stream->ms_zstream_in) != Z_OK) {
-		logmsg_err("Mux Error: INFLATE init: %s",
-			   stream->ms_zstream_in.msg);
+		logmsg_err("Mux Error: INFLATE init: %s", stream->ms_zstream_in.msg);
 		free(stream);
 		return (false);
 	}
@@ -52,8 +51,7 @@ mux_init_zlib(struct mux *mx, int level)
 	stream->ms_zstream_out.zfree = Z_NULL;
 	stream->ms_zstream_out.opaque = Z_NULL;
 	if (deflateInit(&stream->ms_zstream_out, level) != Z_OK) {
-		logmsg_err("Mux Error: DEFLATE init: %s",
-			   stream->ms_zstream_out.msg);
+		logmsg_err("Mux Error: DEFLATE init: %s", stream->ms_zstream_out.msg);
 		inflateEnd(&stream->ms_zstream_in);
 		free(stream);
 		return (false);
@@ -99,13 +97,11 @@ mux_send_zlib(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 		return (false);
 	}
 	if (z->total_out > mxb->mxb_mss) {
-		logmsg_err("Mux(SEND) Error: DEFLATE: %u > %u(mss)",
-			   z->total_out, mxb->mxb_mss);
+		logmsg_err("Mux(SEND) Error: DEFLATE: %u > %u(mss)", z->total_out, mxb->mxb_mss);
 		return (false);
 	}
 
-	logmsg_debug(DEBUG_ZLIB, "DEFLATE: %u => %u",
-		     mxb->mxb_length + bufsize, z->total_out);
+	logmsg_debug(DEBUG_ZLIB, "DEFLATE: %u => %u", mxb->mxb_length + bufsize, z->total_out);
 
 	cmd[0] = MUX_CMD_DATA;
 	cmd[1] = chnum;
@@ -115,8 +111,7 @@ mux_send_zlib(struct mux *mx, uint8_t chnum, const void *buffer, size_t bufsize)
 		logmsg_err("Mux(SEND) Error: send");
 		return (false);
 	}
-	if (!sock_send(mx->mx_socket, stream->ms_zbuffer_out,
-		       (size_t)z->total_out)) {
+	if (!sock_send(mx->mx_socket, stream->ms_zbuffer_out, (size_t)z->total_out)) {
 		logmsg_err("Mux(SEND) Error: send");
 		return (false);
 	}
@@ -148,13 +143,11 @@ mux_flush_zlib(struct mux *mx, uint8_t chnum)
 		return (false);
 	}
 	if (z->total_out > mxb->mxb_mss) {
-		logmsg_err("Mux(FLUSH) Error: DEFLATE: %u > %u(mss)",
-			   z->total_out, mxb->mxb_mss);
+		logmsg_err("Mux(FLUSH) Error: DEFLATE: %u > %u(mss)", z->total_out, mxb->mxb_mss);
 		return (false);
 	}
 
-	logmsg_debug(DEBUG_ZLIB, "DEFLATE: %u => %u", mxb->mxb_length,
-		     z->total_out);
+	logmsg_debug(DEBUG_ZLIB, "DEFLATE: %u => %u", mxb->mxb_length, z->total_out);
 
 	cmd[0] = MUX_CMD_DATA;
 	cmd[1] = chnum;
@@ -164,8 +157,7 @@ mux_flush_zlib(struct mux *mx, uint8_t chnum)
 		logmsg_err("Mux(FLUSH) Error: send");
 		return (false);
 	}
-	if (!sock_send(mx->mx_socket, stream->ms_zbuffer_out,
-		       (size_t)z->total_out)) {
+	if (!sock_send(mx->mx_socket, stream->ms_zbuffer_out, (size_t)z->total_out)) {
 		logmsg_err("Mux(FLUSH) Error: send");
 		return (false);
 	}

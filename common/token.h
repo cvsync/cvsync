@@ -18,8 +18,7 @@ struct token_keyword {
 	int		type;
 };
 
-const struct token_keyword *token_get_keyword(FILE *,
-					      const struct token_keyword *);
+const struct token_keyword *token_get_keyword(FILE *, const struct token_keyword *);
 bool token_get_number(FILE *, unsigned long *);
 bool token_get_string(FILE *, struct token *);
 bool token_skip_whitespace(FILE *);

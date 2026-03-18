@@ -117,9 +117,7 @@ access_destroy(void)
 			sock_close(sa->sa_socket);
 		}
 
-		for (lep = acl_high->l_head ;
-		     lep != NULL ;
-		     lep = lep->le_next) {
+		for (lep = acl_high->l_head ; lep != NULL ; lep = lep->le_next) {
 			sa = lep->le_elm;
 			sock_close(sa->sa_socket);
 		}
@@ -185,12 +183,10 @@ access_authorize(int sock, struct config *cf)
 
 	access_open(cf->cf_access_name);
 
-	if ((aclp = access_match(acl_lists, sa->sa_family,
-				 sa->sa_addr)) != NULL) {
+	if ((aclp = access_match(acl_lists, sa->sa_family, sa->sa_addr)) != NULL)
 		sa->sa_status = aclp->acl_status;
-	} else {
+	else
 		sa->sa_status = ACL_ALLOW;
-	}
 
 	switch (sa->sa_status) {
 	case ACL_ALLOW:
@@ -215,8 +211,7 @@ access_authorize(int sock, struct config *cf)
 			for (i = 0 ; i < acl_size ; i++) {
 				if ((sa_active = acl[i]) == NULL)
 					continue;
-				if (access_match(&aca, sa_active->sa_family,
-						 sa_active->sa_addr) != NULL) {
+				if (access_match(&aca, sa_active->sa_family, sa_active->sa_addr) != NULL) {
 					if (++n <= aclp->acl_max)
 						continue;
 
@@ -298,9 +293,7 @@ access_done(struct server_args *sa)
 		acl_actives--;
 		break;
 	case ACL_ALWAYS:
-		for (lep = acl_high->l_head ;
-		     lep != NULL ;
-		     lep = lep->le_next) {
+		for (lep = acl_high->l_head ; lep != NULL ; lep = lep->le_next) {
 			if (lep->le_elm == sa)
 				break;
 		}
@@ -493,8 +486,7 @@ access_parse(FILE *fp)
 			}
 
 			if (aca->aca_patterns != NULL) {
-				(void)memcpy(newptr, aca->aca_patterns,
-					     old * sizeof(*newptr));
+				(void)memcpy(newptr, aca->aca_patterns, old * sizeof(*newptr));
 				free(aca->aca_patterns);
 			}
 			aca->aca_patterns = newptr;
@@ -516,27 +508,21 @@ access_parse(FILE *fp)
 		switch (aclp->acl_status) {
 		case ACL_ALLOW:
 			if (!access_parse_allow(&tk, aclp)) {
-				logmsg_err("ACL: line %u: %s: invalid "
-					   "address/hostname", lineno,
-					   tk.token);
+				logmsg_err("ACL: line %u: %s: invalid address/hostname", lineno, tk.token);
 				access_close(aca);
 				return (NULL);
 			}
 			break;
 		case ACL_ALWAYS:
 			if (!access_parse_always(&tk, aclp)) {
-				logmsg_err("ACL: line %u: %s: invalid "
-					   "address/hostname", lineno,
-					   tk.token);
+				logmsg_err("ACL: line %u: %s: invalid address/hostname", lineno, tk.token);
 				access_close(aca);
 				return (NULL);
 			}
 			break;
 		case ACL_DENY:
 			if (!access_parse_deny(&tk, aclp)) {
-				logmsg_err("ACL: line %u: %s: invalid "
-					   "address/hostname", lineno,
-					   tk.token);
+				logmsg_err("ACL: line %u: %s: invalid address/hostname", lineno, tk.token);
 				access_close(aca);
 				return (NULL);
 			}
@@ -562,7 +548,7 @@ access_parse_allow(struct token *tk, struct aclent *aclp)
 	size_t n;
 
 	if ((sep = memchr(sp, ',', (size_t)(bp - sp))) != NULL) {
-		if (sep + 1 >= bp)
+		if ((sep + 1) >= bp)
 			return (false);
 		if (!access_parse_number(sep + 1, bp, &aclp->acl_max))
 			return (false);
@@ -570,7 +556,7 @@ access_parse_allow(struct token *tk, struct aclent *aclp)
 	}
 
 	if ((sep = memchr(sp, '/', (size_t)(bp - sp))) != NULL) {
-		if (sep + 1 >= bp)
+		if ((sep + 1) >= bp)
 			return (false);
 		if (!access_parse_number(sep + 1, bp, &n))
 			return (false);
@@ -590,7 +576,7 @@ access_parse_always(struct token *tk, struct aclent *aclp)
 	size_t n;
 
 	if ((sep = memchr(sp, '/', (size_t)(bp - sp))) != NULL) {
-		if (sep + 1 >= bp)
+		if ((sep + 1) >= bp)
 			return (false);
 		if (!access_parse_number(sep + 1, bp, &n))
 			return (false);
@@ -610,7 +596,7 @@ access_parse_deny(struct token *tk, struct aclent *aclp)
 	size_t n;
 
 	if ((sep = memchr(sp, '/', (size_t)(bp - sp))) != NULL) {
-		if (sep + 1 >= bp)
+		if ((sep + 1) >= bp)
 			return (false);
 		if (!access_parse_number(sep + 1, bp, &n))
 			return (false);
@@ -651,10 +637,8 @@ access_parse_address(char *sp, const char *bp, size_t n, struct aclent *aclp)
 bool
 access_parse_hostname(char *sp, const char *bp, struct aclent *aclp)
 {
-	if (isdigit((int)(sp[bp - sp - 1])) ||
-	    (memchr(sp, ':', (size_t)(bp - sp)) != NULL)) {
+	if (isdigit((int)(sp[bp - sp - 1])) || (memchr(sp, ':', (size_t)(bp - sp)) != NULL))
 		return (false);
-	}
 
 	aclp->acl_family = AF_UNSPEC;
 	aclp->acl_addrlen = (size_t)(bp - sp);

@@ -47,24 +47,18 @@ bool filecmp_rcs_update_rcs(struct filecmp_args *, struct cvsync_file *);
 bool filecmp_rcs_update_symlink(struct filecmp_args *);
 
 bool filecmp_rcs_admin(struct filecmp_args *, struct rcslib_file *);
-bool filecmp_rcs_admin_access(struct filecmp_args *, struct rcslib_file *,
-			      size_t);
-bool filecmp_rcs_admin_symbols(struct filecmp_args *, struct rcslib_file *,
-			       size_t);
-bool filecmp_rcs_admin_locks(struct filecmp_args *, struct rcslib_file *,
-			     size_t);
+bool filecmp_rcs_admin_access(struct filecmp_args *, struct rcslib_file *, size_t);
+bool filecmp_rcs_admin_symbols(struct filecmp_args *, struct rcslib_file *, size_t);
+bool filecmp_rcs_admin_locks(struct filecmp_args *, struct rcslib_file *, size_t);
 bool filecmp_rcs_delta(struct filecmp_args *, struct rcslib_file *, uint32_t *);
 bool filecmp_rcs_delta_add(struct filecmp_args *, struct rcslib_revision *);
 bool filecmp_rcs_delta_remove(struct filecmp_args *, struct rcsnum *);
-bool filecmp_rcs_delta_update(struct filecmp_args *, struct rcslib_revision *,
-			      uint8_t *);
+bool filecmp_rcs_delta_update(struct filecmp_args *, struct rcslib_revision *, uint8_t *);
 bool filecmp_rcs_desc(struct filecmp_args *, struct rcslib_file *);
-bool filecmp_rcs_deltatext(struct filecmp_args *, struct rcslib_file *,
-			   uint32_t);
+bool filecmp_rcs_deltatext(struct filecmp_args *, struct rcslib_file *, uint32_t);
 bool filecmp_rcs_deltatext_add(struct filecmp_args *, struct rcslib_revision *);
 bool filecmp_rcs_deltatext_remove(struct filecmp_args *, struct rcsnum *);
-bool filecmp_rcs_deltatext_update(struct filecmp_args *,
-				  struct rcslib_revision *, uint8_t *);
+bool filecmp_rcs_deltatext_update(struct filecmp_args *, struct rcslib_revision *, uint8_t *);
 
 bool filecmp_rcs_ignore_rcs(struct filecmp_args *);
 bool filecmp_rcs_ignore_rcs_delta(struct filecmp_args *, uint32_t *);
@@ -81,8 +75,7 @@ filecmp_rcs(struct filecmp_args *fca)
 
 	for (;;) {
 		if (!filecmp_rcs_fetch(fca)) {
-			logmsg_err("%s FileCmp(RCS): Fetch Error",
-				   fca->fca_hostinfo);
+			logmsg_err("%s FileCmp(RCS): Fetch Error", fca->fca_hostinfo);
 			return (false);
 		}
 
@@ -92,42 +85,36 @@ filecmp_rcs(struct filecmp_args *fca)
 		switch (cap->ca_tag) {
 		case FILECMP_ADD:
 			if (!filecmp_rcs_add(fca)) {
-				logmsg_err("%s FileCmp(RCS): %s: ADD Error",
-					   fca->fca_hostinfo, fca->fca_path);
+				logmsg_err("%s FileCmp(RCS): %s: ADD Error", fca->fca_hostinfo, fca->fca_path);
 				return (false);
 			}
 			break;
 		case FILECMP_REMOVE:
 			if (!filecmp_rcs_remove(fca)) {
-				logmsg_err("%s FileCmp(RCS): %s: REMOVE Error",
-					   fca->fca_hostinfo, fca->fca_path);
+				logmsg_err("%s FileCmp(RCS): %s: REMOVE Error", fca->fca_hostinfo, fca->fca_path);
 				return (false);
 			}
 			break;
 		case FILECMP_RCS_ATTIC:
 			if (!filecmp_rcs_attic(fca)) {
-				logmsg_err("%s FileCmp(RCS): %s: ATTIC Error",
-					   fca->fca_hostinfo, fca->fca_path);
+				logmsg_err("%s FileCmp(RCS): %s: ATTIC Error", fca->fca_hostinfo, fca->fca_path);
 				return (false);
 			}
 			break;
 		case FILECMP_SETATTR:
 			if (!filecmp_rcs_setattr(fca)) {
-				logmsg_err("%s FileCmp(RCS): %s: SETATTR Error",
-					   fca->fca_hostinfo, fca->fca_path);
+				logmsg_err("%s FileCmp(RCS): %s: SETATTR Error", fca->fca_hostinfo, fca->fca_path);
 				return (false);
 			}
 			break;
 		case FILECMP_UPDATE:
 			if (!filecmp_rcs_update(fca)) {
-				logmsg_err("%s FileCmp(RCS): %s: UPDATE Error",
-					   fca->fca_hostinfo, fca->fca_path);
+				logmsg_err("%s FileCmp(RCS): %s: UPDATE Error", fca->fca_hostinfo, fca->fca_path);
 				return (false);
 			}
 			break;
 		default:
-			logmsg_err("%s FileCmp(RCS): %02x: Unknown Command",
-				   cap->ca_tag);
+			logmsg_err("%s FileCmp(RCS): %02x: Unknown Command", cap->ca_tag);
 			return (false);
 		}
 	}
@@ -145,7 +132,7 @@ filecmp_rcs_fetch(struct filecmp_args *fca)
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 3))
 		return (false);
 	len = GetWord(cmd);
-	if ((len == 0) || (len > fca->fca_cmdmax - 2))
+	if ((len == 0) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if ((cap->ca_tag = cmd[2]) == FILECMP_END)
 		return (len == 1);
@@ -163,30 +150,22 @@ filecmp_rcs_fetch(struct filecmp_args *fca)
 	switch (cap->ca_tag) {
 	case FILECMP_ADD:
 	case FILECMP_REMOVE:
-		if (cap->ca_namelen != len - 4)
+		if (cap->ca_namelen != (len - 4))
 			return (false);
-		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
 		break;
 	case FILECMP_RCS_ATTIC:
-		if ((cap->ca_type != FILETYPE_RCS) &&
-		    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+		if ((cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 			return (false);
-		}
-		if (cap->ca_namelen != len - RCS_ATTRLEN_RCS - 4)
+		if (cap->ca_namelen != (len - RCS_ATTRLEN_RCS - 4))
 			return (false);
-		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name,
-			      cap->ca_namelen)) {
+		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name, cap->ca_namelen))
 			return (false);
-		}
 		if (!IS_FILE_RCS(cap->ca_name, cap->ca_namelen))
 			return (false);
-		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd,
-			      RCS_ATTRLEN_RCS)) {
+		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, RCS_ATTRLEN_RCS))
 			return (false);
-		}
 		if (!attr_rcs_decode_rcs(cmd, RCS_ATTRLEN_RCS, cap))
 			return (false);
 		break;
@@ -194,12 +173,10 @@ filecmp_rcs_fetch(struct filecmp_args *fca)
 		if (cap->ca_type == FILETYPE_DIR)
 			return (false);
 		if (cap->ca_type == FILETYPE_SYMLINK) {
-			if (len != cap->ca_namelen + 4)
+			if (len != (cap->ca_namelen + 4))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
 			break;
 		}
 		FALLTHROUGH;
@@ -207,47 +184,35 @@ filecmp_rcs_fetch(struct filecmp_args *fca)
 	case FILECMP_SETATTR:
 		switch (cap->ca_type) {
 		case FILETYPE_DIR:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_DIR - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_DIR - 4))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd,
-				      RCS_ATTRLEN_DIR)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, RCS_ATTRLEN_DIR))
 				return (false);
-			}
 			if (!attr_rcs_decode_dir(cmd, RCS_ATTRLEN_DIR, cap))
 				return (false);
 			break;
 		case FILETYPE_FILE:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_FILE - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_FILE - 4))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd,
-				      RCS_ATTRLEN_FILE)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, RCS_ATTRLEN_FILE))
 				return (false);
-			}
 			if (!attr_rcs_decode_file(cmd, RCS_ATTRLEN_FILE, cap))
 				return (false);
 			break;
 		case FILETYPE_RCS:
 		case FILETYPE_RCS_ATTIC:
-			if (cap->ca_namelen != len - RCS_ATTRLEN_RCS - 4)
+			if (cap->ca_namelen != (len - RCS_ATTRLEN_RCS - 4))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      cap->ca_name, cap->ca_namelen)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cap->ca_name, cap->ca_namelen))
 				return (false);
-			}
 			if (!IS_FILE_RCS(cap->ca_name, cap->ca_namelen))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd,
-				      RCS_ATTRLEN_RCS)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, RCS_ATTRLEN_RCS))
 				return (false);
-			}
 			if (!attr_rcs_decode_rcs(cmd, RCS_ATTRLEN_RCS, cap))
 				return (false);
 			break;
@@ -268,10 +233,8 @@ filecmp_rcs_fetch(struct filecmp_args *fca)
 	(void)memcpy(fca->fca_rpath, cap->ca_name, cap->ca_namelen);
 	fca->fca_rpath[cap->ca_namelen] = '\0';
 	if (cap->ca_type == FILETYPE_RCS_ATTIC) {
-		if (!cvsync_rcs_insert_attic(fca->fca_path, pathlen,
-					     fca->fca_pathmax)) {
+		if (!cvsync_rcs_insert_attic(fca->fca_path, pathlen, fca->fca_pathmax))
 			return (false);
-		}
 	}
 
 	return (true);
@@ -322,17 +285,13 @@ filecmp_rcs_add_dir(struct filecmp_args *fca)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
 	mode = RCS_MODE(st.st_mode, fca->fca_umask);
 
-	if ((len = attr_rcs_encode_dir(&cmd[2], fca->fca_cmdmax - 2,
-				       mode)) == 0) {
+	if ((len = attr_rcs_encode_dir(&cmd[2], fca->fca_cmdmax - 2, mode)) == 0)
 		return (false);
-	}
 	SetWord(cmd, len);
 
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, len + 2))
@@ -373,15 +332,12 @@ filecmp_rcs_add_file(struct filecmp_args *fca)
 		cvsync_fclose(cfp);
 		return (false);
 	}
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen)) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
 
-	if ((len = attr_rcs_encode_file(&cmd[2], fca->fca_cmdmax - 2,
-					cfp->cf_mtime, cfp->cf_size,
-					mode)) == 0) {
+	if ((len = attr_rcs_encode_file(&cmd[2], fca->fca_cmdmax - 2, cfp->cf_mtime, cfp->cf_size, mode)) == 0) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
@@ -456,13 +412,10 @@ filecmp_rcs_add_symlink(struct filecmp_args *fca)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
-	if ((wn = readlink(fca->fca_path, (char *)&cmd[2],
-			   fca->fca_cmdmax - 2)) == -1) {
+	if ((wn = readlink(fca->fca_path, (char *)&cmd[2], fca->fca_cmdmax - 2)) == -1) {
 		if (errno == ENOENT)
 			return (true);
 		return (false);
@@ -491,10 +444,8 @@ filecmp_rcs_remove(struct filecmp_args *fca)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 
 	return (true);
 }
@@ -515,10 +466,8 @@ filecmp_rcs_attic(struct filecmp_args *fca)
 		case FILETYPE_RCS:
 			len = fca->fca_pathlen + cap->ca_namelen;
 			cap->ca_type = FILETYPE_RCS_ATTIC;
-			if (!cvsync_rcs_insert_attic(fca->fca_path, len,
-						     fca->fca_pathmax)) {
+			if (!cvsync_rcs_insert_attic(fca->fca_path, len, fca->fca_pathmax))
 				return (false);
-			}
 			break;
 		case FILETYPE_RCS_ATTIC:
 			len = fca->fca_pathlen + cap->ca_namelen + 6;
@@ -556,12 +505,10 @@ filecmp_rcs_attic(struct filecmp_args *fca)
 			cvsync_fclose(cfp);
 			return (false);
 		}
-		(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr,
-				   (size_t)cfp->cf_size);
+		(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr, (size_t)cfp->cf_size);
 		(*hashops->final)(fca->fca_hash_ctx, fca->fca_hash);
 
-		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd,
-			      hashops->length)) {
+		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, hashops->length)) {
 			cvsync_fclose(cfp);
 			return (false);
 		}
@@ -611,8 +558,7 @@ filecmp_rcs_attic(struct filecmp_args *fca)
 				cvsync_fclose(cfp);
 				return (false);
 			}
-			(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr,
-					   (size_t)cfp->cf_size);
+			(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr, (size_t)cfp->cf_size);
 			(*hashops->final)(fca->fca_hash_ctx, fca->fca_hash);
 		}
 		break;
@@ -628,8 +574,7 @@ filecmp_rcs_attic(struct filecmp_args *fca)
 		return (false);
 	}
 
-	if ((len = attr_rcs_encode_rcs(&cmd[6], fca->fca_cmdmax - base,
-				       cfp->cf_mtime, mode)) == 0) {
+	if ((len = attr_rcs_encode_rcs(&cmd[6], fca->fca_cmdmax - base, cfp->cf_mtime, mode)) == 0) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
@@ -642,8 +587,7 @@ filecmp_rcs_attic(struct filecmp_args *fca)
 		cvsync_fclose(cfp);
 		return (false);
 	}
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen)) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
@@ -718,26 +662,19 @@ filecmp_rcs_setattr(struct filecmp_args *fca)
 			return (false);
 		break;
 	case FILETYPE_FILE:
-		if ((cap->ca_mtime == (int64_t)st.st_mtime) &&
-		    (cap->ca_size == (uint64_t)st.st_size) &&
+		if ((cap->ca_mtime == (int64_t)st.st_mtime) && (cap->ca_size == (uint64_t)st.st_size) &&
 		    (cap->ca_mode == mode)) {
 			return (true);
 		}
-		if ((len = attr_rcs_encode_file(&cmd[6], len, st.st_mtime,
-						st.st_size, mode)) == 0) {
+		if ((len = attr_rcs_encode_file(&cmd[6], len, st.st_mtime, st.st_size, mode)) == 0)
 			return (false);
-		}
 		break;
 	case FILETYPE_RCS:
 	case FILETYPE_RCS_ATTIC:
-		if ((cap->ca_mtime == (int64_t)st.st_mtime) &&
-		    (cap->ca_mode == mode)) {
+		if ((cap->ca_mtime == (int64_t)st.st_mtime) && (cap->ca_mode == mode))
 			return (true);
-		}
-		if ((len = attr_rcs_encode_rcs(&cmd[6], len, st.st_mtime,
-					       mode)) == 0) {
+		if ((len = attr_rcs_encode_rcs(&cmd[6], len, st.st_mtime, mode)) == 0)
 			return (false);
-		}
 		break;
 	default:
 		return (false);
@@ -749,10 +686,8 @@ filecmp_rcs_setattr(struct filecmp_args *fca)
 	SetWord(&cmd[4], cap->ca_namelen);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, &cmd[6], len))
 		return (false);
 
@@ -781,10 +716,8 @@ filecmp_rcs_update(struct filecmp_args *fca)
 		case FILETYPE_RCS:
 			len = fca->fca_pathlen + cap->ca_namelen;
 			cap->ca_type = FILETYPE_RCS_ATTIC;
-			if (!cvsync_rcs_insert_attic(fca->fca_path, len,
-						     fca->fca_pathmax)) {
+			if (!cvsync_rcs_insert_attic(fca->fca_path, len, fca->fca_pathmax))
 				return (false);
-			}
 			if (stat(fca->fca_path, &st) == 0)
 				return (filecmp_rcs_attic(fca));
 			cap->ca_type = FILETYPE_RCS;
@@ -799,10 +732,8 @@ filecmp_rcs_update(struct filecmp_args *fca)
 			if (stat(fca->fca_path, &st) == 0)
 				return (filecmp_rcs_attic(fca));
 			cap->ca_type = FILETYPE_RCS_ATTIC;
-			if (!cvsync_rcs_insert_attic(fca->fca_path, len - 6,
-						     fca->fca_pathmax)) {
+			if (!cvsync_rcs_insert_attic(fca->fca_path, len - 6, fca->fca_pathmax))
 				return (false);
-			}
 			break;
 		default:
 			return (false);
@@ -816,10 +747,8 @@ filecmp_rcs_update(struct filecmp_args *fca)
 
 		switch (tag) {
 		case FILECMP_UPDATE_GENERIC:
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd,
-				      hashops->length)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, hashops->length))
 				return (false);
-			}
 			break;
 		case FILECMP_UPDATE_RCS:
 			if (!filecmp_rcs_ignore_rcs(fca))
@@ -863,12 +792,10 @@ filecmp_rcs_update(struct filecmp_args *fca)
 			cvsync_fclose(cfp);
 			return (false);
 		}
-		(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr,
-				   (size_t)cfp->cf_size);
+		(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr, (size_t)cfp->cf_size);
 		(*hashops->final)(fca->fca_hash_ctx, fca->fca_hash);
 
-		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd,
-			      hashops->length)) {
+		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, hashops->length)) {
 			cvsync_fclose(cfp);
 			return (false);
 		}
@@ -918,8 +845,7 @@ filecmp_rcs_update(struct filecmp_args *fca)
 				cvsync_fclose(cfp);
 				return (false);
 			}
-			(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr,
-					   (size_t)cfp->cf_size);
+			(*hashops->update)(fca->fca_hash_ctx, cfp->cf_addr, (size_t)cfp->cf_size);
 			(*hashops->final)(fca->fca_hash_ctx, fca->fca_hash);
 		}
 		break;
@@ -938,16 +864,14 @@ filecmp_rcs_update(struct filecmp_args *fca)
 
 	switch (cap->ca_type) {
 	case FILETYPE_FILE:
-		if ((len = attr_rcs_encode_file(&cmd[6], len, cfp->cf_mtime,
-						cfp->cf_size, mode)) == 0) {
+		if ((len = attr_rcs_encode_file(&cmd[6], len, cfp->cf_mtime, cfp->cf_size, mode)) == 0) {
 			cvsync_fclose(cfp);
 			return (false);
 		}
 		break;
 	case FILETYPE_RCS:
 	case FILETYPE_RCS_ATTIC:
-		if ((len = attr_rcs_encode_rcs(&cmd[6], len, cfp->cf_mtime,
-					       mode)) == 0) {
+		if ((len = attr_rcs_encode_rcs(&cmd[6], len, cfp->cf_mtime, mode)) == 0) {
 			cvsync_fclose(cfp);
 			return (false);
 		}
@@ -965,8 +889,7 @@ filecmp_rcs_update(struct filecmp_args *fca)
 		cvsync_fclose(cfp);
 		return (false);
 	}
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen)) {
 		cvsync_fclose(cfp);
 		return (false);
 	}
@@ -1067,17 +990,13 @@ filecmp_rcs_update_symlink(struct filecmp_args *fca)
 	cmd[2] = UPDATER_UPDATE;
 	cmd[3] = FILETYPE_SYMLINK;
 	SetWord(&cmd[4], cap->ca_namelen);
-	if ((wn = readlink(fca->fca_path, (char *)&cmd[6],
-			   fca->fca_cmdmax - base)) == -1) {
+	if ((wn = readlink(fca->fca_path, (char *)&cmd[6], fca->fca_cmdmax - base)) == -1)
 		return (false);
-	}
 	SetWord(cmd, (size_t)((size_t)wn + base - 2));
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name,
-		      cap->ca_namelen)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, cap->ca_name, cap->ca_namelen))
 		return (false);
-	}
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, &cmd[6], (size_t)wn))
 		return (false);
 
@@ -1097,13 +1016,13 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > fca->fca_cmdmax - 2))
+	if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 		return (false);
 	if (cmd[0] != FILECMP_UPDATE_RCS_HEAD)
 		return (false);
-	if (len != (size_t)cmd[1] + 2)
+	if (len != ((size_t)cmd[1] + 2))
 		return (false);
 	len = cmd[1];
 	if ((len != num->n_len) || (memcmp(&cmd[2], num->n_str, len) != 0)) {
@@ -1115,10 +1034,8 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (num->n_len > 0) {
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str,
-				      num->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str, num->n_len))
 				return (false);
-			}
 		}
 	}
 
@@ -1127,13 +1044,13 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > fca->fca_cmdmax - 2))
+	if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 		return (false);
 	if (cmd[0] != FILECMP_UPDATE_RCS_BRANCH)
 		return (false);
-	if (len != (size_t)cmd[1] + 2)
+	if (len != ((size_t)cmd[1] + 2))
 		return (false);
 	len = cmd[1];
 	if ((len != num->n_len) || (memcmp(&cmd[2], num->n_str, len) != 0)) {
@@ -1145,10 +1062,8 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (num->n_len > 0) {
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str,
-				      num->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str, num->n_len))
 				return (false);
-			}
 		}
 	}
 
@@ -1227,16 +1142,15 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > fca->fca_cmdmax - 2))
+	if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 		return (false);
 	if (cmd[0] != FILECMP_UPDATE_RCS_COMMENT)
 		return (false);
-	if (len != (size_t)cmd[1] + 2)
+	if (len != ((size_t)cmd[1] + 2))
 		return (false);
-	if ((cmd[1] != str->s_len) ||
-	    (memcmp(&cmd[2], str->s_str, cmd[1]) != 0)) {
+	if ((cmd[1] != str->s_len) || (memcmp(&cmd[2], str->s_str, cmd[1]) != 0)) {
 		if ((len = str->s_len + 4) > fca->fca_cmdmax)
 			return (false);
 		SetWord(cmd, len - 2);
@@ -1245,10 +1159,8 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (str->s_len > 0) {
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, str->s_str,
-				      str->s_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, str->s_str, str->s_len))
 				return (false);
-			}
 		}
 	}
 
@@ -1257,16 +1169,15 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > fca->fca_cmdmax - 2))
+	if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 		return (false);
 	if (cmd[0] != FILECMP_UPDATE_RCS_EXPAND)
 		return (false);
-	if (len != (size_t)cmd[1] + 2)
+	if (len != ((size_t)cmd[1] + 2))
 		return (false);
-	if ((cmd[1] != str->s_len) ||
-	    (memcmp(&cmd[2], str->s_str, cmd[1]) != 0)) {
+	if ((cmd[1] != str->s_len) || (memcmp(&cmd[2], str->s_str, cmd[1]) != 0)) {
 		if ((len = str->s_len + 4) > fca->fca_cmdmax)
 			return (false);
 		SetWord(cmd, len - 2);
@@ -1275,10 +1186,8 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 			return (false);
 		if (str->s_len > 0) {
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, str->s_str,
-				      str->s_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, str->s_str, str->s_len))
 				return (false);
-			}
 		}
 	}
 
@@ -1296,8 +1205,7 @@ filecmp_rcs_admin(struct filecmp_args *fca, struct rcslib_file *rcs)
 }
 
 bool
-filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
-			 size_t n)
+filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs, size_t n)
 {
 	struct rcsid *i1, *i2, t_id;
 	uint8_t *cmd = fca->fca_cmd;
@@ -1314,12 +1222,10 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 1))
 				return (false);
 			ilen = cmd[0];
-			if ((ilen == 0) || (ilen > fca->fca_cmdmax - 1))
+			if ((ilen == 0) || (ilen > (fca->fca_cmdmax - 1)))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      fca->fca_rvcmd, ilen)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, fca->fca_rvcmd, ilen))
 				return (false);
-			}
 
 			i2->i_id = (char *)fca->fca_rvcmd;
 			i2->i_len = ilen;
@@ -1336,10 +1242,8 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[4] = (uint8_t)i2->i_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
-				      i2->i_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id, i2->i_len))
 				return (false);
-			}
 			fetched = false;
 			i++;
 			continue;
@@ -1360,10 +1264,8 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[4] = (uint8_t)i2->i_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
-				      i2->i_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id, i2->i_len))
 				return (false);
-			}
 			fetched = false;
 			i++;
 		} else { /* rv < 0 */
@@ -1375,10 +1277,8 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[4] = (uint8_t)i1->i_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id,
-				      i1->i_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id, i1->i_len))
 				return (false);
-			}
 			c++;
 		}
 	}
@@ -1401,8 +1301,7 @@ filecmp_rcs_admin_access(struct filecmp_args *fca, struct rcslib_file *rcs,
 }
 
 bool
-filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
-			  size_t n)
+filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs, size_t n)
 {
 	struct rcslib_symbol *sym1, *sym2, t_sym;
 	struct rcsnum *n1, *n2;
@@ -1426,12 +1325,10 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 				return (false);
 			if ((nlen = (size_t)cmd[1]) == 0)
 				return (false);
-			if ((len = nlen + slen) > fca->fca_cmdmax - 2)
+			if ((len = nlen + slen) > (fca->fca_cmdmax - 2))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      fca->fca_rvcmd, len)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, fca->fca_rvcmd, len))
 				return (false);
-			}
 
 			s2->s_sym = (char *)fca->fca_rvcmd;
 			s2->s_len = slen;
@@ -1453,14 +1350,10 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, s2->s_sym,
-				      s2->s_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, s2->s_sym, s2->s_len))
 				return (false);
-			}
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str,
-				      n2->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str, n2->n_len))
 				return (false);
-			}
 			fetched = false;
 			i++;
 			continue;
@@ -1483,14 +1376,10 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, s2->s_sym,
-				      s2->s_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, s2->s_sym, s2->s_len))
 				return (false);
-			}
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str,
-				      n2->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str, n2->n_len))
 				return (false);
-			}
 			fetched = false;
 			i++;
 		} else { /* rv < 0 */
@@ -1506,14 +1395,10 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[5] = (uint8_t)n1->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, s1->s_sym,
-				      s1->s_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, s1->s_sym, s1->s_len))
 				return (false);
-			}
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, n1->n_str,
-				      n1->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, n1->n_str, n1->n_len))
 				return (false);
-			}
 			c++;
 		}
 	}
@@ -1541,8 +1426,7 @@ filecmp_rcs_admin_symbols(struct filecmp_args *fca, struct rcslib_file *rcs,
 }
 
 bool
-filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
-			size_t n)
+filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs, size_t n)
 {
 	struct rcslib_lock *lock1, *lock2, t_lock;
 	struct rcsid *i1, *i2;
@@ -1562,20 +1446,16 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 				return (false);
 			if ((cmd[0] == 0) || (cmd[1] == 0))
 				return (false);
-			if ((len = cmd[0] + cmd[1]) > fca->fca_cmdmax - 2)
+			if ((len = cmd[0] + cmd[1]) > (fca->fca_cmdmax - 2))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      fca->fca_rvcmd, len)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, fca->fca_rvcmd, len))
 				return (false);
-			}
 
 			i2->i_id = (char *)fca->fca_rvcmd;
 			i2->i_len = cmd[0];
 
-			if (!rcslib_str2num(&fca->fca_rvcmd[cmd[0]],
-					    cmd[1], n2)) {
+			if (!rcslib_str2num(&fca->fca_rvcmd[cmd[0]], cmd[1], n2))
 				return (false);
-			}
 
 			fetched = true;
 		}
@@ -1591,14 +1471,10 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
-				      i2->i_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id, i2->i_len))
 				return (false);
-			}
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str,
-				      n2->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str, n2->n_len))
 				return (false);
-			}
 			fetched = false;
 			i++;
 			continue;
@@ -1621,14 +1497,10 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[5] = (uint8_t)n2->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id,
-				      i2->i_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, i2->i_id, i2->i_len))
 				return (false);
-			}
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str,
-				      n2->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, n2->n_str, n2->n_len))
 				return (false);
-			}
 			fetched = false;
 			i++;
 		} else { /* rv < 0 */
@@ -1644,14 +1516,10 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 			cmd[5] = (uint8_t)n1->n_len;
 			if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 6))
 				return (false);
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id,
-				      i1->i_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, i1->i_id, i1->i_len))
 				return (false);
-			}
-			if (!mux_send(fca->fca_mux, MUX_UPDATER, n1->n_str,
-				      n1->n_len)) {
+			if (!mux_send(fca->fca_mux, MUX_UPDATER, n1->n_str, n1->n_len))
 				return (false);
-			}
 			c++;
 		}
 	}
@@ -1679,8 +1547,7 @@ filecmp_rcs_admin_locks(struct filecmp_args *fca, struct rcslib_file *rcs,
 }
 
 bool
-filecmp_rcs_delta(struct filecmp_args *fca, struct rcslib_file *rcs,
-		  uint32_t *ndeltas)
+filecmp_rcs_delta(struct filecmp_args *fca, struct rcslib_file *rcs, uint32_t *ndeltas)
 {
 	const struct hash_args *hashops = fca->fca_hash_ops;
 	struct rcslib_revision *rev;
@@ -1703,17 +1570,15 @@ filecmp_rcs_delta(struct filecmp_args *fca, struct rcslib_file *rcs,
 			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 				return (false);
 			len = GetWord(cmd);
-			if ((len < 2) || (len > fca->fca_cmdmax - 2))
+			if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      fca->fca_rvcmd, len)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, fca->fca_rvcmd, len))
 				return (false);
-			}
 			if (fca->fca_rvcmd[0] != FILECMP_UPDATE_RCS_DELTA)
 				return (false);
 			if ((nlen = fca->fca_rvcmd[1]) == 0)
 				return (false);
-			if (len != nlen + hashops->length + 2)
+			if (len != (nlen + hashops->length + 2))
 				return (false);
 
 			hash = &fca->fca_rvcmd[nlen + 2];
@@ -1802,44 +1667,33 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 	cmd[0] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,
-		      rev->num.n_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str, rev->num.n_len))
 		return (false);
-	}
 
 	/* date */
 	cmd[0] = (uint8_t)rev->date.rd_num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->date.rd_num.n_str,
-		      rev->date.rd_num.n_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->date.rd_num.n_str, rev->date.rd_num.n_len))
 		return (false);
-	}
-	(*hashops->update)(fca->fca_hash_ctx, rev->date.rd_num.n_str,
-			   rev->date.rd_num.n_len);
+	(*hashops->update)(fca->fca_hash_ctx, rev->date.rd_num.n_str, rev->date.rd_num.n_len);
 
 	/* author */
 	cmd[0] = (uint8_t)rev->author.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->author.i_id,
-		      rev->author.i_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->author.i_id, rev->author.i_len))
 		return (false);
-	}
-	(*hashops->update)(fca->fca_hash_ctx, rev->author.i_id,
-			   rev->author.i_len);
+	(*hashops->update)(fca->fca_hash_ctx, rev->author.i_id, rev->author.i_len);
 
 	/* state */
 	cmd[0] = (uint8_t)rev->state.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->state.i_len > 0) {
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->state.i_id,
-			      rev->state.i_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->state.i_id, rev->state.i_len))
 			return (false);
-		}
-		(*hashops->update)(fca->fca_hash_ctx, rev->state.i_id,
-				   rev->state.i_len);
+		(*hashops->update)(fca->fca_hash_ctx, rev->state.i_id, rev->state.i_len);
 	}
 
 	/* branches */
@@ -1851,10 +1705,8 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 		cmd[0] = (uint8_t)num->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 			return (false);
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str,
-			      num->n_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str, num->n_len))
 			return (false);
-		}
 		(*hashops->update)(fca->fca_hash_ctx, num->n_str, num->n_len);
 	}
 
@@ -1863,12 +1715,9 @@ filecmp_rcs_delta_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->next.n_len > 0) {
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->next.n_str,
-			      rev->next.n_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->next.n_str, rev->next.n_len))
 			return (false);
-		}
-		(*hashops->update)(fca->fca_hash_ctx, rev->next.n_str,
-				   rev->next.n_len);
+		(*hashops->update)(fca->fca_hash_ctx, rev->next.n_str, rev->next.n_len);
 	}
 
 	(*hashops->final)(fca->fca_hash_ctx, cmd);
@@ -1900,8 +1749,7 @@ filecmp_rcs_delta_remove(struct filecmp_args *fca, struct rcsnum *num)
 }
 
 bool
-filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
-			 uint8_t *hash)
+filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev, uint8_t *hash)
 {
 	const struct hash_args *hashops = fca->fca_hash_ops;
 	struct rcslib_branches *branches = &rev->branches;
@@ -1913,26 +1761,20 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 		return (false);
 
 	/* date */
-	(*hashops->update)(fca->fca_hash_ctx, rev->date.rd_num.n_str,
-			   rev->date.rd_num.n_len);
+	(*hashops->update)(fca->fca_hash_ctx, rev->date.rd_num.n_str, rev->date.rd_num.n_len);
 	/* author */
-	(*hashops->update)(fca->fca_hash_ctx, rev->author.i_id,
-			   rev->author.i_len);
+	(*hashops->update)(fca->fca_hash_ctx, rev->author.i_id, rev->author.i_len);
 	/* state */
-	if (rev->state.i_len > 0) {
-		(*hashops->update)(fca->fca_hash_ctx, rev->state.i_id,
-				   rev->state.i_len);
-	}
+	if (rev->state.i_len > 0)
+		(*hashops->update)(fca->fca_hash_ctx, rev->state.i_id, rev->state.i_len);
 	/* branches */
 	for (i = 0 ; i < branches->rb_count ; i++) {
 		num = &branches->rb_num[i];
 		(*hashops->update)(fca->fca_hash_ctx, num->n_str, num->n_len);
 	}
 	/* next */
-	if (rev->next.n_len > 0) {
-		(*hashops->update)(fca->fca_hash_ctx, rev->next.n_str,
-				   rev->next.n_len);
-	}
+	if (rev->next.n_len > 0)
+		(*hashops->update)(fca->fca_hash_ctx, rev->next.n_str, rev->next.n_len);
 
 	(*hashops->final)(fca->fca_hash_ctx, fca->fca_hash);
 
@@ -1956,38 +1798,30 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 	cmd[0] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,
-		      rev->num.n_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str, rev->num.n_len))
 		return (false);
-	}
 
 	/* date */
 	cmd[0] = (uint8_t)rev->date.rd_num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->date.rd_num.n_str,
-		      rev->date.rd_num.n_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->date.rd_num.n_str, rev->date.rd_num.n_len))
 		return (false);
-	}
 
 	/* author */
 	cmd[0] = (uint8_t)rev->author.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->author.i_id,
-		      rev->author.i_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->author.i_id, rev->author.i_len))
 		return (false);
-	}
 
 	/* state */
 	cmd[0] = (uint8_t)rev->state.i_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->state.i_len > 0) {
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->state.i_id,
-			      rev->state.i_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->state.i_id, rev->state.i_len))
 			return (false);
-		}
 	}
 
 	/* branches */
@@ -1999,10 +1833,8 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 		cmd[0] = (uint8_t)num->n_len;
 		if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 			return (false);
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str,
-			      num->n_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, num->n_str, num->n_len))
 			return (false);
-		}
 	}
 
 	/* next */
@@ -2010,16 +1842,12 @@ filecmp_rcs_delta_update(struct filecmp_args *fca, struct rcslib_revision *rev,
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 1))
 		return (false);
 	if (rev->next.n_len > 0) {
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->next.n_str,
-			      rev->next.n_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->next.n_str, rev->next.n_len))
 			return (false);
-		}
 	}
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, fca->fca_hash,
-		      hashops->length)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, fca->fca_hash, hashops->length))
 		return (false);
-	}
 
 	return (true);
 }
@@ -2039,18 +1867,15 @@ filecmp_rcs_desc(struct filecmp_args *fca, struct rcslib_file *rcs)
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 		return (false);
 	if (rcs->desc.s_len > 0) {
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rcs->desc.s_str,
-			      rcs->desc.s_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rcs->desc.s_str, rcs->desc.s_len))
 			return (false);
-		}
 	}
 
 	return (true);
 }
 
 bool
-filecmp_rcs_deltatext(struct filecmp_args *fca, struct rcslib_file *rcs,
-		      uint32_t ndeltas)
+filecmp_rcs_deltatext(struct filecmp_args *fca, struct rcslib_file *rcs, uint32_t ndeltas)
 {
 	const struct hash_args *hashops = fca->fca_hash_ops;
 	struct rcslib_revision *rev;
@@ -2074,17 +1899,15 @@ filecmp_rcs_deltatext(struct filecmp_args *fca, struct rcslib_file *rcs,
 			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 				return (false);
 			len = GetWord(cmd);
-			if ((len < 2) || (len > fca->fca_cmdmax - 2))
+			if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 				return (false);
-			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN,
-				      fca->fca_rvcmd, len)) {
+			if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, fca->fca_rvcmd, len))
 				return (false);
-			}
 			if (fca->fca_rvcmd[0] != FILECMP_UPDATE_RCS_DELTATEXT)
 				return (false);
 			if ((nlen = fca->fca_rvcmd[1]) == 0)
 				return (false);
-			if (len != nlen + hashops->length + 2)
+			if (len != (nlen + hashops->length + 2))
 				return (false);
 
 			hash = &fca->fca_rvcmd[nlen + 2];
@@ -2142,8 +1965,7 @@ filecmp_rcs_deltatext(struct filecmp_args *fca, struct rcslib_file *rcs,
 }
 
 bool
-filecmp_rcs_deltatext_add(struct filecmp_args *fca,
-			  struct rcslib_revision *rev)
+filecmp_rcs_deltatext_add(struct filecmp_args *fca, struct rcslib_revision *rev)
 {
 	const struct hash_args *hashops = fca->fca_hash_ops;
 	uint8_t *cmd = fca->fca_cmd;
@@ -2158,10 +1980,8 @@ filecmp_rcs_deltatext_add(struct filecmp_args *fca,
 	cmd[4] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,
-		      rev->num.n_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str, rev->num.n_len))
 		return (false);
-	}
 
 	if (!(*hashops->init)(&fca->fca_hash_ctx))
 		return (false);
@@ -2173,10 +1993,8 @@ filecmp_rcs_deltatext_add(struct filecmp_args *fca,
 		return (false);
 	}
 	if (rev->log.s_len > 0) {
-		(*hashops->update)(fca->fca_hash_ctx, rev->log.s_str,
-				   rev->log.s_len);
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->log.s_str,
-			      rev->log.s_len)) {
+		(*hashops->update)(fca->fca_hash_ctx, rev->log.s_str, rev->log.s_len);
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->log.s_str, rev->log.s_len)) {
 			(*hashops->destroy)(fca->fca_hash_ctx);
 			return (false);
 		}
@@ -2189,10 +2007,8 @@ filecmp_rcs_deltatext_add(struct filecmp_args *fca,
 		return (false);
 	}
 	if (rev->text.s_len > 0) {
-		(*hashops->update)(fca->fca_hash_ctx, rev->text.s_str,
-				   rev->text.s_len);
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->text.s_str,
-			      rev->text.s_len)) {
+		(*hashops->update)(fca->fca_hash_ctx, rev->text.s_str, rev->text.s_len);
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->text.s_str, rev->text.s_len)) {
 			(*hashops->destroy)(fca->fca_hash_ctx);
 			return (false);
 		}
@@ -2227,8 +2043,7 @@ filecmp_rcs_deltatext_remove(struct filecmp_args *fca, struct rcsnum *num)
 }
 
 bool
-filecmp_rcs_deltatext_update(struct filecmp_args *fca,
-			     struct rcslib_revision *rev, uint8_t *hash)
+filecmp_rcs_deltatext_update(struct filecmp_args *fca, struct rcslib_revision *rev, uint8_t *hash)
 {
 	const struct hash_args *hashops = fca->fca_hash_ops;
 	uint8_t *cmd = fca->fca_cmd;
@@ -2238,15 +2053,11 @@ filecmp_rcs_deltatext_update(struct filecmp_args *fca,
 		return (false);
 
 	/* log */
-	if (rev->log.s_len > 0) {
-		(*hashops->update)(fca->fca_hash_ctx, rev->log.s_str,
-				   rev->log.s_len);
-	}
+	if (rev->log.s_len > 0)
+		(*hashops->update)(fca->fca_hash_ctx, rev->log.s_str, rev->log.s_len);
 	/* text */
-	if (rev->text.s_len > 0) {
-		(*hashops->update)(fca->fca_hash_ctx, rev->text.s_str,
-				   rev->text.s_len);
-	}
+	if (rev->text.s_len > 0)
+		(*hashops->update)(fca->fca_hash_ctx, rev->text.s_str, rev->text.s_len);
 
 	(*hashops->final)(fca->fca_hash_ctx, fca->fca_hash);
 
@@ -2262,20 +2073,16 @@ filecmp_rcs_deltatext_update(struct filecmp_args *fca,
 	cmd[4] = (uint8_t)rev->num.n_len;
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 5))
 		return (false);
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str,
-		      rev->num.n_len)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->num.n_str, rev->num.n_len))
 		return (false);
-	}
 
 	/* log */
 	SetDWord(cmd, rev->log.s_len);
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 4))
 		return (false);
 	if (rev->log.s_len > 0) {
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->log.s_str,
-			      rev->log.s_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->log.s_str, rev->log.s_len))
 			return (false);
-		}
 	}
 
 	/* text */
@@ -2283,16 +2090,12 @@ filecmp_rcs_deltatext_update(struct filecmp_args *fca,
 	if (!mux_send(fca->fca_mux, MUX_UPDATER, cmd, 8))
 		return (false);
 	if (rev->text.s_len > 0) {
-		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->text.s_str,
-			      rev->text.s_len)) {
+		if (!mux_send(fca->fca_mux, MUX_UPDATER, rev->text.s_str, rev->text.s_len))
 			return (false);
-		}
 	}
 
-	if (!mux_send(fca->fca_mux, MUX_UPDATER, fca->fca_hash,
-		      hashops->length)) {
+	if (!mux_send(fca->fca_mux, MUX_UPDATER, fca->fca_hash, hashops->length))
 		return (false);
-	}
 
 	return (true);
 }
@@ -2308,26 +2111,26 @@ filecmp_rcs_ignore_rcs(struct filecmp_args *fca)
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > fca->fca_cmdmax - 2))
+	if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 		return (false);
 	if (cmd[0] != FILECMP_UPDATE_RCS_HEAD)
 		return (false);
-	if (len != (size_t)cmd[1] + 2)
+	if (len != ((size_t)cmd[1] + 2))
 		return (false);
 
 	/* branch */
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > fca->fca_cmdmax - 2))
+	if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 		return (false);
 	if (cmd[0] != FILECMP_UPDATE_RCS_BRANCH)
 		return (false);
-	if (len != (size_t)cmd[1] + 2)
+	if (len != ((size_t)cmd[1] + 2))
 		return (false);
 
 	/* access */
@@ -2385,13 +2188,13 @@ filecmp_rcs_ignore_rcs_delta(struct filecmp_args *fca, uint32_t *ndeltas)
 		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len < 2) || (len > fca->fca_cmdmax - 2))
+		if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 			return (false);
 		if (cmd[0] != FILECMP_UPDATE_RCS_DELTA)
 			return (false);
-		if (len != cmd[1] + hashops->length + 2)
+		if (len != (cmd[1] + hashops->length + 2))
 			return (false);
 	}
 
@@ -2424,13 +2227,13 @@ filecmp_rcs_ignore_rcs_deltatext(struct filecmp_args *fca, uint32_t ndeltas)
 		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 			return (false);
 		len = GetWord(cmd);
-		if ((len < 2) || (len > fca->fca_cmdmax - 2))
+		if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 			return (false);
 		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 			return (false);
 		if (cmd[0] != FILECMP_UPDATE_RCS_DELTATEXT)
 			return (false);
-		if (len != cmd[1] + hashops->length + 2)
+		if (len != (cmd[1] + hashops->length + 2))
 			return (false);
 	}
 
@@ -2473,8 +2276,7 @@ filecmp_rcs_ignore_rcs_list(struct filecmp_args *fca, uint8_t type)
 		return (false);
 	if (cmd[0] != type)
 		return (false);
-	if ((type != FILECMP_UPDATE_RCS_SYMBOLS) ||
-	    (fca->fca_proto < CVSYNC_PROTO(0, 24))) {
+	if ((type != FILECMP_UPDATE_RCS_SYMBOLS) || (fca->fca_proto < CVSYNC_PROTO(0, 24))) {
 		n = cmd[len - 1];
 	} else {
 		n = GetDWord(&cmd[1]);
@@ -2484,7 +2286,7 @@ filecmp_rcs_ignore_rcs_list(struct filecmp_args *fca, uint8_t type)
 			return (false);
 		if ((cmd[0] == 0) || (cmd[1] == 1))
 			return (false);
-		if ((len = cmd[0] + cmd[1]) > fca->fca_cmdmax - 2)
+		if ((len = cmd[0] + cmd[1]) > (fca->fca_cmdmax - 2))
 			return (false);
 		if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 			return (false);
@@ -2509,13 +2311,13 @@ filecmp_rcs_ignore_rcs_string(struct filecmp_args *fca, uint8_t type)
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, 2))
 		return (false);
 	len = GetWord(cmd);
-	if ((len < 2) || (len > fca->fca_cmdmax - 2))
+	if ((len < 2) || (len > (fca->fca_cmdmax - 2)))
 		return (false);
 	if (!mux_recv(fca->fca_mux, MUX_FILECMP_IN, cmd, len))
 		return (false);
 	if (cmd[0] != type)
 		return (false);
-	if (len != (size_t)cmd[1] + 2)
+	if (len != ((size_t)cmd[1] + 2))
 		return (false);
 
 	return (true);

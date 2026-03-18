@@ -31,19 +31,15 @@ filescan_generic_update(struct filescan_args *fsa, struct cvsync_file *cfp)
 	struct cvsync_attr *cap = &fsa->fsa_attr;
 	uint8_t *cmd = fsa->fsa_cmd;
 
-	if ((cap->ca_type != FILETYPE_FILE) &&
-	    (cap->ca_type != FILETYPE_RCS) &&
-	    (cap->ca_type != FILETYPE_RCS_ATTIC)) {
+	if ((cap->ca_type != FILETYPE_FILE) && (cap->ca_type != FILETYPE_RCS) && (cap->ca_type != FILETYPE_RCS_ATTIC))
 		return (false);
-	}
 
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmds, sizeof(cmds)))
 		return (false);
 
 	if (!(*hashops->init)(&fsa->fsa_hash_ctx))
 		return (false);
-	(*hashops->update)(fsa->fsa_hash_ctx, cfp->cf_addr,
-			   (size_t)cfp->cf_size);
+	(*hashops->update)(fsa->fsa_hash_ctx, cfp->cf_addr, (size_t)cfp->cf_size);
 	(*hashops->final)(fsa->fsa_hash_ctx, cmd);
 
 	if (!mux_send(fsa->fsa_mux, MUX_FILECMP, cmd, hashops->length))

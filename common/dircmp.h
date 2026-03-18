@@ -43,8 +43,7 @@ struct dircmp_args {
 	struct cvsync_attr	dca_attr;
 };
 
-struct dircmp_args *dircmp_init(struct mux *, const char *,
-				struct collection *, uint32_t);
+struct dircmp_args *dircmp_init(struct mux *, const char *, struct collection *, uint32_t);
 void dircmp_destroy(struct dircmp_args *);
 void *dircmp(void *);
 bool dircmp_start(struct dircmp_args *, const char *, const char *);
