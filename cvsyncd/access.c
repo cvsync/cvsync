@@ -563,7 +563,7 @@ access_parse_allow(struct token *tk, struct aclent *aclp)
 		return (access_parse_address(sp, sep, n, aclp));
 	}
 
-	if (!access_parse_address(sp, bp, (size_t)-1, aclp))
+	if (!access_parse_address(sp, bp, SIZE_MAX, aclp))
 		return (access_parse_hostname(sp, bp, aclp));
 
 	return (true);
@@ -583,7 +583,7 @@ access_parse_always(struct token *tk, struct aclent *aclp)
 		return (access_parse_address(sp, sep, n, aclp));
 	}
 
-	if (!access_parse_address(sp, bp, (size_t)-1, aclp))
+	if (!access_parse_address(sp, bp, SIZE_MAX, aclp))
 		return (access_parse_hostname(sp, bp, aclp));
 
 	return (true);
@@ -603,7 +603,7 @@ access_parse_deny(struct token *tk, struct aclent *aclp)
 		return (access_parse_address(sp, sep, n, aclp));
 	}
 
-	if (!access_parse_address(sp, bp, (size_t)-1, aclp))
+	if (!access_parse_address(sp, bp, SIZE_MAX, aclp))
 		return (access_parse_hostname(sp, bp, aclp));
 
 	return (true);
@@ -755,7 +755,7 @@ access_set_ipv4addr(struct aclent *aclp, const void *addr, size_t netmask)
 	aclp->acl_addrlen = sizeof(uint32_t);
 	addrbits = aclp->acl_addrlen * 8;
 
-	if (netmask == (size_t)-1)
+	if (netmask == SIZE_MAX)
 		netmask = addrbits;
 	if (netmask > addrbits)
 		return (false);
@@ -791,7 +791,7 @@ access_set_ipv6addr(struct aclent *aclp, const void *addr, size_t prefixlen)
 	aclp->acl_addrlen = 16;
 	addrbits = aclp->acl_addrlen * 8;
 
-	if (prefixlen == (size_t)-1)
+	if (prefixlen == SIZE_MAX)
 		prefixlen = addrbits;
 	if (prefixlen > addrbits)
 		return (false);

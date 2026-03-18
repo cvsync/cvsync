@@ -108,7 +108,7 @@ cvsup_write_dirdown(int fd, struct scanfile_attr *attr)
 	ssize_t wrn;
 	int wn;
 
-	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == SIZE_MAX)
 		return (false);
 
 	wn = snprintf(attrstr, sizeof(attrstr), "D %.*s\n", (int)namelen, name);
@@ -142,7 +142,7 @@ cvsup_write_dirup(int fd, struct scanfile_attr *attr)
 	if (!attr_rcs_decode_dir(attr->a_aux, attr->a_auxlen, &cattr))
 		return (false);
 
-	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == SIZE_MAX)
 		return (false);
 
 	mlen = snprintf(attrstr, sizeof(attrstr), "%o", cattr.ca_mode);
@@ -179,7 +179,7 @@ cvsup_write_file(int fd, struct scanfile_attr *attr)
 	if (!attr_rcs_decode_file(attr->a_aux, attr->a_auxlen, &cattr))
 		return (false);
 
-	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == SIZE_MAX)
 		return (false);
 
 	tlen = snprintf(attrstr, sizeof(attrstr), "%lld", (long long)cattr.ca_mtime);
@@ -224,7 +224,7 @@ cvsup_write_rcs(int fd, struct scanfile_attr *attr)
 	else /* FILETYPE_RCS_ATTIC */
 		c = 'v';
 
-	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == SIZE_MAX)
 		return (false);
 
 	tlen = snprintf(attrstr, sizeof(attrstr), "%lld", (long long)cattr.ca_mtime);
@@ -258,7 +258,7 @@ cvsup_write_symlink(int fd, struct scanfile_attr *attr)
 	ssize_t wrn;
 	int wn;
 
-	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == (size_t)-1)
+	if ((namelen = cvsup_escape_name(attr, name, sizeof(name))) == SIZE_MAX)
 		return (false);
 
 	wn = snprintf(attrstr, sizeof(attrstr), "V %.*s 1#91#5%lu#%.*s\n", (int)namelen, name,
@@ -292,7 +292,7 @@ cvsup_escape_name(struct scanfile_attr *attr, void *buffer, size_t length)
 		case '\\':
 			if ((namelen + 2) > length) {
 				logmsg_err("No space to escape '\\'");
-				return ((size_t)-1);
+				return (SIZE_MAX);
 			}
 			*p++ = '\\';
 			*p++ = '\\';
@@ -301,7 +301,7 @@ cvsup_escape_name(struct scanfile_attr *attr, void *buffer, size_t length)
 		case ' ':
 			if ((namelen + 2) > length) {
 				logmsg_err("No space to escape ' '");
-				return ((size_t)-1);
+				return (SIZE_MAX);
 			}
 			*p++ = '\\';
 			*p++ = '_';
@@ -310,7 +310,7 @@ cvsup_escape_name(struct scanfile_attr *attr, void *buffer, size_t length)
 		default:
 			if (namelen >= length) {
 				logmsg_err("No space to put any characters");
-				return ((size_t)-1);
+				return (SIZE_MAX);
 			}
 			*p++ = *sp;
 			namelen++;

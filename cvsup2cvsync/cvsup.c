@@ -362,7 +362,7 @@ cvsup_decode_attrs(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 		logmsg_err("no separators");
 		return ((uint32_t)-1);
 	}
-	if ((n = cvsup_decode_length(sp, sep)) == (size_t)-1)
+	if ((n = cvsup_decode_length(sp, sep)) == SIZE_MAX)
 		return ((uint32_t)-1);
 	if (((sp = sep + 1) >= ep) || ((size_t)(ep - sp) < n)) {
 		logmsg_err("premature EOF");
@@ -402,7 +402,7 @@ cvsup_decode_filetype(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 		logmsg_err("no separators");
 		return ((uint8_t)-1);
 	}
-	if ((n = cvsup_decode_length(sp, sep)) == (size_t)-1)
+	if ((n = cvsup_decode_length(sp, sep)) == SIZE_MAX)
 		return ((uint8_t)-1);
 	if (((sp = sep + 1) >= ep) || ((size_t)(ep - sp) < n)) {
 		logmsg_err("premature EOF");
@@ -467,7 +467,7 @@ cvsup_decode_mtime(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 		logmsg_err("no separators");
 		return (-1);
 	}
-	if ((n = cvsup_decode_length(sp, sep)) == (size_t)-1)
+	if ((n = cvsup_decode_length(sp, sep)) == SIZE_MAX)
 		return (-1);
 	if (((sp = sep + 1) >= ep) || ((size_t)(ep - sp) < n)) {
 		logmsg_err("premature EOF");
@@ -508,7 +508,7 @@ cvsup_decode_size(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 		logmsg_err("no separators");
 		return ((uint64_t)-1);
 	}
-	if ((n = cvsup_decode_length(sp, sep)) == (size_t)-1)
+	if ((n = cvsup_decode_length(sp, sep)) == SIZE_MAX)
 		return ((uint64_t)-1);
 	if (((sp = sep + 1) >= ep) || ((size_t)(ep - sp) < n)) {
 		logmsg_err("premature EOF");
@@ -548,7 +548,7 @@ cvsup_decode_linktarget(uint8_t *sp, uint8_t *ep, uint8_t **new_sp, void *buffer
 		logmsg_err("no separators");
 		return (0);
 	}
-	if ((n = cvsup_decode_length(sp, sep)) == (size_t)-1)
+	if ((n = cvsup_decode_length(sp, sep)) == SIZE_MAX)
 		return (0);
 	if (((sp = sep + 1) >= ep) || ((size_t)(ep - sp) < n)) {
 		logmsg_err("premature EOF");
@@ -598,7 +598,7 @@ cvsup_decode_mode(uint8_t *sp, uint8_t *ep, uint8_t **new_sp)
 		logmsg_err("no separators");
 		return ((uint16_t)-1);
 	}
-	if ((n = cvsup_decode_length(sp, sep)) == (size_t)-1)
+	if ((n = cvsup_decode_length(sp, sep)) == SIZE_MAX)
 		return ((uint16_t)-1);
 	if (((sp = sep + 1) >= ep) || ((size_t)(ep - sp) < n)) {
 		logmsg_err("premature EOF");
@@ -631,17 +631,17 @@ cvsup_decode_length(uint8_t *sp, uint8_t *ep)
 	while (sp < ep) {
 		if (!isdigit((int)(*sp))) {
 			logmsg_err("%c: invalid length specifier", *sp);
-			return ((size_t)-1);
+			return (SIZE_MAX);
 		}
 		c = (size_t)(*sp++ - '0');
 		if ((SIZE_MAX / 10) < n) {
 			logmsg_err("%.*s: %s", ep - sv_sp, sv_sp, strerror(ERANGE));
-			return ((size_t)-1);
+			return (SIZE_MAX);
 		}
 		n *= 10;
 		if ((SIZE_MAX - n) < c) {
 			logmsg_err("%.*s: %s", ep - sv_sp, sv_sp, strerror(ERANGE));
-			return ((size_t)-1);
+			return (SIZE_MAX);
 		}
 		n += c;
 	}
@@ -659,7 +659,7 @@ cvsup_ignore_bit(uint8_t *sp, uint8_t *ep)
 		logmsg_err("no separators");
 		return (NULL);
 	}
-	if ((n = cvsup_decode_length(sp, sep)) == (size_t)-1)
+	if ((n = cvsup_decode_length(sp, sep)) == SIZE_MAX)
 		return (NULL);
 	if (((sp = sep + 1) >= ep) || ((size_t)(ep - sp) < n)) {
 		logmsg_err("premature EOF");

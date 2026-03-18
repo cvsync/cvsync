@@ -266,7 +266,7 @@ config_parse_config(struct config_args *ca)
 		return (NULL);
 	}
 	(void)memset(cf, 0, sizeof(*cf));
-	cf->cf_maxclients = (size_t)-1;
+	cf->cf_maxclients = SIZE_MAX;
 	cf->cf_hash = HASH_UNSPEC;
 
 	for (;;) {
@@ -334,7 +334,7 @@ config_parse_config(struct config_args *ca)
 			}
 			break;
 		case TOK_MAXCLIENTS:
-			if (cf->cf_maxclients != (size_t)-1) {
+			if (cf->cf_maxclients != SIZE_MAX) {
 				logmsg_err("line %u: found duplication of the '%s'", lineno, key->name);
 				config_destroy(cf);
 				return (NULL);
@@ -375,7 +375,7 @@ config_parse_config(struct config_args *ca)
 
 	if (strlen(cf->cf_serv) == 0)
 		snprintf(cf->cf_serv, sizeof(cf->cf_serv), "%s", CVSYNC_DEFAULT_PORT);
-	if (cf->cf_maxclients == (size_t)-1)
+	if (cf->cf_maxclients == SIZE_MAX)
 		cf->cf_maxclients = CVSYNCD_DEFAULT_MAXCLIENTS;
 	if (cf->cf_hash == HASH_UNSPEC)
 		cf->cf_hash = HASH_DEFAULT_TYPE;
