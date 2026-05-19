@@ -29,7 +29,7 @@ main(int argc, char *argv[])
 	const struct hash_args *hashops;
 	const char *fname;
 	struct rcslib_file *rcs;
-	uint64_t size64;
+	struct stat st;
 	uint8_t hash[2][HASH_MAXLEN];
 	void *addr;
 	off_t size;
@@ -55,23 +55,27 @@ main(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 
-		if ((size = lseek(fd, (off_t)0, SEEK_END)) == (off_t)-1) {
+		if (fstat(fd, &st) == -1) {
 			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
-		if (size == 0) {
+		if (!S_ISREG(st.st_mode)) {
+			(void)fprintf(stderr, "%s: not a regular file\n", fname);
+			(void)close(fd);
+			exit(EXIT_FAILURE);
+		}
+		if (st.st_size == 0) {
 			(void)fprintf(stderr, "%s: empty file\n", fname);
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
-		size64 = (uint64_t)size;
-		if (size64 > SIZE_MAX) {
-			(void)fprintf(stderr, "%s: %" PRIu64 ": %s\n", fname, size64, strerror(ERANGE));
+		if ((uintmax_t)st.st_size > SIZE_MAX) {
+			(void)fprintf(stderr, "%s: %ju: %s\n", fname, (uintmax_t)st.st_size, strerror(ERANGE));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
-		if ((addr = mmap(NULL, (size_t)size, PROT_READ, MAP_PRIVATE, fd, (off_t)0)) == MAP_FAILED) {
+		if ((addr = mmap(NULL, (size_t)st.st_size, PROT_READ, MAP_PRIVATE, fd, (off_t)0)) == MAP_FAILED) {
 			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
@@ -79,13 +83,13 @@ main(int argc, char *argv[])
 
 		if (close(fd) == -1) {
 			(void)fprintf(stderr, "%s: %s\n", fname, strerror(errno));
-			(void)munmap(addr, (size_t)size);
+			(void)munmap(addr, (size_t)st.st_size);
 			exit(EXIT_FAILURE);
 		}
 
-		if ((rcs = rcslib_init(addr, size)) == NULL) {
+		if ((rcs = rcslib_init(addr, st.st_size)) == NULL) {
 			(void)fprintf(stderr, "%s: rcsfile(5) error\n", fname);
-			(void)munmap(addr, (size_t)size);
+			(void)munmap(addr, (size_t)st.st_size);
 			exit(EXIT_FAILURE);
 		}
 
