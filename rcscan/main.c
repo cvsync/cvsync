@@ -84,6 +84,11 @@ main(int argc, char *argv[])
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
+		if (st.st_size == 0) {
+			(void)fprintf(stderr, "%s: empty file\n", fname);
+			(void)close(fd);
+			exit(EXIT_FAILURE);
+		}
 		if ((uintmax_t)st.st_size > SIZE_MAX) {
 			(void)fprintf(stderr, "%s: %ju: %s\n", fname, (uintmax_t)st.st_size, strerror(ERANGE));
 			(void)close(fd);
