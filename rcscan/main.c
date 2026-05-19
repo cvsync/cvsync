@@ -33,7 +33,6 @@ main(int argc, char *argv[])
 	struct stat st;
 	void *addr;
 	off_t size;
-	uint64_t size64;
 	int fd, ch;
 	bool quiet = false;
 	bool verbose = false;
@@ -85,9 +84,8 @@ main(int argc, char *argv[])
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
-		size64 = (uint64_t)st.st_size;
-		if (size64 > SIZE_MAX) {
-			(void)fprintf(stderr, "%s: %" PRIu64 ": %s\n", fname, size64, strerror(ERANGE));
+		if ((uintmax_t)st.st_size > SIZE_MAX) {
+			(void)fprintf(stderr, "%s: %ju: %s\n", fname, (uintmax_t)st.st_size, strerror(ERANGE));
 			(void)close(fd);
 			exit(EXIT_FAILURE);
 		}
